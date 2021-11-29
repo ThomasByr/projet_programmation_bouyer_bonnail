@@ -1,0 +1,11 @@
+pages:
+  stage: deploy
+  script:
+    - apt update
+    - apt install dos2unix
+    # - bash setup.bash
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
