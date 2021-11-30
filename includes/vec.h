@@ -122,6 +122,12 @@ void vec_free(vec *v);
 void vec_init(vec *v);
 
 /**
+ * @brief create a new vector
+ * 
+ */
+vec *vec_new(void);
+
+/**
  * @brief return the number of entries in the vector
  * 
  * @param v vector
