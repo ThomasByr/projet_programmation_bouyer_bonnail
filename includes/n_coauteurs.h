@@ -5,5 +5,5 @@
 #include "vec.h"
 #include "node.h"
 
-vec n_coauteurs(node_t *begin, int n);
+vec *n_coauteurs(node_t *begin, int n);
 #endif
