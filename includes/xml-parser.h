@@ -29,10 +29,11 @@ static const char close_tag = '>';        // closing tag
 static const char end_tag = '/';          // ending tag
 static const char delims[] = {' ', '\n'}; // delimiters
 
-// list of tags to look for while parsing
-static const char *look_for[] = {
+static const char *external[] = {
     "article",
     "phdthesis",
+};
+static const char *look_for[] = {
     "title",
     "author",
     "date",
@@ -50,6 +51,16 @@ static const char *look_for[] = {
 void get_tag_id(char *tag);
 
 /**
+ * @brief parse the buffer of size `size`
+ * 
+ * @param buffer buffer to parse
+ * @param size size of the buffer
+ * @param info the info constaining the handler functions
+ * @return parser_error_type_t 
+ */
+parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info);
+
+/**
  * @brief open and parse the file pointed by `filename`
  * 
  * @param filename the name of the file to parse
@@ -57,6 +68,6 @@ void get_tag_id(char *tag);
  * 
  * @return PARSER_OK if everything went fine, an error otherwise
  */
-parser_error_t parse(const char *filename, parser_info_t *info);
+parser_error_type_t parse(const char *filename, parser_info_t *info);
 
 #endif
