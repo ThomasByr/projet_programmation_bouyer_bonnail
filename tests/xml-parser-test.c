@@ -5,21 +5,17 @@
 #include "xml-parser.h"
 #include "macros.h"
 
-void test_count()
+void test_error_0(void)
 {
-    char *line = "abcdefghijklmnopqrstuvwxyz";
-    char *w0 = "abc";
-    char *w1 = "def";
-    char *w2 = "ghi";
-    char *w3 = "aaa";
-    assert_equal(count(line, w0), 1);
-    assert_equal(count(line, w1), 1);
-    assert_equal(count(line, w2), 1);
-    assert_equal(count(line, w3), 0);
+    parser_info_t *info = parser_info_new();
+
+    char filename[] = "../assets/dblp.xml";
+    parser_error_type_t err = parse(filename, info);
+    free(info);
+    printf("%d\n", err);
 }
 
-int main(void)
+void xml_parser_test()
 {
-    test_case(test_count);
-    return 0;
+    test_case(test_error_0);
 }
