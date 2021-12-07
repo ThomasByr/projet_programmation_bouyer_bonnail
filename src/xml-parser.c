@@ -16,23 +16,32 @@ void get_tag_id(char *tag)
 long find_next_tag(char *buffer, long start, long size)
 {
     long i = start;
-
     while (i < size)
     {
+        char *c = buffer + i;
         for each (e, external, 3)
         {
-            if (strcmp(buffer + i, e) == 0)
+            size_t len = strlen(e);
+            char tag[XMLP_MAX_TAG_SIZE] = "<";
+            strcat(tag, e);
+            strcat(tag, ">");
+
+            if (i + len + 2ul >= (size_t)size)
+                continue;
+
+            if (strncmp(c, tag, len + 1ul) == 0)
             {
                 return i;
             }
         }
+        i++;
     }
     return -1;
 }
 
 parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info)
 {
-    char *p = buffer;  //current position in buffer
+    char *p = buffer;  // current position in buffer
     char *pp = buffer; // previous position in buffer
 
     char buff[XMLP_BUFFER_SIZE] = "";

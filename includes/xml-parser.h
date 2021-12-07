@@ -12,8 +12,9 @@
 
 #include "info-parser.h"
 
-#define EOL '\n'
+#define NTHREADS 8
 #define XMLP_BUFFER_SIZE 1 << 12
+#define XMLP_MAX_TAG_SIZE 1 << 6
 #define reset(idx, b) \
     idx = 0;          \
     b[0] = '\0';
