@@ -1,6 +1,6 @@
 CC ?= gcc-11
-CFLAGS ?= -march=x86-64 -O3 -pipe # -g -Wall -Wextra -Werror
-LDLIBS ?= # -lm -ltps -lSDL2 -lSDL2_ttf
+CFLAGS ?= -march=x86-64 -O3 -pipe -Wall -Wextra -Werror # -g
+LDLIBS ?= -pthread # -lm -ltps -lSDL2 -lSDL2_ttf
 
 INCLUDE_PATH = ./includes
 
@@ -23,7 +23,7 @@ $(BINDIR)/$(TARGET): $(OBJECTS)
 
 $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.c $(INCLUDES)
 	mkdir -p $(OBJDIR)
-	$(CC) -o $@ -c $< $(CFLAGS) -I$(INCLUDE_PATH)
+	$(CC) -o $@ -c $< $(CFLAGS) -isystem$(INCLUDE_PATH)
 
 
 .PHONY: clean cov
