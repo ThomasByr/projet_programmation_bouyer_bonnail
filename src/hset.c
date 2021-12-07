@@ -1,8 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 #include "hset.h"
+
+static const unsigned int prime_1 = 3079;
+static const unsigned int prime_2 = 1572869;
 
 unsigned long hash(char *str)
 {
@@ -13,107 +17,126 @@ unsigned long hash(char *str)
     return hash;
 }
 
-hset_t *hset_create(size_t capacity, char *(*to_string)(void *))
+hset_t *hset_create(void)
 {
-    hset_t *hset = malloc(sizeof(hset_t));
-    hset->capacity = capacity;
+    hset_t *set = calloc(1, sizeof(struct hset_s));
 
-    void ***buckets = malloc(sizeof(void *) * capacity); // `capacity` buckets
-    for (size_t i = 0; i < capacity; i++)                // initialize all buckets to NULL
-        buckets[i] = malloc(sizeof(void *));             // each bucket is an array of pointers
-    memset(buckets, 0, sizeof(void *) * capacity);
-    hset->buckets = buckets;
+    if (set == NULL) // out of memory
+        return NULL;
 
-    int *sizes = malloc(sizeof(int) * capacity);
-    for (size_t i = 0; i < capacity; i++)
-        sizes[i] = 1;
-    hset->sizes = sizes;
-
-    int *counts = malloc(sizeof(int) * capacity);
-    for (size_t i = 0; i < capacity; i++)
-        counts[i] = 0;
-    hset->counts = counts;
-
-    hset->to_string = to_string;
-
-    return hset;
-}
-
-void hset_destroy(hset_t *hset)
-{
-    for (size_t i = 0; i < hset->capacity; i++)
-        free(hset->buckets[i]);
-    free(hset->buckets);
-    free(hset->counts);
-    free(hset->sizes);
-    free(hset);
-}
-
-void hset_insert(hset_t *hset, void *data)
-{
-    char *str = hset->to_string(data);
-    unsigned long hash_value = hash(str);
-
-    int index = hash_value % hset->capacity;
-    int size = hset->sizes[index];
-    int count = hset->counts[index];
-
-    if (count == size)
+    set->nbits = 3;                                     // 2^3 = 8 buckets
+    set->capacity = (size_t)(1 << set->nbits);          // is increased when needed
+    set->mask = set->capacity - 1;                      // 2^3 - 1 = 7
+    set->items = calloc(set->capacity, sizeof(size_t)); // items array
+    if (set->items == NULL)
     {
-        hset->sizes[index] *= 2;
-        hset->buckets[index] = realloc(hset->buckets[index], sizeof(void *) * hset->sizes[index]);
+        hset_destroy(set);
+        return NULL;
     }
-
-    for (int i = 0; i < count; i++)
-    {
-        if (strcmp(str, hset->buckets[index][i]) == 0)
-        {
-            free(str); // ?is this necessary?
-            return;
-        }
-    }
-    hset->buckets[index][count] = data;
-    hset->counts[index]++;
+    set->nitems = 0;          // no items yet
+    set->n_deleted_items = 0; // no deleted items yet
+    return set;
 }
 
-int hset_contains(hset_t *hset, void *data)
+void hset_destroy(hset_t *set)
 {
-    char *str = hset->to_string(data);
-    unsigned long hash_value = hash(str);
+    if (set)              // if set is not NULL
+        free(set->items); // free items array
+    free(set);            // free set
+}
 
-    int index = hash_value % hset->capacity;
-    int count = hset->counts[index];
+int _hset_insert_item(hset_t *set, void *item)
+{
+    size_t value = (size_t)item; // cast item to size_t
+    size_t ii;                   // index of the bucket
 
-    for (int i = 0; i < count; i++)
+    if (value == 0 || value == 1) // if item casts to 0 or 1
+        return -1;                // return error
+
+    ii = set->mask & (prime_1 * value); // hash value modulo capacity
+
+    while (set->items[ii] != 0 && set->items[ii] != 1)
     {
-        if (strcmp(str, hset->buckets[index][i]) == 0)
-        {
-            free(str);
+        if (set->items[ii] == value)
+            return 0;
+        else
+            ii = set->mask & (ii + prime_2);
+    }
+    set->nitems++;
+    if (set->items[ii] == 1)
+        set->n_deleted_items--;
+
+    set->items[ii] = value;
+    return 1;
+}
+
+static void _maybe_rehash(hset_t *set)
+{
+    size_t *old_items;
+    size_t old_capacity, ii;
+
+    if (set->nitems + set->n_deleted_items >= (double)set->capacity * 0.85)
+    {
+        old_items = set->items;
+        old_capacity = set->capacity;
+        set->nbits++;
+        set->capacity = (size_t)(1 << set->nbits);
+        set->mask = set->capacity - 1;
+        set->items = calloc(set->capacity, sizeof(size_t));
+        set->nitems = 0;
+        set->n_deleted_items = 0;
+        assert(set->items);
+        for (ii = 0; ii < old_capacity; ii++)
+            _hset_insert_item(set, (void *)old_items[ii]);
+        free(old_items);
+    }
+}
+
+int hset_insert(hset_t *set, void *item)
+{
+    int rv = _hset_insert_item(set, item);
+    _maybe_rehash(set);
+    return rv;
+}
+
+int hset_constains(hset_t *set, void *item)
+{
+
+    size_t value = (size_t)item;
+    size_t ii = set->mask & (prime_1 * value);
+
+    while (set->items[ii] != 0)
+    {
+        if (set->items[ii] == value)
             return 1;
-        }
+        else
+            ii = set->mask & (ii + prime_2);
     }
-    free(str);
     return 0;
 }
 
-void hset_discard(hset_t *hset, void *data)
+int hset_discard(hset_t *set, void *item)
 {
-    char *str = hset->to_string(data);
-    unsigned long hash_value = hash(str);
 
-    int index = hash_value % hset->capacity;
-    int count = hset->counts[index];
+    size_t value = (size_t)item;
+    size_t ii = set->mask & (prime_1 * value);
 
-    for (int i = 0; i < count; i++)
+    while (set->items[ii] != 0)
     {
-        if (strcmp(str, hset->buckets[index][i]) == 0)
+        if (set->items[ii] == value)
         {
-            free(str);
-            for (int j = i; j < count - 1; j++)
-                hset->buckets[index][j] = hset->buckets[index][j + 1];
-            hset->counts[index]--;
-            return;
+            set->items[ii] = 1;
+            set->nitems--;
+            set->n_deleted_items++;
+            return 1;
         }
+        else
+            ii = set->mask & (ii + prime_2);
     }
-    free(str);
+    return 0;
+}
+
+size_t hset_nitems(hset_t *set)
+{
+    return set->nitems;
 }

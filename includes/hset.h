@@ -5,16 +5,18 @@
 #ifndef HSET_H
 #define HSET_H
 
-typedef struct hset_t
+struct hset_s
 {
-    void ***buckets; // array of arrays of pointers
-    int *sizes;      // array of sizes (max number of elements in each bucket)
-    int *counts;     // array of counts (actual number of elements in each bucket)
-    size_t capacity; // number of buckets (the higher the capacity, the more memory is used but the faster the search)
+    size_t nbits;
+    size_t mask;
 
-    // function pointer to extract string representation of element
-    char *(*to_string)(void *);
-} hset_t;
+    size_t capacity;
+    size_t *items;
+    size_t nitems;
+    size_t n_deleted_items;
+};
+
+typedef struct hset_s hset_t;
 
 /**
  * @brief djb2 hash function by Dan Bernstein
@@ -25,13 +27,11 @@ typedef struct hset_t
 unsigned long hash(char *str);
 
 /**
- * @brief ceate a new hash set with a fixed capacity
+ * @brief ceate a new hash set
  * 
- * @param capacity number of buckets
- * @param to_string function pointer to extract string representation of element
  * @return hset_t* 
  */
-hset_t *hset_create(size_t capacity, char *(*to_string)(void *));
+hset_t *hset_create(void);
 
 /**
  * @brief destroy a hash set
@@ -44,25 +44,35 @@ void hset_destroy(hset_t *hset);
  * @brief add a new element to the hash set, does nothing if already present
  * 
  * @param hset hash set
- * @param data new element
+ * @param item new element
+ * @return int - 1 if added, 0 if already present and -1 if error
  */
-void hset_insert(hset_t *hset, void *data);
+int hset_insert(hset_t *hset, void *item);
 
 /**
- * @brief return 1 if element is present in the hash set, 0 otherwise
+ * @brief test if an element is present in the hash set
  * 
  * @param hset hash set
- * @param data data to check
- * @return int 
+ * @param item item to check
+ * @return int - 1 if present, 0 if not
  */
-int hset_contains(hset_t *hset, void *data);
+int hset_contains(hset_t *hset, void *item);
 
 /**
- * @brief remove data from hash set, does nothing if not present
+ * @brief remove item from hash set, does nothing if not present
  * 
  * @param hset hash set
- * @param data data to remove
+ * @param item item to remove
+ * @return int - 1 if removed, 0 if not present
  */
-void hset_discard(hset_t *hset, void *data);
+int hset_discard(hset_t *hset, void *item);
+
+/**
+ * @brief get the number of items in the hash set
+ * 
+ * @param hset hash set
+ * @return size_t - number of items
+ */
+size_t hset_nitems(hset_t *hset);
 
 #endif
