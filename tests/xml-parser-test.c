@@ -45,9 +45,7 @@ void test_1(void)
     char *ext[] = {"article", "phdthesis", "mastersthesis"};
     int i = -1;
     for each (e, ext, 3)
-    {
         assert_eq(strcmp(e, ext[++i]), 0);
-    }
 }
 
 void xml_parser_test()
