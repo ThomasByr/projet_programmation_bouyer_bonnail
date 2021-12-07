@@ -50,9 +50,9 @@ int dijkstra(node_t *begin, node_t *end)
     while (vec_used(v_open) != 0)
     {
         int index_min = find_min_weight(v_open);
-        node_t *min = vec_get_at(v_open, index);
+        node_t *min = vec_get_at(v_open, index_min);
         vec_push(v_close, min);
-        vec_delete_at(v_open, index);
+        vec_delete_at(v_open, index_min);
         vec *voisin_min = min->co_autors;
         size_t taille_voisin_min = vec_used(voisin_min);
         int index = 0;

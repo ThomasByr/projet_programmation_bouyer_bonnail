@@ -17,12 +17,12 @@ typedef struct parser_context_t
     int close_count;
 } parser_context_t;
 
-typedef enum parser_error_t
+typedef enum parser_error_type_t
 {
     PARSER_OK,
     ERROR_UNABLE_TO_OPEN_FILE,
     ERROR_UNEXPECTED_END_OF_TAG
-} parser_error_t;
+} parser_error_type_t;
 
 typedef struct parser_info_t
 {

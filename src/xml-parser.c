@@ -12,65 +12,90 @@ void get_tag_id(char *tag)
     *p = '\0';
 }
 
-parser_error_t parse(const char *filename, parser_info_t *info)
+parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info)
+{
+    char *p = buffer;
+
+    char buff[XMLP_BUFFER_SIZE] = "";
+    int index = 0;
+    int is_opening_tag = 0;
+    int is_ending_tag = 0;
+
+    // read the buffer character by character
+    while (p < buffer + size)
+    {
+        if (*p == open_tag)
+        {
+            if (index > 0)
+            {
+                buff[index] = '\0';
+                info->handleText(buff, info->data);
+            }
+            check(is_opening_tag, is_ending_tag);
+            is_opening_tag = 1;
+            reset(index, buff);
+            p++;
+            continue;
+        }
+        if (*p == end_tag)
+        {
+            is_opening_tag = 0;
+            is_ending_tag = 1;
+            reset(index, buff);
+            p++;
+            continue;
+        }
+        if (*p == close_tag)
+        {
+            buff[index] = '\0';
+            get_tag_id(buff);
+
+            if (is_opening_tag == 1)
+                info->handleOpenTag(buff, info->data);
+            if (is_ending_tag == 1)
+                info->handleCloseTag(buff, info->data);
+
+            is_opening_tag = 0;
+            is_ending_tag = 0;
+            reset(index, buff);
+            p++;
+            continue;
+        }
+
+        buff[index] = *p;
+        index++;
+        p++;
+    }
+    check(is_opening_tag, is_ending_tag);
+    return PARSER_OK;
+}
+
+parser_error_type_t parse(const char *filename, parser_info_t *info)
 {
     FILE *fp = fopen(filename, "r");
     if (fp == NULL) // error while opening file
         return ERROR_UNABLE_TO_OPEN_FILE;
 
-    char curr;                        // curr is the current character
-    char prev = '\0';                 // prev is the previous character
-    char buff[XMLP_BUFFER_SIZE] = ""; // this buffer is used to store the current content
-    int index = 0;                    // index of the current character in buff
+    // get size of file
+    fseek(fp, 0, SEEK_END);
+    long size = ftell(fp);
+    rewind(fp);
 
-    int is_opening_tag = 0; // is the current character in an opening tag?
-    int is_ending_tag = 0;  // is the current character in a ending tag?
+    // allocate memory to contain the whole file
+    char *buffer = (char *)malloc(sizeof(char) * size);
+    if (buffer == NULL) // error while allocating memory
+        return ERROR_UNABLE_TO_OPEN_FILE;
 
-    while ((curr = fgetc(fp)) != EOF)
-    {
-        if (curr == open_tag) // if the current char is an opening tag '<'
-        {
-            if (index > 0) // if the buffer is not empty
-            {
-                buff[index] = '\0';                 // add the end of string character
-                info->handleText(buff, info->data); // handle the text before the opening tag
-            }
-            check(is_opening_tag, is_ending_tag); // if the previous tag was not closed
-            is_opening_tag = 1;                   // we are in an opening tag
-            reset(index, buff);                   // reset the buffer
-            prev = curr;                          // save the current character
-            continue;                             // move on to the next character
-        }
-        if (curr == end_tag && prev == open_tag) // if the current char is an ending tag '/'
-        {
-            is_opening_tag = 0; // we are not in an opening tag anymore
-            is_ending_tag = 1;  // we are in an ending tag
-            reset(index, buff); // reset the buffer
-            prev = curr;        // save the current character
-            continue;           // move on to the next character
-        }
-        if (curr == close_tag) // if the current char is a closing tag '>'
-        {
-            buff[index] = '\0'; // terminate the string
-            get_tag_id(buff);   // get the tag name
+    // copy the file into the buffer
+    size_t result = fread(buffer, 1, size, fp);
+    if (result != (size_t)size) // error while reading file
+        return ERROR_UNABLE_TO_OPEN_FILE;
 
-            if (is_opening_tag == 1)
-                info->handleOpenTag(buff, info->data); // handle the opening tag
-            if (is_ending_tag == 1)
-                info->handleCloseTag(buff, info->data); // handle the endind tag
+    // close file
+    fclose(fp);
 
-            is_opening_tag = 0; // we are not in an opening tag anymore
-            is_ending_tag = 0;  // we are not in an ending tag anymore
-            reset(index, buff); // reset the buffer
-            prev = curr;        // save the current character
-            continue;           // move on to the next character
-        }
-
-        buff[index] = curr; // add the current character to the buffer
-        index++;            // increment the index
-        prev = curr;        // save the current character
-    }
-
-    check(is_opening_tag, is_ending_tag); // if the tag is not closed by the end of the file
-    return PARSER_OK;
+    // parse the file
+    parser_error_type_t error = parse_buffer(buffer, size, info);
+    free(buffer);
+    return error;
 }

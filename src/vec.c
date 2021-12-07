@@ -166,3 +166,10 @@ void vec_init(vec *v)
     v->free_slot = 0;
     v->elts = 0;
 }
+
+vec *vec_new(void)
+{
+    vec *v = (vec *)malloc(sizeof(vec));
+    vec_init(v);
+    return v;
+}
