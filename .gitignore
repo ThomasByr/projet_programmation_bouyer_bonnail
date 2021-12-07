@@ -29,6 +29,9 @@ htmlcov/
 nosetests.xml
 coverage.xml
 *,cover
+tests/[Tt]ests
+report/
+report.*
 
 # Translations
 *.mo
