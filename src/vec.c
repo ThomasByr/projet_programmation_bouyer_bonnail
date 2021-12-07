@@ -104,7 +104,7 @@ void *vec_set_at(vec *v, int index, void *ptr)
 {
     ASSERT_IF_LOCKED(v);
 
-    if (index >= v->end_slot)
+    if ((size_t)index >= v->end_slot)
     {
         return NULL;
     }

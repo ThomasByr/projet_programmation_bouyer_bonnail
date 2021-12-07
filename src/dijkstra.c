@@ -6,7 +6,7 @@ int find_min_weight(vec *v)
     node_t *min_weight = vec_get_at(v, 0);
     int index = 1;
     size_t size = vec_used(v);
-    while (index <= size)
+    while ((size_t)index <= size)
     {
         node_t *test = vec_get_at(v, index);
         if (test != NULL)
@@ -33,7 +33,7 @@ int dijkstra(node_t *begin, node_t *end)
     vec *voisin_begin = begin->co_autors;
     size_t taille_voisin_begin = vec_used(voisin_begin);
     int index = 0;
-    while (index <= taille_voisin_begin)
+    while ((size_t)index <= taille_voisin_begin)
     {
         node_t *voisin = vec_get_at(voisin_begin, index);
         if (voisin != NULL)
@@ -49,16 +49,16 @@ int dijkstra(node_t *begin, node_t *end)
 
     while (vec_used(v_open) != 0)
     {
-        int index_min = find_min_weight(v_open);
+        // int index_min = find_min_weight(v_open);
         node_t *min = vec_get_at(v_open, index);
         vec_push(v_close, min);
         vec_delete_at(v_open, index);
         vec *voisin_min = min->co_autors;
         size_t taille_voisin_min = vec_used(voisin_min);
         int index = 0;
-        while (index <= taille_voisin_min)
+        while ((size_t)index <= taille_voisin_min)
         {
-            node_t *voisin = vec_get_ad(voisin_min, index);
+            node_t *voisin = vec_get_at(voisin_min, index);
             if (voisin != NULL)
             {
                 voisin->weight++;

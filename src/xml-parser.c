@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <pthread.h>
 
 #include "xml-parser.h"
 
@@ -12,9 +13,27 @@ void get_tag_id(char *tag)
     *p = '\0';
 }
 
+long find_next_tag(char *buffer, long start, long size)
+{
+    long i = start;
+
+    while (i < size)
+    {
+        for each (e, external, 3)
+        {
+            if (strcmp(buffer + i, e) == 0)
+            {
+                return i;
+            }
+        }
+    }
+    return -1;
+}
+
 parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info)
 {
-    char *p = buffer;
+    char *p = buffer;  //current position in buffer
+    char *pp = buffer; // previous position in buffer
 
     char buff[XMLP_BUFFER_SIZE] = "";
     int index = 0;
@@ -34,14 +53,16 @@ parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info)
             check(is_opening_tag, is_ending_tag);
             is_opening_tag = 1;
             reset(index, buff);
+            pp = p;
             p++;
             continue;
         }
-        if (*p == end_tag)
+        if (*p == end_tag && *pp == open_tag)
         {
             is_opening_tag = 0;
             is_ending_tag = 1;
             reset(index, buff);
+            pp = p;
             p++;
             continue;
         }
@@ -58,12 +79,14 @@ parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info)
             is_opening_tag = 0;
             is_ending_tag = 0;
             reset(index, buff);
+            pp = p;
             p++;
             continue;
         }
 
         buff[index] = *p;
         index++;
+        pp = p;
         p++;
     }
     check(is_opening_tag, is_ending_tag);
@@ -82,14 +105,16 @@ parser_error_type_t parse(const char *filename, parser_info_t *info)
     rewind(fp);
 
     // allocate memory to contain the whole file
-    char *buffer = (char *)malloc(sizeof(char) * size);
+    char *buffer = (char *)malloc(sizeof(char) * (size + 1));
     if (buffer == NULL) // error while allocating memory
-        return ERROR_UNABLE_TO_OPEN_FILE;
+        return ERROR_UNABLE_TO_ALLOCATE_MEMORY;
+    memset(buffer, 0, size);
 
     // copy the file into the buffer
     size_t result = fread(buffer, 1, size, fp);
+    buffer[size] = '\0';
     if (result != (size_t)size) // error while reading file
-        return ERROR_UNABLE_TO_OPEN_FILE;
+        return ERROR_WHILE_READING_FILE;
 
     // close file
     fclose(fp);

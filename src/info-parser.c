@@ -6,25 +6,22 @@
 
 void handleText(char *txt, void *data)
 {
-    // parser_context_t *context = data;
-    // context->text_count++;
-    // printf("TEXT %s\n", txt);
+    (void)txt;
+    (void)data;
     return;
 }
 
 void handleOpenTag(char *tag, void *data)
 {
-    // parser_context_t *context = data;
-    // context->open_count++;
-    // printf("OPEN TAG %s\n", tag);
+    (void)tag;
+    (void)data;
     return;
 }
 
 void handleCloseTag(char *tag, void *data)
 {
-    // parser_context_t *context = data;
-    // context->close_count++;
-    // printf("CLOSE TAG %s\n", tag);
+    (void)tag;
+    (void)data;
     return;
 }
 
@@ -59,4 +56,23 @@ void parser_info_free(parser_info_t *info)
         return;
     free(info->data);
     free(info);
+}
+
+char *parser_error_type_to_string(parser_error_type_t error)
+{
+    switch (error)
+    {
+    case ERROR_UNABLE_TO_ALLOCATE_MEMORY:
+        return "Unable to allocate memory to hold the file (possibly not enough memory)";
+    case ERROR_WHILE_READING_FILE:
+        return "Error while reading the file into memory (possibly pointer out of memory)";
+    case ERROR_UNABLE_TO_OPEN_FILE:
+        return "Unable to open the file (possibly wrong path)";
+    case ERROR_UNEXPECTED_END_OF_TAG:
+        return "Unexpected end of tag (possibly a < was not matched with a >)";
+
+    default:
+    case PARSER_OK:
+        return "Parsing was successful (possibly luck)";
+    }
 }
