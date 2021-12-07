@@ -29,6 +29,7 @@
 
 #define test_case(name)                                         \
     printf("\nrunning %s:%d: %s\n", __FILE__, __LINE__, #name); \
-    name();
+    name();                                                     \
+    printf("\n");
 
 #endif

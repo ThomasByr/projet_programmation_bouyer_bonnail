@@ -11,7 +11,7 @@ void test_error_0(void)
 
     char filename[] = "../assets/eg.xml";
     parser_error_type_t err = parse(filename, info);
-    free(info);
+    parser_info_free(info);
     assert_eq(err, PARSER_OK);
 }
 
@@ -40,8 +40,19 @@ void test_0(void)
     assert_eq(i3, 8l);
 }
 
+void test_1(void)
+{
+    char *ext[] = {"article", "phdthesis", "mastersthesis"};
+    int i = -1;
+    for each (e, ext, 3)
+    {
+        assert_eq(strcmp(e, ext[++i]), 0);
+    }
+}
+
 void xml_parser_test()
 {
     test_case(test_error_0);
     // test_case(test_0);
+    test_case(test_1);
 }
