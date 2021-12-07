@@ -5,7 +5,7 @@
 #include "xml-parser.h"
 #include "macros.h"
 
-void test_error_0(void)
+void xml_test_error_0(void)
 {
     parser_info_t *info = parser_info_new();
 
@@ -15,7 +15,7 @@ void test_error_0(void)
     assert_eq(err, PARSER_OK);
 }
 
-void test_0(void)
+void xml_test_0(void)
 {
     char filename[] = "../assets/eg.xml";
     FILE *fp = fopen(filename, "r");
@@ -32,15 +32,16 @@ void test_0(void)
     fclose(fp);
 
     long i1 = find_next_tag(buffer, 0, size);
-    long i2 = find_next_tag(buffer, i1, size);
-    long i3 = find_next_tag(buffer, i2, size);
+    long i2 = find_next_tag(buffer, i1 + 1, size);
+    long i3 = find_next_tag(buffer, i2 + 1, size);
 
+    free(buffer);
     assert_eq(i1, 85l);
-    assert_eq(i2, 4l);
-    assert_eq(i3, 8l);
+    assert_eq(i2, 188l);
+    assert_eq(i3, 294l);
 }
 
-void test_1(void)
+void xml_test_1(void)
 {
     char *ext[] = {"article", "phdthesis", "mastersthesis"};
     int i = -1;
@@ -50,7 +51,7 @@ void test_1(void)
 
 void xml_parser_test()
 {
-    test_case(test_error_0);
-    // test_case(test_0);
-    test_case(test_1);
+    test_case(xml_test_error_0);
+    test_case(xml_test_0);
+    test_case(xml_test_1);
 }
