@@ -168,7 +168,6 @@ int hset_itr_has_next(hset_itr_t *itr)
         if (value != 0)
             return 1;
     }
-
     return 0;
 }
 
