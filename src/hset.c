@@ -101,7 +101,6 @@ int hset_insert(hset_t *set, void *item)
 
 int hset_constains(hset_t *set, void *item)
 {
-
     size_t value = (size_t)item;
     size_t ii = set->mask & (prime_1 * value);
 
@@ -117,7 +116,6 @@ int hset_constains(hset_t *set, void *item)
 
 int hset_discard(hset_t *set, void *item)
 {
-
     size_t value = (size_t)item;
     size_t ii = set->mask & (prime_1 * value);
 
@@ -139,4 +137,57 @@ int hset_discard(hset_t *set, void *item)
 size_t hset_nitems(hset_t *set)
 {
     return set->nitems;
+}
+
+hset_itr_t *hset_itr(hset_t *set)
+{
+    hset_itr_t *itr = calloc(1, sizeof(struct hset_itr_s));
+    if (itr == NULL)
+        return NULL;
+
+    itr->set = set;
+    itr->index = 0;
+
+    if (set->nitems > 0)
+        hset_itr_next(itr);
+
+    return itr;
+}
+
+int hset_itr_has_next(hset_itr_t *itr)
+{
+    size_t index;
+
+    if (itr->set->nitems == 0 || itr->index == itr->set->capacity)
+        return 0;
+
+    index = itr->index;
+    while (index < itr->set->capacity)
+    {
+        size_t value = itr->set->items[index++];
+        if (value != 0)
+            return 1;
+    }
+
+    return 0;
+}
+
+size_t hset_itr_next(hset_itr_t *itr)
+{
+    if (hset_itr_has_next(itr) == 0)
+        return -1;
+
+    itr->index++;
+    while (itr->set->items[(itr->index)] == 0 && itr->index < itr->set->capacity)
+        itr->index++;
+
+    return itr->index;
+}
+
+size_t hset_itr_val(hset_itr_t *itr)
+{
+    if (itr->set->items[itr->index] == 0)
+        hashset_iterator_next(itr);
+
+    return itr->set->items[itr->index];
 }

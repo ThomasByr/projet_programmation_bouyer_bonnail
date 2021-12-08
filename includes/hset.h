@@ -16,7 +16,14 @@ struct hset_s
     size_t n_deleted_items;
 };
 
+struct hset_itr_s
+{
+    hset_t *set;
+    size_t index;
+};
+
 typedef struct hset_s hset_t;
+typedef struct hset_itr_s hset_itr_t;
 
 /**
  * @brief djb2 hash function by Dan Bernstein
@@ -74,5 +81,38 @@ int hset_discard(hset_t *hset, void *item);
  * @return size_t - number of items
  */
 size_t hset_nitems(hset_t *hset);
+
+/**
+ * @brief create a hashset iterator, advances to first value is available
+ * 
+ * @param set hash set
+ * @return hset_itr_t* - new iterator
+ */
+hset_itr_t *hset_itr(hset_t *set);
+
+/**
+ * @brief returns the value at the current index, it is the caller's responsibility to cast the value
+ * 
+ * @param itr iterator
+ * @return size_t - value at current index
+ */
+size_t hset_itr_val(hset_itr_t *itr);
+
+/**
+ * @brief return 1 is can advance, 0 otherwise
+ * 
+ * @param itr iterator
+ * @return int 
+ */
+int hset_itr_has_next(hset_itr_t *itr);
+
+/**
+ * @brief check if iterator can advance, if so advances
+ * returns current index if can advance and -1 otherwise
+ * 
+ * @param itr iterator
+ * @return int 
+ */
+size_t hset_itr_next(hset_itr_t *itr);
 
 #endif
