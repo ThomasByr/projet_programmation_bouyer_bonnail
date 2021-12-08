@@ -111,7 +111,7 @@ int hset_itr_has_next(hset_itr_t *itr);
  * returns current index if can advance and -1 otherwise
  * 
  * @param itr iterator
- * @return int 
+ * @return size_t 
  */
 size_t hset_itr_next(hset_itr_t *itr);
 
