@@ -55,26 +55,27 @@ int _hset_insert_item(hset_t *set, void *item)
 
     ii = set->mask & (prime_1 * value); // hash value modulo capacity
 
-    while (set->items[ii] != 0 && set->items[ii] != 1)
+    while (set->items[ii] != 0 && set->items[ii] != 1) // find empty or deleted bucket
     {
-        if (set->items[ii] == value)
-            return 0;
-        else
-            ii = set->mask & (ii + prime_2);
+        if (set->items[ii] == value)         // if item is already in set
+            return 0;                        // return failure
+        else                                 // else
+            ii = set->mask & (ii + prime_2); // get index of next bucket
     }
-    set->nitems++;
-    if (set->items[ii] == 1)
-        set->n_deleted_items--;
+    set->nitems++;              // increase number of items
+    if (set->items[ii] == 1)    // if bucket is deleted
+        set->n_deleted_items--; // decrease number of deleted items
 
-    set->items[ii] = value;
-    return 1;
+    set->items[ii] = value; // insert item
+    return 1;               // return success
 }
 
 static void _maybe_rehash(hset_t *set)
 {
-    size_t *old_items;
-    size_t old_capacity, ii;
+    size_t *old_items;       // old items array
+    size_t old_capacity, ii; // old capacity, index of the bucket
 
+    // if load factor is greater than 0.85, increase capacity and rehash
     if (set->nitems + set->n_deleted_items >= (double)set->capacity * 0.85)
     {
         old_items = set->items;
@@ -94,44 +95,44 @@ static void _maybe_rehash(hset_t *set)
 
 int hset_insert(hset_t *set, void *item)
 {
-    int rv = _hset_insert_item(set, item);
-    _maybe_rehash(set);
+    int rv = _hset_insert_item(set, item); // insert item
+    _maybe_rehash(set);                    // rehash if needed
     return rv;
 }
 
 int hset_constains(hset_t *set, void *item)
 {
-    size_t value = (size_t)item;
-    size_t ii = set->mask & (prime_1 * value);
+    size_t value = (size_t)item;               // cast item to size_t
+    size_t ii = set->mask & (prime_1 * value); // hash value modulo capacity
 
-    while (set->items[ii] != 0)
+    while (set->items[ii] != 0) // find empty or deleted bucket
     {
-        if (set->items[ii] == value)
-            return 1;
-        else
-            ii = set->mask & (ii + prime_2);
+        if (set->items[ii] == value)         // if item is already in set
+            return 1;                        // return success
+        else                                 // else
+            ii = set->mask & (ii + prime_2); // get index of next bucket
     }
-    return 0;
+    return 0; // return failure
 }
 
 int hset_discard(hset_t *set, void *item)
 {
-    size_t value = (size_t)item;
-    size_t ii = set->mask & (prime_1 * value);
+    size_t value = (size_t)item;               // cast item to size_t
+    size_t ii = set->mask & (prime_1 * value); // hash value modulo capacity
 
-    while (set->items[ii] != 0)
+    while (set->items[ii] != 0) // find empty or deleted bucket
     {
-        if (set->items[ii] == value)
+        if (set->items[ii] == value) // if item is already in set
         {
-            set->items[ii] = 1;
-            set->nitems--;
-            set->n_deleted_items++;
-            return 1;
+            set->items[ii] = 1;     // mark bucket as deleted
+            set->nitems--;          // decrease number of items
+            set->n_deleted_items++; // increase number of deleted items
+            return 1;               // return success
         }
-        else
-            ii = set->mask & (ii + prime_2);
+        else                                 // else
+            ii = set->mask & (ii + prime_2); // get index of next bucket
     }
-    return 0;
+    return 0; // return failure
 }
 
 size_t hset_nitems(hset_t *set)
@@ -157,37 +158,38 @@ int hset_itr_has_next(hset_itr_t *itr)
 {
     size_t index;
 
+    // either there are no items or we are at the end of the set
     if (itr->set->nitems == 0 || itr->index >= itr->set->capacity)
         return 0;
 
-    index = itr->index;
-    while (index < itr->set->capacity)
+    index = itr->index;                // save index
+    while (index < itr->set->capacity) //while index is less than capacity
     {
-        size_t value = itr->set->items[index++];
-        if (value != 0)
-            return 1;
+        size_t value = itr->set->items[index++]; // get value at index
+        if (value != 0)                          // if value is not 0
+            return 1;                            // return success
     }
-    return 0;
+    return 0; // return failure
 }
 
 size_t hset_itr_next(hset_itr_t *itr)
 {
-    if (hset_itr_has_next(itr) == 0)
-        return -1;
+    if (hset_itr_has_next(itr) == 0) // if there are no more items
+        return -1;                   // return failure
 
-    itr->index++;
+    itr->index++; // increase index
     while (itr->index < itr->set->capacity && itr->set->items[(itr->index)] == 0)
         itr->index++;
 
-    return itr->index;
+    return itr->index; // return index
 }
 
 size_t hset_itr_val(hset_itr_t *itr)
 {
-    if (itr->set->items[itr->index] == 0)
-        hset_itr_next(itr);
+    if (itr->set->items[itr->index] == 0) // if value is 0
+        hset_itr_next(itr);               // get next valid value
 
-    return itr->set->items[itr->index];
+    return itr->set->items[itr->index]; // return value at current index
 }
 
 void hset_itr_destroy(hset_itr_t *itr)
