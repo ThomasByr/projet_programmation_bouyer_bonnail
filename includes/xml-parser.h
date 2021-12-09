@@ -9,10 +9,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <pthread.h>
 
 #include "info-parser.h"
 
-#define NTHREADS 8
+#define NTHREADS 1
 #define XMLP_BUFFER_SIZE 1 << 12
 #define XMLP_MAX_TAG_SIZE 1 << 6
 #define reset(idx, b) \
@@ -43,6 +44,14 @@ static const char *look_for[] = {
     "pages",
     "isbn",
 };
+
+struct pthread_arg
+{
+    char *buffer;
+    long size;
+    parser_info_t *info;
+};
+typedef struct pthread_arg pthread_arg_t;
 
 /**
  * @brief only keep the first characters of a string until any of `delims` is reached

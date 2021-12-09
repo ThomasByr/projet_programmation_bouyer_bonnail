@@ -39,6 +39,16 @@ long find_next_tag(char *buffer, long start, long size)
     return -1;
 }
 
+void *pthread_func(void *arg)
+{
+    pthread_arg_t *p = (pthread_arg_t *)arg;
+    char *buffer = p->buffer;
+    long size = p->size;
+    parser_info_t *info = p->info;
+    parser_error_type_t err = parse_buffer(buffer, size, info);
+    return (void *)err;
+}
+
 parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info)
 {
     char *p = buffer;  // current position in buffer
@@ -104,6 +114,9 @@ parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info)
 
 parser_error_type_t parse(const char *filename, parser_info_t *info)
 {
+    pthread_t threads[NTHREADS];
+    pthread_arg_t thread_args[NTHREADS];
+
     FILE *fp = fopen(filename, "r");
     if (fp == NULL) // error while opening file
         return ERROR_UNABLE_TO_OPEN_FILE;
@@ -129,7 +142,24 @@ parser_error_type_t parse(const char *filename, parser_info_t *info)
     fclose(fp);
 
     // parse the file
-    parser_error_type_t error = parse_buffer(buffer, size, info);
+    long pstart = 0;
+    for (int i = 0; i < NTHREADS; i++)
+    {
+        thread_args[i] = (pthread_arg_t){
+            .buffer = buffer,
+            .size = size,
+            .info = info,
+        };
+        long start = find_next_tag(buffer, pstart, size);
+        pstart = start + 1;
+        thread_args[i].buffer = buffer + start;
+        thread_args[i].size = size - start;
+
+        pthread_create(&threads[i], NULL, pthread_func, (void *)&thread_args[i]);
+    }
+    for (int i = 0; i < NTHREADS; ++i)
+        pthread_join(threads[i], NULL);
+
     free(buffer);
-    return error;
+    return PARSER_OK;
 }
