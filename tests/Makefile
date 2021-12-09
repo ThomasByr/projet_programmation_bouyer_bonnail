@@ -1,7 +1,7 @@
 TARGET = tests
 
 CFLAGS = -march=x86-64 -O3 -pipe -fprofile-arcs -ftest-coverage -Wall -Wextra -Werror # -g
-LDLIBS=-lm
+LDLIBS = -pthread
 
 INCLUDE_PATH = ../includes
 

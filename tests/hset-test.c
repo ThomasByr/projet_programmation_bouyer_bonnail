@@ -54,7 +54,46 @@ void hset_test_0(void)
     foo_free(foo2);
 }
 
+void hset_test_1(void)
+{
+    hset_t *hset = hset_create();
+    hset_itr_t *itr = hset_itr_create(hset);
+    size_t n_foo = 1000;
+
+    for (size_t i = 0; i < n_foo; i++)
+    {
+        foo_t *foo = foo_new(i);
+        foo->a = 42;
+        hset_insert(hset, foo);
+    }
+
+    assert_eq(hset_nitems(hset), n_foo);
+    size_t count = 0;
+    while (hset_itr_has_next(itr))
+    {
+        count++;
+        foo_t *foo = (foo_t *)hset_itr_val(itr);
+        // assert_eq(foo->a, 42);
+        foo->a = 1;
+        hset_insert(hset, foo);
+        hset_itr_next(itr);
+    }
+    assert_eq(count, n_foo);
+    assert_eq(hset_nitems(hset), n_foo);
+    hset_itr_reset(itr);
+
+    while (hset_itr_has_next(itr))
+    {
+        foo_t *foo = (foo_t *)hset_itr_val(itr);
+        foo_free(foo);
+        hset_itr_next(itr);
+    }
+    hset_itr_destroy(itr);
+    hset_destroy(hset);
+}
+
 void hset_test(void)
 {
     test_case(hset_test_0);
+    test_case(hset_test_1);
 }
