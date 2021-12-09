@@ -139,7 +139,7 @@ size_t hset_nitems(hset_t *set)
     return set->nitems;
 }
 
-hset_itr_t *hset_itr(hset_t *set)
+hset_itr_t *hset_itr_create(hset_t *set)
 {
     hset_itr_t *itr = calloc(1, sizeof(struct hset_itr_s));
     if (itr == NULL)
@@ -148,9 +148,8 @@ hset_itr_t *hset_itr(hset_t *set)
     itr->set = set;
     itr->index = 0;
 
-    if (set->nitems > 0)
-        hset_itr_next(itr);
-
+    // if (set->nitems > 0)
+    //     hset_itr_next(itr);
     return itr;
 }
 
@@ -158,7 +157,7 @@ int hset_itr_has_next(hset_itr_t *itr)
 {
     size_t index;
 
-    if (itr->set->nitems == 0 || itr->index == itr->set->capacity)
+    if (itr->set->nitems == 0 || itr->index >= itr->set->capacity)
         return 0;
 
     index = itr->index;
@@ -177,7 +176,7 @@ size_t hset_itr_next(hset_itr_t *itr)
         return -1;
 
     itr->index++;
-    while (itr->set->items[(itr->index)] == 0 && itr->index < itr->set->capacity)
+    while (itr->index < itr->set->capacity && itr->set->items[(itr->index)] == 0)
         itr->index++;
 
     return itr->index;
@@ -186,7 +185,19 @@ size_t hset_itr_next(hset_itr_t *itr)
 size_t hset_itr_val(hset_itr_t *itr)
 {
     if (itr->set->items[itr->index] == 0)
-        hashset_iterator_next(itr);
+        hset_itr_next(itr);
 
     return itr->set->items[itr->index];
+}
+
+void hset_itr_destroy(hset_itr_t *itr)
+{
+    if (itr == NULL)
+        return;
+    free(itr);
+}
+
+void hset_itr_reset(hset_itr_t *itr)
+{
+    itr->index = 0;
 }

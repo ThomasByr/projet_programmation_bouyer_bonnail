@@ -15,14 +15,21 @@ struct hset_s
     size_t nitems;
     size_t n_deleted_items;
 };
+/**
+ * @brief hash set data structure that holds a collection of unique items
+ * 
+ */
+typedef struct hset_s hset_t;
 
 struct hset_itr_s
 {
     hset_t *set;
     size_t index;
 };
-
-typedef struct hset_s hset_t;
+/**
+ * @brief iterator for hash set, somehow order is preserved but not guaranteed
+ * 
+ */
 typedef struct hset_itr_s hset_itr_t;
 
 /**
@@ -88,7 +95,7 @@ size_t hset_nitems(hset_t *hset);
  * @param set hash set
  * @return hset_itr_t* - new iterator
  */
-hset_itr_t *hset_itr(hset_t *set);
+hset_itr_t *hset_itr_create(hset_t *set);
 
 /**
  * @brief returns the value at the current index, it is the caller's responsibility to cast the value
@@ -114,5 +121,19 @@ int hset_itr_has_next(hset_itr_t *itr);
  * @return size_t 
  */
 size_t hset_itr_next(hset_itr_t *itr);
+
+/**
+ * @brief destroy an iterator
+ * 
+ * @param itr iterator
+ */
+void hset_itr_destroy(hset_itr_t *itr);
+
+/**
+ * @brief reset the iterator to the beginning of the set
+ * 
+ * @param itr iterator
+ */
+void hset_itr_reset(hset_itr_t *itr);
 
 #endif
