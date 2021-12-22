@@ -25,7 +25,7 @@ casted to the same type in `_a` and `_b`).
         if (!(expr)) {                                                 \
             fprintf(stderr, "\033[0;31m");                             \
             fprintf(stderr, "\nassertion failed: %s\n", #__VA_ARGS__); \
-            printf("\033[0m");                                         \
+            fprintf(stderr, "\033[0m");                                \
             abort();                                                   \
         }                                                              \
     } while (0);
