@@ -5,15 +5,13 @@
 #include "hset.h"
 #include "macros.h"
 
-typedef struct foo_t
-{
+typedef struct foo_t {
     int a;
     int b;
     char *id;
 } foo_t;
 
-foo_t *foo_new(int id)
-{
+foo_t *foo_new(int id) {
     foo_t *foo = malloc(sizeof(foo_t));
     foo->a = 0;
     foo->b = 0;
@@ -23,14 +21,24 @@ foo_t *foo_new(int id)
     return foo;
 }
 
-void foo_free(foo_t *foo)
-{
+void foo_free(foo_t *foo) {
     free(foo->id);
     free(foo);
 }
 
-void hset_test_0(void)
-{
+void foo_free_void(void *foo) {
+    foo_t *f = (foo_t *)foo;
+    foo_free(f);
+}
+
+void *foo_cmpa_void(void *foo, void *a) {
+    foo_t *f = (foo_t *)foo;
+    int *i = (int *)a;
+    assert_eq(f->a, *i);
+    return NULL;
+}
+
+void hset_test_0(void) {
     hset_t *hset = hset_create();
 
     foo_t *foo0 = foo_new(0);
@@ -54,14 +62,12 @@ void hset_test_0(void)
     foo_free(foo2);
 }
 
-void hset_test_1(void)
-{
+void hset_test_1(void) {
     hset_t *hset = hset_create();
     hset_itr_t *itr = hset_itr_create(hset);
     size_t n_foo = 1000;
 
-    for (size_t i = 0; i < n_foo; i++)
-    {
+    for (size_t i = 0; i < n_foo; i++) {
         foo_t *foo = foo_new(i);
         foo->a = 42;
         hset_insert(hset, foo);
@@ -69,8 +75,7 @@ void hset_test_1(void)
 
     assert_eq(hset_nitems(hset), n_foo);
     size_t count = 0;
-    while (hset_itr_has_next(itr))
-    {
+    while (hset_itr_has_next(itr)) {
         count++;
         foo_t *foo = (foo_t *)hset_itr_val(itr);
         // assert_eq(foo->a, 42);
@@ -82,8 +87,7 @@ void hset_test_1(void)
     assert_eq(hset_nitems(hset), n_foo);
     hset_itr_reset(itr);
 
-    while (hset_itr_has_next(itr))
-    {
+    while (hset_itr_has_next(itr)) {
         foo_t *foo = (foo_t *)hset_itr_val(itr);
         foo_free(foo);
         hset_itr_next(itr);
@@ -92,8 +96,29 @@ void hset_test_1(void)
     hset_destroy(hset);
 }
 
-void hset_test(void)
-{
+void hset_test_2(void) {
+    hset_t *hset = hset_create();
+    hset_itr_t *itr = hset_itr_create(hset);
+    size_t n_foo = 2;
+
+    for (size_t i = 0; i < n_foo; i++) {
+        foo_t *foo = foo_new(i);
+        foo->a = 42;
+        hset_insert(hset, foo);
+    }
+
+    assert_eq(hset_nitems(hset), n_foo);
+    int a = 42;
+    void *data = &a;
+    hset_itr_for_each(itr, foo_cmpa_void, data);
+
+    hset_itr_discard_all(itr, foo_free_void);
+    hset_itr_destroy(itr);
+    hset_destroy(hset);
+}
+
+void hset_test(void) {
     test_case(hset_test_0);
     test_case(hset_test_1);
+    test_case(hset_test_2);
 }
