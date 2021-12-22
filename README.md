@@ -6,7 +6,7 @@
 2. [Méthode de résolution](#méthode-de-résolution)
 3. [Benchmarking](#benchmarking)
 4. [Changelog](#changelog)
-5. [TODOs](#todos)
+5. [TODO](#todo)
 
 ## Le sujet
 
@@ -16,7 +16,7 @@
 
 ## Changelog
 
-Se référer au fichier [changelog](changelog.md) pour la liste exhaustive des mofifications.
+Se référer au fichier [changelog](changelog.md) pour la liste exhaustive des modifications.
 
 <details>
     <summary> v0.0.1 : début du projet (cliquez ici) </summary>
@@ -31,6 +31,6 @@ Se référer au fichier [changelog](changelog.md) pour la liste exhaustive des m
 
 </details>
 
-## TODOs
+## TODO
 
 *   arbre de Fibonacci pour des piles de priorité
