@@ -28,13 +28,13 @@ casted to the same type in `_a` and `_b`).
             abort();                                                 \
         }                                                            \
     } while (0);
-#define assert(expr) assert_info(expr, expr)
+#define assert(expr) assert_info(expr, expr);
 
-#define assert_eq(a, b)               \
-    do {                              \
-        __typeof__(a) _a = (a);       \
-        __typeof__(a) _b = (b);       \
-        assert_info(_a == _b, a == b) \
+#define assert_eq(a, b)                \
+    do {                               \
+        __typeof__(a) _a = (a);        \
+        __typeof__(a) _b = (b);        \
+        assert_info(_a == _b, a == b); \
     } while (0);
 #define assert_neq(a, b)               \
     do {                               \
