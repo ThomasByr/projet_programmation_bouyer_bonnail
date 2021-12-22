@@ -5,27 +5,19 @@
 #ifndef MACROS_H
 #define MACROS_H
 
-#define assert_eq(a, b)                                                 \
-    if (a != b)                                                         \
-    {                                                                   \
-        printf("failed %s:%d: %s != %s\n", __FILE__, __LINE__, #a, #b); \
-        exit(1);                                                        \
-    }                                                                   \
-    else                                                                \
-    {                                                                   \
-        printf("ok %s:%d: %s == %s\n", __FILE__, __LINE__, #a, #b);     \
-    }
+#include <assert.h>
 
-#define assert_neq(a, b)                                                \
-    if (a == b)                                                         \
-    {                                                                   \
-        printf("failed %s:%d: %s == %s\n", __FILE__, __LINE__, #a, #b); \
-        exit(1);                                                        \
-    }                                                                   \
-    else                                                                \
-    {                                                                   \
-        printf("ok %s:%d: %s != %s\n", __FILE__, __LINE__, #a, #b);     \
-    }
+#define assert_eq(a, b) assert(a == b)
+
+#define assert_neq(a, b) assert(a != b)
+
+#define assert_lt(a, b) assert(a < b)
+
+#define assert_gt(a, b) assert(a > b)
+
+#define assert_leq(a, b) assert(a <= b)
+
+#define assert_geq(a, b) assert(a >= b)
 
 #define test_case(name)                                         \
     printf("\nrunning %s:%d: %s\n", __FILE__, __LINE__, #name); \
