@@ -28,10 +28,7 @@ casted to the same type in `_a` and `_b`).
             abort();                                                 \
         }                                                            \
     } while (0);
-#define assert(expr)            \
-    do {                        \
-        assert_info(expr, expr) \
-    } while (0);
+#define assert(expr) assert_info(expr, expr)
 
 #define assert_eq(a, b)               \
     do {                              \
