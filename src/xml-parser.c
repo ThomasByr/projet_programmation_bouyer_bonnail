@@ -1,46 +1,33 @@
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <pthread.h>
 
+#include "types.h"
 #include "xml-parser.h"
 
-void get_tag_id(char *tag)
-{
+static const char open_tag = '<';   // opening tag
+static const char close_tag = '>';  // closing tag
+static const char end_tag = '/';    // ending tag
+static const char delims[] = " \n"; // delimiters
+
+const char *external[] = {
+    "article",
+    "phdthesis",
+    "mastersthesis",
+};
+const char *look_for[] = {
+    "title", "author", "date", "school", "year", "pages", "isbn",
+};
+
+void get_tag_id(char *tag) {
     char *p = tag;
     while (*p != '\0' && strchr(delims, *p) == NULL)
         p++;
     *p = '\0';
 }
 
-long find_next_tag(char *buffer, long start, long size)
-{
-    long i = start;
-    while (i < size)
-    {
-        char *c = buffer + i;
-        for each (e, external, 3)
-        {
-            size_t len = strlen(e);
-            char tag[XMLP_MAX_TAG_SIZE] = "<";
-            strcat(tag, e);
-            strcat(tag, ">");
-
-            if (i + len + 2ul >= (size_t)size)
-                continue;
-
-            if (strncmp(c, tag, len + 1ul) == 0)
-            {
-                return i;
-            }
-        }
-        i++;
-    }
-    return -1;
-}
-
-void *pthread_func(void *arg)
-{
+void *pthread_func(void *arg) {
     pthread_arg_t *p = (pthread_arg_t *)arg;
     char *buffer = p->buffer;
     long size = p->size;
@@ -49,8 +36,7 @@ void *pthread_func(void *arg)
     return (void *)err;
 }
 
-parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info)
-{
+parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info) {
     char *p = buffer;  // current position in buffer
     char *pp = buffer; // previous position in buffer
 
@@ -60,12 +46,9 @@ parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info)
     int is_ending_tag = 0;
 
     // read the buffer character by character
-    while (p < buffer + size)
-    {
-        if (*p == open_tag)
-        {
-            if (index > 0)
-            {
+    while (p < buffer + size) {
+        if (*p == open_tag) {
+            if (index > 0) {
                 buff[index] = '\0';
                 info->handleText(buff, info->data);
             }
@@ -76,8 +59,7 @@ parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info)
             p++;
             continue;
         }
-        if (*p == end_tag && *pp == open_tag)
-        {
+        if (*p == end_tag && *pp == open_tag) {
             is_opening_tag = 0;
             is_ending_tag = 1;
             reset(index, buff);
@@ -85,8 +67,7 @@ parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info)
             p++;
             continue;
         }
-        if (*p == close_tag)
-        {
+        if (*p == close_tag) {
             buff[index] = '\0';
             get_tag_id(buff);
 
@@ -112,11 +93,7 @@ parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info)
     return PARSER_OK;
 }
 
-parser_error_type_t parse(const char *filename, parser_info_t *info)
-{
-    pthread_t threads[NTHREADS];
-    pthread_arg_t thread_args[NTHREADS];
-
+parser_error_type_t parse(const char *filename, parser_info_t *info) {
     FILE *fp = fopen(filename, "r");
     if (fp == NULL) // error while opening file
         return ERROR_UNABLE_TO_OPEN_FILE;
@@ -142,24 +119,8 @@ parser_error_type_t parse(const char *filename, parser_info_t *info)
     fclose(fp);
 
     // parse the file
-    long pstart = 0;
-    for (int i = 0; i < NTHREADS; i++)
-    {
-        thread_args[i] = (pthread_arg_t){
-            .buffer = buffer,
-            .size = size,
-            .info = info,
-        };
-        long start = find_next_tag(buffer, pstart, size);
-        pstart = start + 1;
-        thread_args[i].buffer = buffer + start;
-        thread_args[i].size = size - start;
-
-        pthread_create(&threads[i], NULL, pthread_func, (void *)&thread_args[i]);
-    }
-    for (int i = 0; i < NTHREADS; ++i)
-        pthread_join(threads[i], NULL);
+    parser_error_type_t err = parse_buffer(buffer, size, info);
 
     free(buffer);
-    return PARSER_OK;
+    return err;
 }

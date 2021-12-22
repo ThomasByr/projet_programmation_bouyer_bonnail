@@ -9,8 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct options_s
-{
+struct options_s {
     int verbose;
     int debug;
 
@@ -18,7 +17,8 @@ struct options_s
     int find_shortest_path;     // find shortest path between two authors
     int find_authors_words;     // find all authors that have a word in common
     int find_info_author;       // find information about an author
-    int find_authors_within;    // find all authors that are within a distance of a given author
+    int find_authors_within; // find all authors that are within a distance of a
+                             // given author
 
     char *author;
     char *author1;

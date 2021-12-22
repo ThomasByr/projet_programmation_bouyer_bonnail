@@ -1,11 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "xml-parser.h"
 #include "vec.h"
+#include "xml-parser.h"
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     (void)argc;
     (void)argv;
 
@@ -13,6 +12,6 @@ int main(int argc, char *argv[])
 
     char filename[] = "assets/dblp.xml";
     parser_error_type_t err = parse(filename, info);
-    free(info);
+    parser_info_free(info);
     printf("%s\n", parser_error_type_to_string(err));
 }
