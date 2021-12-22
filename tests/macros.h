@@ -20,13 +20,14 @@ casted to the same type in `_a` and `_b`).
 #include <stdio.h>
 #include <stdlib.h>
 
-#define assert_info(expr, ...)                                       \
-    do {                                                             \
-        if (!(expr)) {                                               \
-            fprintf(stderr, "\033[0;31m");                           \
-            fprintf(stderr, "Assertion failed: %s\n", #__VA_ARGS__); \
-            abort();                                                 \
-        }                                                            \
+#define assert_info(expr, ...)                                         \
+    do {                                                               \
+        if (!(expr)) {                                                 \
+            fprintf(stderr, "\033[0;31m");                             \
+            fprintf(stderr, "\nassertion failed: %s\n", #__VA_ARGS__); \
+            printf("\033[0m");                                         \
+            abort();                                                   \
+        }                                                              \
     } while (0);
 #define assert(expr) assert_info(expr, expr);
 
@@ -67,14 +68,14 @@ casted to the same type in `_a` and `_b`).
         assert_info(_a >= _b, a >= b); \
     } while (0);
 
-#define test_case(name)                                         \
-    do {                                                        \
-        printf("\033[0m");                                      \
-        printf("running %s:%d: %s", __FILE__, __LINE__, #name); \
-        name();                                                 \
-        printf("\033[0;32m");                                   \
-        printf(" ok\n");                                        \
-        printf("\033[0m");                                      \
+#define test_case(name)                                                  \
+    do {                                                                 \
+        fprintf(stderr, "\033[0m");                                      \
+        fprintf(stderr, "running %s:%d: %s", __FILE__, __LINE__, #name); \
+        name();                                                          \
+        fprintf(stderr, "\033[0;32m");                                   \
+        fprintf(stderr, " ok\n");                                        \
+        fprintf(stderr, "\033[0m");                                      \
     } while (0);
 
 #endif
