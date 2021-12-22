@@ -31,7 +31,7 @@ void foo_free_void(void *foo) {
     foo_free(f);
 }
 
-void *foo_cmpa_void(void *foo, void *a) {
+void *foo_cmp_a_void(void *foo, void *a) {
     foo_t *f = (foo_t *)foo;
     int *i = (int *)a;
     assert_eq(f->a, *i);
@@ -110,7 +110,7 @@ void hset_test_2(void) {
     assert_eq(hset_nitems(hset), n_foo);
     int a = 42;
     void *data = &a;
-    hset_itr_for_each(itr, foo_cmpa_void, data);
+    hset_itr_for_each(itr, foo_cmp_a_void, data);
 
     hset_itr_discard_all(itr, foo_free_void);
     hset_itr_destroy(itr);

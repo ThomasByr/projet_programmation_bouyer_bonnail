@@ -42,7 +42,7 @@ int attempt(char *y, char *x, int m, int start, int wall) {
     return (k);
 }
 
-int KMPSKIP(char *x, int m, char *y, int n) {
+int KMP_SKIP(char *x, int m, char *y, int n) {
     int i, j, k, kmpStart, per, start, wall;
     int kmpNext[XSIZE], list[XSIZE], mpNext[XSIZE], z[ASIZE];
 

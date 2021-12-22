@@ -17,6 +17,6 @@ void preKmp(char *x, int m, int kmpNext[]);
 
 int attempt(char *y, char *x, int m, int start, int wall);
 
-int KMPSKIP(char *x, int m, char *y, int n);
+int KMP_SKIP(char *x, int m, char *y, int n);
 
 #endif
