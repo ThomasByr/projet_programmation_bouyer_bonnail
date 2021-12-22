@@ -12,6 +12,9 @@ evaluation. The type of the first argument is arbitrarily chosen.
 #ifndef MACROS_H
 #define MACROS_H
 
+#include <stdio.h>
+#include <stdlib.h>
+
 #define assert(expr)                                          \
     do {                                                      \
         if (!(expr)) {                                        \
