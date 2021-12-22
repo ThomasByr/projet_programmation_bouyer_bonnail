@@ -24,6 +24,8 @@ void xml_test_0(void) {
         count++;
     }
     assert_eq(count, 27);
+    assert_eq(lerp(5, 0, 10, 0, 100), 50);
+    assert_eq(lerp(0.5, 0.0, 1.0, -1.0, 1.0), 0);
 }
 
 void xml_test_1(void) {
