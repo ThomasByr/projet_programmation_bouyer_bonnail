@@ -31,3 +31,4 @@ Se référer au fichier [changelog](changelog.md) pour la liste exhaustive des m
 ## TODO
 
 *   arbre de Fibonacci pour des piles de priorité
+*   bug sur le renvoi du nombre d'items dans le dictionnaire (dict_test_1) mais le dictionnaire contient bien toutes les valeurs (?)
