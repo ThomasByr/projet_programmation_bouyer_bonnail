@@ -9,6 +9,7 @@ void dict_test_0(void) {
     dict_t *dict = dict_create();
     dict_insert(dict, (void *)"foo1", (void *)"bar");
     dict_insert(dict, (void *)"foo2", (void *)"baz");
+    assert_eq(dict_nitems(dict), 2);
     char *value = (char *)dict_get(dict, (void *)"foo1");
     assert_eq(strcmp(value, "bar"), 0);
     value = (char *)dict_get(dict, (void *)"foo2");
@@ -24,6 +25,9 @@ void dict_test_1(void) {
         sprintf(key, "foo%d", i);
         dict_insert(dict, (void *)key, (void *)"bar");
     }
+    // printf("\nnumber of items: %lu\n", dict_nitems(dict));
+    // assert_eq(dict_nitems(dict), n);
+
     for (int i = 0; i < n; i++) {
         char key[100];
         sprintf(key, "foo%d", i);
@@ -37,13 +41,17 @@ void dict_test_2(void) {
     dict_t *dict = dict_create();
     dict_insert(dict, (void *)"foo1", (void *)"bar");
     dict_insert(dict, (void *)"foo2", (void *)"baz");
+    assert_eq(dict_nitems(dict), 2);
 
     dict_discard(dict, (void *)"foo1");
+    assert_eq(dict_nitems(dict), 1);
     assert_eq(dict_get(dict, (void *)"foo1"), NULL);
     assert_eq(dict_get(dict, (void *)"foo2"), "baz");
 
     dict_insert(dict, (void *)"foo1", (void *)"bar");
+    assert_eq(dict_nitems(dict), 2);
     dict_discard(dict, (void *)"foo2");
+    assert_eq(dict_nitems(dict), 1);
     assert_eq(dict_get(dict, (void *)"foo1"), "bar");
     assert_eq(dict_get(dict, (void *)"foo2"), NULL);
 
