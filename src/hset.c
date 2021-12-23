@@ -188,7 +188,7 @@ void *hset_itr_for_each(hset_itr_t *itr, for_each_callback_t *fe, void *data) {
     while (hset_itr_has_next(itr)) {
         void *value = (void *)hset_itr_val(itr);
         if (value != NULL) {
-            void *p = fe(value, data);
+            void *p = (fe)(value, data);
             if (p != NULL)
                 return p;
         }
