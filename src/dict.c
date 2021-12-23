@@ -75,19 +75,19 @@ static void _maybe_rehash(dict_t *dict) {
         old_keys = dict->keys;
         old_values = dict->values;
         old_capacity = dict->capacity;
-        dict->nbits++;                               // increase number of bits
-        dict->capacity = (size_t)(1 << dict->nbits); // is increased when needed
-        dict->mask = dict->capacity - 1;             // 2^n - 1 = 2^(n+1) - 1
-        dict->keys = calloc(dict->capacity, sizeof(size_t));   // keys array
-        dict->values = calloc(dict->capacity, sizeof(void *)); // values array
+        dict->nbits++;
+        dict->capacity = (size_t)(1 << dict->nbits);
+        dict->mask = dict->capacity - 1;
+        dict->keys = calloc(dict->capacity, sizeof(size_t));
+        dict->values = calloc(dict->capacity, sizeof(void *));
 
         if (dict->keys == NULL || dict->values == NULL) {
-            dict->nbits--;                   // decrease number of bits
-            dict->capacity = old_capacity;   // restore capacity
-            dict->mask = dict->capacity - 1; // 2^n - 1 = 2^(n+1) - 1
-            dict->keys = old_keys;           // restore keys array
-            dict->values = old_values;       // restore values array
-            return;                          // return
+            dict->nbits--;
+            dict->capacity = old_capacity;
+            dict->mask = dict->capacity - 1;
+            dict->keys = old_keys;
+            dict->values = old_values;
+            return;
         }
         dict->nitems = 0;
         dict->n_deleted_items = 0;
