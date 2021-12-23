@@ -1,7 +1,7 @@
 CC = gcc-11
 
 CFLAGS ?= -march=znver3 -O3 -std=c18 -pedantic -pipe -Wall -Wextra -Werror # -g
-LDLIBS ?= -pthread # -lm -ltps -lSDL2 -lSDL2_ttf
+LDLIBS ?= # -pthread -lm -ltps -lSDL2 -lSDL2_ttf
 
 INCLUDE_PATH = ./includes
 
