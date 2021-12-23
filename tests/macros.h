@@ -1,6 +1,11 @@
 /* macro.h
 A simple assertion macro.
 
+*   `test_case` macro is used to define a test case.
+It should at least hold one of the `assert` macros.
+Note that `assert` macros may not produce the desired output if not used in a
+test case.
+
 *   `assert` macro is used to check the truth evaluation of an expression.
 If the expression evaluates to false, the program will be terminated with an
 error
