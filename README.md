@@ -1,6 +1,6 @@
 # Projet Programmation 2021/2022 | Julie BONNAIL & Thomas BOUYER
 
-> version 0.0.1 fr
+> version 0.0.2 fr
 
 1. [Le sujet](#le-sujet)
 2. [Méthode de résolution](#méthode-de-résolution)
@@ -19,15 +19,12 @@
 Se référer au fichier [changelog](changelog.md) pour la liste exhaustive des modifications.
 
 <details>
-    <summary> v0.0.1 : début du projet (cliquez ici) </summary>
+    <summary> v0.0.2 : petite librairie deviendra grande (cliquez ici) </summary>
 
-*   push initial (+ une erreur dans le .gitignore...)
-*   intégration du tp11 xml-parser-1 : premier test de performances, eta 50s caractère par caractère
-*   amélioration des performances de l'algorithme de parsing : diminution du nombre d'appels aux primitives systèmes, augmentation drastique de l'utilisation mémoire
-*   écriture d'une librairie de vecteurs (l'object c++)
-*   intégration d'une table de hachage en vue d'accélérer l'algorithme de Dijkstra
-*   intégration de threads ! mais le temps d'exécution augmente
-*   reformat entier : clang-format sur Google avec {IndentWidth: 4, TabWidth: 4, ColumnLimit: 80, AlignEscapedNewlines: Left}
+*   macros pour des tests esthétiques
+*   la table de hachage fonctionne aussi bien avec des objets issus de structures qu'avec des pseudos objets
+*   on peut itérer sur les objets de la table de hachage (pratique pour faire le free final)
+*   structure de dictionnaire, fortement basé sur la table de hachage (ne dispose pas de fonction d'itération pour le moment étant donné l'utilisation prévue)
 
 </details>
 
