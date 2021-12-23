@@ -78,7 +78,7 @@ void hset_test_1(void) {
     while (hset_itr_has_next(itr)) {
         count++;
         foo_t *foo = (foo_t *)hset_itr_val(itr);
-        // assert_eq(foo->a, 42);
+        assert_eq(foo->a, 42);
         foo->a = 1;
         hset_insert(hset, foo);
         hset_itr_next(itr);
@@ -99,7 +99,7 @@ void hset_test_1(void) {
 void hset_test_2(void) {
     hset_t *hset = hset_create();
     hset_itr_t *itr = hset_itr_create(hset);
-    size_t n_foo = 2;
+    size_t n_foo = 1000;
 
     for (size_t i = 0; i < n_foo; i++) {
         foo_t *foo = foo_new(i);
@@ -117,8 +117,19 @@ void hset_test_2(void) {
     hset_destroy(hset);
 }
 
+void hset_test_3(void) {
+    hset_t *hset = hset_create();
+    hset_insert(hset, (void *)"foo");
+    hset_insert(hset, (void *)"bar");
+    hset_insert(hset, (void *)"foo");
+    assert_eq(hset_nitems(hset), 2);
+
+    hset_destroy(hset);
+}
+
 void hset_test(void) {
     test_case(hset_test_0);
     test_case(hset_test_1);
     test_case(hset_test_2);
+    test_case(hset_test_3);
 }
