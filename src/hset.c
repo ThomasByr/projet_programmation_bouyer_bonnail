@@ -78,6 +78,7 @@ static void _maybe_rehash(hset_t *set) {
         set->capacity = (size_t)(1 << set->nbits);
         set->mask = set->capacity - 1;
         set->items = calloc(set->capacity, sizeof(size_t));
+
         set->nitems = 0;
         set->n_deleted_items = 0;
         assert(set->items);
