@@ -6,7 +6,7 @@
 void _set_path(vec_t *path, node_t *end) {
     node_t *node = end;
     while (node != NULL) {
-        vec_push(path, node);
+        vec_push(path, node->name);
         node = node->parent;
     }
 }
@@ -41,17 +41,9 @@ vec_t *dijkstra(node_t *start, node_t *end) {
                     child->parent = current;
 
                     // if child already in open set, update its weight
-                    int rv =
-                        pqueue_decrease_key(open, (void *)child, new_weight);
-                    switch (rv) {
-                    case -1: // node not in the open set
-                        pqueue_push(open, child, new_weight);
-                        break;
-                    case 0: // node in the open set, but with a lower weight
-                    case 1: // node in the open set, but with a higher weight
-                    default:
-                        break;
-                    }
+                    int rv = pqueue_push(open, child, new_weight);
+                    if (rv == 0)
+                        pqueue_decrease_key(open, child, new_weight);
                 }
             }
             hset_itr_next(itr); // advance to next child

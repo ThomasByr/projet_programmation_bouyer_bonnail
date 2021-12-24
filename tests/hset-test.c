@@ -70,7 +70,8 @@ void hset_test_1(void) {
     for (size_t i = 0; i < n_foo; i++) {
         foo_t *foo = foo_new(i);
         foo->a = 42;
-        hset_push(hset, foo);
+        int x = hset_push(hset, foo);
+        assert_eq(x, 1);
     }
 
     assert_eq(hset_nitems(hset), n_foo);
