@@ -8,7 +8,6 @@ bin/
 obj/
 develop-eggs/
 dist/
-legacy/
 downloads/
 eggs/
 .eggs/
@@ -29,6 +28,9 @@ htmlcov/
 nosetests.xml
 coverage.xml
 *,cover
+tests/[Tt]ests
+report/
+report.*
 
 # Translations
 *.mo

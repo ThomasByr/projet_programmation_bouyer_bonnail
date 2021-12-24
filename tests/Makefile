@@ -1,7 +1,8 @@
+CC = gcc-11
 TARGET = tests
 
-CFLAGS = -march=x86-64 -O3 -pipe -g -fprofile-arcs -ftest-coverage # -Wall -Wextra -Werror
-LDLIBS=-lm
+CFLAGS = -march=znver3 -O3 -pipe -std=c18 -pedantic -fprofile-arcs -ftest-coverage -Wall -Wextra -Werror # -g
+LDLIBS = -lm # -pthread -ltps -lSDL2 -lSDL2_ttf
 
 INCLUDE_PATH = ../includes
 
@@ -11,7 +12,7 @@ OBJDIR   = obj
 SOURCES  := $(wildcard $(SRCDIR)/*.c)
 INCLUDES := $(wildcard $(INCLUDE_PATH)/*.h)
 OBJECTS0  := $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
-OBJECTS = $(filter-out $(OBJDIR)/bmp-msg.o,$(OBJECTS0))
+OBJECTS = $(filter-out $(OBJDIR)/main.o,$(OBJECTS0))
 
 tests: $(OBJECTS) obj/tests.o
 	$(CC) -o $@ $^ $(CFLAGS) $(LDLIBS)
