@@ -2,9 +2,11 @@
 #include <stdlib.h>
 
 #include "dict-test.c"
+#include "dijkstra-test.c"
 #include "hset-test.c"
 #include "macros.h"
 #include "pqueue-test.c"
+#include "vec-test.c"
 #include "xml-parser-test.c"
 
 int main(void) {
@@ -12,4 +14,6 @@ int main(void) {
     hset_test();
     dict_test();
     pqueue_test();
+    // dijkstra_test();
+    vec_test();
 }

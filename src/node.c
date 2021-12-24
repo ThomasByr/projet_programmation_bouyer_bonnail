@@ -11,3 +11,8 @@ node_t *node_new(char *name, hset_t *neighbors) {
     node->neighbors = hset_itr_new(neighbors);
     return node;
 }
+
+void node_free(node_t *node) {
+    hset_itr_free(node->neighbors);
+    free(node);
+}

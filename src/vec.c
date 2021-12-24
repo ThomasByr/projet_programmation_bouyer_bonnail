@@ -124,11 +124,9 @@ void vec_delete_all(vec_t *v, delete_callback_t *dc) {
 
 void vec_free(vec_t *v) {
     ASSERT_IF_LOCKED(v);
-    memset(v->data, 0x0, v->size);
+    // memset(v->data, 0x0, v->size);
     free(v->data);
-    v->size = 0;
-    v->end_slot = 0;
-    v->elts = 0;
+    free(v);
 }
 
 void vec_init(vec_t *v) {
@@ -140,7 +138,7 @@ void vec_init(vec_t *v) {
 }
 
 vec_t *vec_new(void) {
-    vec_t *v = (vec_t *)malloc(sizeof(vec_t));
+    vec_t *v = malloc(sizeof(vec_t));
     vec_init(v);
     return v;
 }
