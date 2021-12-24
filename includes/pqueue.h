@@ -5,7 +5,7 @@
 #ifndef PQUEUE_H
 #define PQUEUE_H
 
-#include "hset.h"
+#include "dict.h"
 #include "types.h"
 
 struct heap_node_s {
@@ -16,13 +16,12 @@ struct heap_node_s {
     struct heap_node_s *right;  // node "to the right"
     struct heap_node_s *child;  // child node
     int degree;                 // number of children
-    int marked;                 // is this node marked for deletion?
+    int mark;                   // is this node mark for deletion?
 };
 typedef struct heap_node_s heap_node_t;
 
 struct pqueue_s {
-    hset_t *nodes;         // collection of nodes
-    hset_itr_t *map;       // unordered map of nodes
+    dict_t *map;           // correspondence between elements and nodes
     heap_node_t *min_node; // minimum node
     size_t total_nodes;    // total number of nodes
 };
@@ -32,20 +31,66 @@ struct pqueue_s {
  */
 typedef struct pqueue_s pqueue_t;
 
+/**
+ * @brief create a new priority queue
+ *
+ * @return pqueue_t*
+ */
 pqueue_t *pqueue_new();
 
-heap_node_t *pqueue_find_min(pqueue_t *pq);
+/**
+ * @brief get the minimum element of the priority queue
+ *
+ * @param pq priority queue
+ * @return void*
+ */
+void *pqueue_find_min(pqueue_t *pq);
 
-heap_node_t *pqueue_pop_min(pqueue_t *pq);
+/**
+ * @brief get the minimum element of the priority queue and remove it.
+ * The node is freed but the element is still accessible
+ *
+ * @param pq priority queue
+ * @return void*
+ */
+void *pqueue_pop_min(pqueue_t *pq);
 
-int pqueue_insert(pqueue_t *pq, void *element, int priority);
+/**
+ * @brief insert an element into the priority queue.
+ * Does nothing if the element is already present
+ *
+ * @param pq priority queue
+ * @param element element to insert
+ * @param key priority of the element
+ * @return int - 1 if success, 0 if element already exists
+ */
+int pqueue_push(pqueue_t *pq, void *element, int key);
 
-int pqueue_decrease_key(pqueue_t *pq, heap_node_t *node, int priority);
+/**
+ * @brief decrease the priority of an element
+ *
+ * @param pq priority queue
+ * @param element element to decrease the priority
+ * @param new_key new priority
+ * @return int - 1 if success, 0 if element does have a lower priority,
+ * -1 if element does not exist
+ */
+int pqueue_decrease_key(pqueue_t *pq, void *element, int new_key);
 
-int pqueue_consolidate(pqueue_t *pq);
+/**
+ * @brief merge second priority queue into the first one.
+ * The second priority queue is reset
+ *
+ * @param pq1 first priority queue
+ * @param pq2 second priority queue
+ */
+void pqueue_merge(pqueue_t *pq1, pqueue_t *pq2);
 
-pqueue_t *pqueue_merge(pqueue_t *pq1, pqueue_t *pq2);
-
+/**
+ * @brief free the priority queue and all its nodes (might be expensive)
+ *
+ * @param pq priority queue
+ */
 void pqueue_free(pqueue_t *pq);
 
 #endif

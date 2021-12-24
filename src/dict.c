@@ -21,7 +21,7 @@ dict_t *dict_new(void) {
     d->values = calloc(d->capacity, sizeof(void *)); // values array
 
     if (d->keys == NULL || d->values == NULL) {
-        dict_destroy(d);
+        dict_free(d);
         return NULL;
     }
     d->nitems = 0;          // no items yet
@@ -29,7 +29,7 @@ dict_t *dict_new(void) {
     return d;
 }
 
-void dict_destroy(dict_t *d) {
+void dict_free(dict_t *d) {
     if (d) {
         free(d->keys);
         free(d->values);
@@ -52,7 +52,7 @@ int _dict_push_item(dict_t *dict, void *key, void *value) {
     {
         if (dict->keys[ii] == k) {    // if key is already in set
             dict->values[ii] = value; // update value
-            return 0;                 // return success
+            return 0;                 // return success 0
         } else {
             ii = dict->mask & (ii + prime_2); // get index of next bucket
         }
@@ -63,7 +63,7 @@ int _dict_push_item(dict_t *dict, void *key, void *value) {
 
     dict->keys[ii] = k;       // insert key
     dict->values[ii] = value; // insert value
-    return 0;                 // return success
+    return 1;                 // return success 1
 }
 
 static void _maybe_rehash(dict_t *dict) {
@@ -150,12 +150,12 @@ int dict_discard(dict_t *dict, void *key) {
             dict->keys[ii] = 1;      // mark bucket as deleted
             dict->nitems--;          // decrease number of items
             dict->n_deleted_items++; // increase number of deleted items
-            return 0;                // return success
+            return 1;                // return success 1
         } else {
             ii = dict->mask & (ii + prime_2); // get index of next bucket
         }
     }
-    return -1; // return error if key is not found
+    return 0; // return error if key is not found
 }
 
 size_t dict_nitems(dict_t *dict) { return dict->nitems; }
