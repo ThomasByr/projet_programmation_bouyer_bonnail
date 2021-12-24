@@ -5,8 +5,8 @@
 
 #include "dict.h"
 
-static const unsigned int prime_1 = 3079;
-static const unsigned int prime_2 = 1572869;
+static const unsigned int prime_1 = 73;
+static const unsigned int prime_2 = 5009;
 
 dict_t *dict_new(void) {
     dict_t *d = calloc(1, sizeof(struct dict_s));
@@ -71,7 +71,7 @@ static void _maybe_rehash(dict_t *dict) {
     void **old_values;       // old values array
     size_t old_capacity, ii; // old capacity, index of the bucket
 
-    if (dict->nitems + dict->n_deleted_items >= dict->capacity) {
+    if (dict->nitems + dict->n_deleted_items >= (double)dict->capacity * 0.85) {
         old_keys = dict->keys;
         old_values = dict->values;
         old_capacity = dict->capacity;
@@ -81,14 +81,6 @@ static void _maybe_rehash(dict_t *dict) {
         dict->keys = calloc(dict->capacity, sizeof(size_t));
         dict->values = calloc(dict->capacity, sizeof(void *));
 
-        if (dict->keys == NULL || dict->values == NULL) {
-            dict->nbits--;
-            dict->capacity = old_capacity;
-            dict->mask = dict->capacity - 1;
-            dict->keys = old_keys;
-            dict->values = old_values;
-            return;
-        }
         dict->nitems = 0;
         dict->n_deleted_items = 0;
         assert(dict->keys);
