@@ -14,7 +14,7 @@ void dict_test_0(void) {
     assert_eq(strcmp(value, "bar"), 0);
     value = (char *)dict_get(dict, (void *)"foo2");
     assert_eq(strcmp(value, "baz"), 0);
-    dict_destroy(dict);
+    dict_free(dict);
 }
 
 void dict_test_1(void) {
@@ -34,7 +34,7 @@ void dict_test_1(void) {
         char *value = (char *)dict_get(dict, (void *)key);
         assert_eq(strcmp(value, "bar"), 0);
     }
-    dict_destroy(dict);
+    dict_free(dict);
 }
 
 void dict_test_2(void) {
@@ -55,11 +55,34 @@ void dict_test_2(void) {
     assert_eq(dict_get(dict, (void *)"foo1"), "bar");
     assert_eq(dict_get(dict, (void *)"foo2"), NULL);
 
-    dict_destroy(dict);
+    dict_free(dict);
+}
+
+void dict_test_3(void) {
+    dict_t *dict = dict_new();
+    int n = 1000;
+    for (int i = 0; i < n; i++) {
+        char key[100];
+        char value[100];
+        sprintf(key, "foo%d", i);
+        sprintf(value, "bar%d", i);
+        dict_push(dict, (void *)key, (void *)value);
+    }
+
+    for (int i = 0; i < n; i++) {
+        char key[100];
+        char value[100];
+        sprintf(key, "foo%d", i);
+        sprintf(value, "bar%d", i);
+        char *value_ = (char *)dict_get(dict, (void *)key);
+        assert_eq(strcmp(value_, value), 0);
+    }
+    dict_free(dict);
 }
 
 void dict_test(void) {
     test_case(dict_test_0);
     test_case(dict_test_1);
     test_case(dict_test_2);
+    test_case(dict_test_3);
 }
