@@ -184,35 +184,35 @@ void hset_itr_free(hset_itr_t *itr) {
 }
 
 void *hset_itr_for_each(hset_itr_t *itr, for_each_callback_t *fe, void *data) {
-    hset_itr_reset(itr);
+    hset_itr_reset(itr); // reset iterator
 
     while (hset_itr_has_next(itr)) {
         void *value = (void *)hset_itr_val(itr);
         if (value != NULL) {
-            void *p = (fe)(value, data);
-            if (p != NULL)
-                return p;
+            void *p = (fe)(value, data); // call for_each_callback
+            if (p != NULL)               // if callback returns non-NULL
+                return p;                // return value
         }
         hset_itr_next(itr);
-    }
+    } // for each valid item
     return NULL;
 }
 
 void hset_itr_discard_all(hset_itr_t *itr, delete_callback_t *dc) {
-    hset_itr_reset(itr);
+    hset_itr_reset(itr); // reset iterator
 
     while (hset_itr_has_next(itr)) {
         void *value = (void *)hset_itr_val(itr);
         if (value != NULL) {
-            int p = hset_discard(itr->set, value);
+            int p = hset_discard(itr->set, value); // remove value from set
             if (p == 0) {
                 fprintf(stderr, "hset_itr_discard_all failed : yielded item "
                                 "could not be found on original hash set\n");
             } else if (p == 1 && dc != NULL)
-                (dc)(value);
+                (dc)(value); // invoke delete callback
         }
         hset_itr_next(itr);
-    }
+    } // for each valid item
 }
 
 void hset_itr_reset(hset_itr_t *itr) { itr->index = 0; }
