@@ -15,3 +15,5 @@
     *   la table de hachage fonctionne aussi bien avec des objets issus de structures qu'avec des pseudos objets
     *   on peut itérer sur les objets de la table de hachage (pratique pour faire le free final)
     *   structure de dictionnaire, fortement basé sur la table de hachage (ne dispose pas de fonction d'itération pour le moment étant donné l'utilisation prévue)
+    *   structure de file de priorité basée sur les tas de Fibonacci
+    *   ré-implémentation de l'algorithme de Dijkstra en utilisant les tables de hachage et les files de priorité
