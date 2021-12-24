@@ -25,10 +25,12 @@ Se référer au fichier [changelog](changelog.md) pour la liste exhaustive des m
 *   la table de hachage fonctionne aussi bien avec des objets issus de structures qu'avec des pseudos objets
 *   on peut itérer sur les objets de la table de hachage (pratique pour faire le free final)
 *   structure de dictionnaire, fortement basé sur la table de hachage (ne dispose pas de fonction d'itération pour le moment étant donné l'utilisation prévue)
+*   structure de file de priorité basée sur les tas de Fibonacci
+*   ré-implémentation de l'algorithme de Dijkstra en utilisant les tables de hachage et les files de priorité
 
 </details>
 
 ## TODO
 
-*   arbre de Fibonacci pour des piles de priorité
+*   ~~arbre de Fibonacci pour des piles de priorité~~
 *   bug sur le renvoi du nombre d'items dans le dictionnaire (dict_test_1) mais le dictionnaire contient bien toutes les valeurs (?)
