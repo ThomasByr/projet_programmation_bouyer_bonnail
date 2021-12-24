@@ -1,23 +1,37 @@
+/*
+
+*/
+
 #ifndef NODE_H
 #define NODE_H
 #include <stdio.h>
 #include <stdlib.h>
-#include "vec.h"
 
-typedef struct node_t
-{
+#include "hset.h"
+#include "types.h"
+
+struct node_s {
     char *name;
-    vec *co_autors;
-    unsigned long long weight;
-    void *parent;
-} node_t;
+    hset_itr_t *neighbors;
+    int weight;
+    struct node_s *parent;
+};
+typedef struct node_s node_t;
 
-/*creer noeuds*/
+/**
+ * @brief new node with an infinite weight
+ *
+ * @param name name of the author
+ * @param neighbors set of neighbors
+ * @return node_t*
+ */
+node_t *node_new(char *name, hset_t *neighbors);
 
-node_t *create_node(char *name, vec *co_autors);
-
-/* liberer noeuds*/
-
-void delete_node(node_t *name);
+/**
+ * @brief free node structure and its iterators
+ *
+ * @param node node to free
+ */
+void node_free(node_t *node);
 
 #endif

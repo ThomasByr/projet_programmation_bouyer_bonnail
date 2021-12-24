@@ -193,6 +193,8 @@ void pqueue_free(pqueue_t *pq) {
     free(pq);
 }
 
+size_t pqueue_size(pqueue_t *pq) { return pq->total_nodes; }
+
 void *pqueue_find_min(pqueue_t *pq) { return pq->min_node->element; }
 
 void *pqueue_pop_min(pqueue_t *pq) {

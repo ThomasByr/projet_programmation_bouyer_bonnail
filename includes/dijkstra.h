@@ -1,13 +1,26 @@
+/*
+
+*/
+
 #ifndef DIJKSTRA_H
 #define DIJKSTRA_H
 
-#include "node.h"
-#include "vec.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-int find_min_weight(vec *v);
+#include "hset.h"
+#include "node.h"
+#include "pqueue.h"
+#include "types.h"
+#include "vec.h"
 
-int dijkstra(node_t *begin, node_t *end);
+/**
+ * @brief dijkstra algorithm using only one search head
+ *
+ * @param start start node
+ * @param end end node
+ * @return vec* - path from end to start
+ */
+vec *dijkstra(node_t *start, node_t *end);
 
 #endif

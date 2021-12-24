@@ -39,6 +39,14 @@ typedef struct pqueue_s pqueue_t;
 pqueue_t *pqueue_new();
 
 /**
+ * @brief get total node in the priority queue
+ *
+ * @param pq priority queue
+ * @return size_t
+ */
+size_t pqueue_size(pqueue_t *pq);
+
+/**
  * @brief get the minimum element of the priority queue
  *
  * @param pq priority queue

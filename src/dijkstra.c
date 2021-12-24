@@ -1,68 +1,63 @@
-#include "dijkstra.h"
-#include "vec.h"
+#include <stdio.h>
+#include <stdlib.h>
 
-int find_min_weight(vec *v) {
-    node_t *min_weight = vec_get_at(v, 0);
-    int index = 1;
-    size_t size = vec_used(v);
-    while ((size_t)index <= size) {
-        node_t *test = vec_get_at(v, index);
-        if (test != NULL) {
-            if (min_weight->weight > test->weight) {
-                min_weight = test;
-            }
-        }
-        index++;
+#include "dijkstra.h"
+
+void _set_path(vec *path, node_t *end) {
+    node_t *node = end;
+    while (node != NULL) {
+        vec_push(path, node);
+        node = node->parent;
     }
-    return index;
 }
 
-int dijkstra(node_t *begin, node_t *end) {
-    // creation liste exploré et à explorer
-    vec *v_open = (vec *)malloc(sizeof(vec));
-    vec_init(v_open);
-    vec *v_close = (vec *)malloc(sizeof(vec));
-    vec_init(v_close);
-    // le noeud de depart est exploré, on place ses voisins dans la liste à
-    // explorer, on augmente leur taille de 1
-    vec_push(v_close, begin);
-    vec *voisin_begin = begin->co_autors;
-    size_t taille_voisin_begin = vec_used(voisin_begin);
-    int index = 0;
-    while ((size_t)index <= taille_voisin_begin) {
-        node_t *voisin = vec_get_at(voisin_begin, index);
-        if (voisin != NULL) {
-            voisin->weight++;
-            voisin->parent = begin;
+vec *dijkstra(node_t *start, node_t *end) {
+    vec *path = vec_new();
+    hset_t *close = hset_new();
+    pqueue_t *open = pqueue_new();
 
-            vec_push(v_open, voisin);
+    node_t *current = start;
+    current->weight = 0;
+    pqueue_push(open, current, current->weight);
+
+    while (pqueue_size(open) > 0ul) {
+        current = pqueue_pop_min(open); // pop the node with the lowest weight
+        hset_push(close, current);      // add it to the closed set
+
+        if (current == end) {
+            _set_path(path, current);
+            break;
         }
-    }
+        hset_itr_t *itr = hset_itr_new(current->neighbors);
+        while (hset_itr_has_next(itr)) {
+            node_t *child = (node_t *)hset_itr_val(itr);
+            if (!hset_contains(close, child)) {
+                int new_weight = current->weight + 1;
 
-    // tant que l'on a pas exploré toute la liste, on prend le noeud de poids
-    // min et on recommence
+                // if child was never visited before, weight is infinity
+                if (new_weight < child->weight) {
+                    child->weight = new_weight;
+                    child->parent = current;
 
-    while (vec_used(v_open) != 0) {
-        // int index_min = find_min_weight(v_open);
-        node_t *min = vec_get_at(v_open, index);
-        vec_push(v_close, min);
-        vec_delete_at(v_open, index);
-        vec *voisin_min = min->co_autors;
-        size_t taille_voisin_min = vec_used(voisin_min);
-        int index = 0;
-        while ((size_t)index <= taille_voisin_min) {
-            node_t *voisin = vec_get_at(voisin_min, index);
-            if (voisin != NULL) {
-                voisin->weight++;
-                voisin->parent = min;
-                if (voisin == end) {
-
-                    return (end->weight);
+                    // if child already in open set, update its weight
+                    int rv =
+                        pqueue_decrease_key(open, (void *)child, new_weight);
+                    switch (rv) {
+                    case -1: // node not in the open set
+                        pqueue_push(open, child, new_weight);
+                        break;
+                    case 0: // node in the open set, but with a higher weight
+                    case 1: // node in the open set, but with the same weight
+                    default:
+                        break;
+                    }
                 }
-
-                vec_push(v_open, voisin);
             }
+            hset_itr_next(itr); // advance to next child
         }
+        hset_itr_free(itr);
     }
-    return (-1);
+    hset_free(close);
+    pqueue_free(open);
+    return path;
 }
