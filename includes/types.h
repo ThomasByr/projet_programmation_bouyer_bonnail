@@ -1,5 +1,6 @@
-/*
+/* types.h
 Generic types
+
 */
 
 #ifndef TYPES_H

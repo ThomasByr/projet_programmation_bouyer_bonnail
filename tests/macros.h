@@ -17,6 +17,7 @@ are used to check the inequality of two values.
 *   only use `assert_info` when the evaluated expression does not expand to it's
 original form (for example, `assert_info(_a == _b, a == b)` if `a` and `b` are
 casted to the same type in `_a` and `_b`).
+
 */
 
 #ifndef MACROS_H

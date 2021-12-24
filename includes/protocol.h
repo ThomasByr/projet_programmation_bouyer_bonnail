@@ -1,4 +1,5 @@
 /* protocol.h
+Some general-purpose macros and functions.
 
 *   `foreach(item in array)` macro only works for static allocated arrays.
 This is used to iterate over an unidimensional array. Note that `char arr[] =
