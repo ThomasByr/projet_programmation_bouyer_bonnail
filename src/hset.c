@@ -94,7 +94,7 @@ int hset_push(hset_t *set, void *item) {
     return rv;
 }
 
-int hset_constains(hset_t *set, void *item) {
+int hset_contains(hset_t *set, void *item) {
     size_t value = (size_t)item;               // cast item to size_t
     size_t ii = set->mask & (prime_1 * value); // hash value modulo capacity
 

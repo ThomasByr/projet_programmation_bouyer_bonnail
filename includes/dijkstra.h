@@ -21,6 +21,6 @@
  * @param end end node
  * @return vec* - path from end to start
  */
-vec *dijkstra(node_t *start, node_t *end);
+vec_t *dijkstra(node_t *start, node_t *end);
 
 #endif
