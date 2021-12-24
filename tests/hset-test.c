@@ -39,38 +39,38 @@ void *foo_cmp_a_void(void *foo, void *a) {
 }
 
 void hset_test_0(void) {
-    hset_t *hset = hset_create();
+    hset_t *hset = hset_new();
 
     foo_t *foo0 = foo_new(0);
     foo_t *foo1 = foo_new(0);
     foo_t *foo2 = foo_new(0);
 
-    hset_insert(hset, foo0);
-    hset_insert(hset, foo1);
-    hset_insert(hset, foo2);
-    hset_insert(hset, foo0);
+    hset_push(hset, foo0);
+    hset_push(hset, foo1);
+    hset_push(hset, foo2);
+    hset_push(hset, foo0);
 
     foo0->a = 1;
     sprintf(foo0->id, "%d", 42);
-    hset_insert(hset, foo0);
+    hset_push(hset, foo0);
 
     assert_eq(hset_nitems(hset), 3);
 
-    hset_destroy(hset);
+    hset_free(hset);
     foo_free(foo0);
     foo_free(foo1);
     foo_free(foo2);
 }
 
 void hset_test_1(void) {
-    hset_t *hset = hset_create();
-    hset_itr_t *itr = hset_itr_create(hset);
+    hset_t *hset = hset_new();
+    hset_itr_t *itr = hset_itr_new(hset);
     size_t n_foo = 1000;
 
     for (size_t i = 0; i < n_foo; i++) {
         foo_t *foo = foo_new(i);
         foo->a = 42;
-        hset_insert(hset, foo);
+        hset_push(hset, foo);
     }
 
     assert_eq(hset_nitems(hset), n_foo);
@@ -80,7 +80,7 @@ void hset_test_1(void) {
         foo_t *foo = (foo_t *)hset_itr_val(itr);
         assert_eq(foo->a, 42);
         foo->a = 1;
-        hset_insert(hset, foo);
+        hset_push(hset, foo);
         hset_itr_next(itr);
     }
     assert_eq(count, n_foo);
@@ -92,19 +92,19 @@ void hset_test_1(void) {
         foo_free(foo);
         hset_itr_next(itr);
     }
-    hset_itr_destroy(itr);
-    hset_destroy(hset);
+    hset_itr_free(itr);
+    hset_free(hset);
 }
 
 void hset_test_2(void) {
-    hset_t *hset = hset_create();
-    hset_itr_t *itr = hset_itr_create(hset);
+    hset_t *hset = hset_new();
+    hset_itr_t *itr = hset_itr_new(hset);
     size_t n_foo = 1000;
 
     for (size_t i = 0; i < n_foo; i++) {
         foo_t *foo = foo_new(i);
         foo->a = 42;
-        hset_insert(hset, foo);
+        hset_push(hset, foo);
     }
 
     assert_eq(hset_nitems(hset), n_foo);
@@ -113,18 +113,18 @@ void hset_test_2(void) {
     hset_itr_for_each(itr, foo_cmp_a_void, data);
 
     hset_itr_discard_all(itr, foo_free_void);
-    hset_itr_destroy(itr);
-    hset_destroy(hset);
+    hset_itr_free(itr);
+    hset_free(hset);
 }
 
 void hset_test_3(void) {
-    hset_t *hset = hset_create();
-    hset_insert(hset, (void *)"foo");
-    hset_insert(hset, (void *)"bar");
-    hset_insert(hset, (void *)"foo");
+    hset_t *hset = hset_new();
+    hset_push(hset, (void *)"foo");
+    hset_push(hset, (void *)"bar");
+    hset_push(hset, (void *)"foo");
     assert_eq(hset_nitems(hset), 2);
 
-    hset_destroy(hset);
+    hset_free(hset);
 }
 
 void hset_test(void) {

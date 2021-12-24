@@ -23,11 +23,11 @@ struct dict_s {
 
 typedef struct dict_s dict_t;
 
-dict_t *dict_create(void);
+dict_t *dict_new(void);
 
 void dict_destroy(dict_t *dict);
 
-int dict_insert(dict_t *dict, void *key, void *value);
+int dict_push(dict_t *dict, void *key, void *value);
 
 void *dict_get(dict_t *dict, void *key);
 

@@ -16,7 +16,7 @@ unsigned long hash(char *str) {
     return hash;
 }
 
-hset_t *hset_create(void) {
+hset_t *hset_new(void) {
     hset_t *set = calloc(1, sizeof(struct hset_s));
 
     if (set == NULL) // out of memory
@@ -27,7 +27,7 @@ hset_t *hset_create(void) {
     set->mask = set->capacity - 1;             // 2^3 - 1 = 7
     set->items = calloc(set->capacity, sizeof(size_t)); // items array
     if (set->items == NULL) {
-        hset_destroy(set);
+        hset_free(set);
         return NULL;
     }
     set->nitems = 0;          // no items yet
@@ -35,13 +35,13 @@ hset_t *hset_create(void) {
     return set;
 }
 
-void hset_destroy(hset_t *set) {
+void hset_free(hset_t *set) {
     if (set)              // if set is not NULL
         free(set->items); // free items array
     free(set);            // free set
 }
 
-int _hset_insert_item(hset_t *set, void *item) {
+int _hset_push_item(hset_t *set, void *item) {
     size_t value = (size_t)item; // cast item to size_t
     size_t ii;                   // index of the bucket
 
@@ -83,14 +83,14 @@ static void _maybe_rehash(hset_t *set) {
         set->n_deleted_items = 0;
         assert(set->items);
         for (ii = 0; ii < old_capacity; ii++)
-            _hset_insert_item(set, (void *)old_items[ii]);
+            _hset_push_item(set, (void *)old_items[ii]);
         free(old_items);
     }
 }
 
-int hset_insert(hset_t *set, void *item) {
-    int rv = _hset_insert_item(set, item); // insert item
-    _maybe_rehash(set);                    // rehash if needed
+int hset_push(hset_t *set, void *item) {
+    int rv = _hset_push_item(set, item); // insert item
+    _maybe_rehash(set);                  // rehash if needed
     return rv;
 }
 
@@ -128,7 +128,7 @@ int hset_discard(hset_t *set, void *item) {
 
 size_t hset_nitems(hset_t *set) { return set->nitems; }
 
-hset_itr_t *hset_itr_create(hset_t *set) {
+hset_itr_t *hset_itr_new(hset_t *set) {
     hset_itr_t *itr = calloc(1, sizeof(struct hset_itr_s));
     if (itr == NULL)
         return NULL;
@@ -177,7 +177,7 @@ size_t hset_itr_val(hset_itr_t *itr) {
     return itr->set->items[itr->index]; // return value at current index
 }
 
-void hset_itr_destroy(hset_itr_t *itr) {
+void hset_itr_free(hset_itr_t *itr) {
     if (itr == NULL)
         return;
     free(itr);

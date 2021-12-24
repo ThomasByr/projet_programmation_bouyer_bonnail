@@ -44,18 +44,19 @@ typedef struct hset_itr_s hset_itr_t;
 unsigned long hash(char *str);
 
 /**
- * @brief ceate a new hash set
+ * @brief create a new hash set
  *
  * @return hset_t*
  */
-hset_t *hset_create(void);
+hset_t *hset_new(void);
 
 /**
- * @brief destroy a hash set
+ * @brief free a hash set underlying structure.
+ * It is the caller's responsibility to free the items
  *
  * @param hset
  */
-void hset_destroy(hset_t *hset);
+void hset_free(hset_t *hset);
 
 /**
  * @brief add a new element to the hash set, does nothing if already present
@@ -64,7 +65,7 @@ void hset_destroy(hset_t *hset);
  * @param item new element
  * @return int - 1 if added, 0 if already present and -1 if error
  */
-int hset_insert(hset_t *hset, void *item);
+int hset_push(hset_t *hset, void *item);
 
 /**
  * @brief test if an element is present in the hash set
@@ -98,7 +99,7 @@ size_t hset_nitems(hset_t *hset);
  * @param set hash set
  * @return hset_itr_t* - new iterator
  */
-hset_itr_t *hset_itr_create(hset_t *set);
+hset_itr_t *hset_itr_new(hset_t *set);
 
 /**
  * @brief returns the value at the current index, it is the caller's
@@ -131,7 +132,7 @@ size_t hset_itr_next(hset_itr_t *itr);
  *
  * @param itr iterator
  */
-void hset_itr_destroy(hset_itr_t *itr);
+void hset_itr_free(hset_itr_t *itr);
 
 /**
  * @brief apply a function to each item in the hash set,

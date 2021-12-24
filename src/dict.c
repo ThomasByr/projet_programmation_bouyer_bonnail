@@ -8,7 +8,7 @@
 static const unsigned int prime_1 = 3079;
 static const unsigned int prime_2 = 1572869;
 
-dict_t *dict_create(void) {
+dict_t *dict_new(void) {
     dict_t *d = calloc(1, sizeof(struct dict_s));
 
     if (d == NULL) // out of memory
@@ -37,7 +37,7 @@ void dict_destroy(dict_t *d) {
     free(d);
 }
 
-int _dict_insert_item(dict_t *dict, void *key, void *value) {
+int _dict_push_item(dict_t *dict, void *key, void *value) {
     size_t k = (size_t)key; // cast key to size_t
     // size_t v = (size_t)value; // cast value to size_t
     size_t ii; // index of the bucket
@@ -94,7 +94,7 @@ static void _maybe_rehash(dict_t *dict) {
         assert(dict->keys);
         for (ii = 0; ii < old_capacity; ii++) {
             if (old_keys[ii] != 0 && old_keys[ii] != 1) {
-                _dict_insert_item(dict, (void *)old_keys[ii], old_values[ii]);
+                _dict_push_item(dict, (void *)old_keys[ii], old_values[ii]);
             }
         }
         free(old_keys);
@@ -102,13 +102,13 @@ static void _maybe_rehash(dict_t *dict) {
     }
 }
 
-int dict_insert(dict_t *dict, void *key, void *value) {
+int dict_push(dict_t *dict, void *key, void *value) {
     if (dict == NULL) // if dict is NULL
         return -1;    // return error
 
-    int rv = _dict_insert_item(dict, key, value); // insert item
-    _maybe_rehash(dict);                          // maybe rehash
-    return rv;                                    // return result
+    int rv = _dict_push_item(dict, key, value); // insert item
+    _maybe_rehash(dict);                        // maybe rehash
+    return rv;                                  // return result
 }
 
 void *dict_get(dict_t *dict, void *key) {
