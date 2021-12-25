@@ -14,6 +14,7 @@ It is the caller's responsability to cast the values to the same type.
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define FOREACH(type, item, array, size)                                   \
     for (size_t X(keep) = 1, X(i) = 0; X(i) < (size); X(keep) = 1, X(i)++) \
@@ -31,5 +32,14 @@ It is the caller's responsability to cast the values to the same type.
 
 #define lerp(x, x0, x1, y0, y1) \
     (((y0) * ((x1) - (x)) + (y1) * ((x) - (x0))) / ((x1) - (x0)))
+
+/**
+ * @brief duplicate a string.
+ * Since -std=c18, `strdup` is not available because it is not part of the
+ * standard C library.
+ *
+ * @return char* - pointer to the duplicated string
+ */
+extern char *strdup(const char *);
 
 #endif
