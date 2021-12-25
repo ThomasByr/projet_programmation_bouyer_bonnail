@@ -17,3 +17,5 @@
     *   structure de dictionnaire, fortement basé sur la table de hachage (ne dispose pas de fonction d'itération pour le moment étant donné l'utilisation prévue)
     *   structure de file de priorité basée sur les tas de Fibonacci
     *   ré-implémentation de l'algorithme de Dijkstra en utilisant les tables de hachage et les files de priorité
+    *   bugs précédents dus à des défauts de conception des tests (duplicata de strdup qui ne fait pas partie de -std=c18 pour la copie de chaînes de caractères)
+    *   implémentation d'un itérateur pour la structure de dictionnaire sur le modèle de la structure d'ensembles (renvoi du couple clé-valeur pour les dictionnaires)
