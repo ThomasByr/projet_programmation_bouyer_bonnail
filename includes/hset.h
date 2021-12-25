@@ -128,7 +128,8 @@ int hset_itr_has_next(hset_itr_t *itr);
 size_t hset_itr_next(hset_itr_t *itr);
 
 /**
- * @brief destroy an iterator
+ * @brief free the iterator's underlying structure.
+ * Does not free the hash set
  *
  * @param itr iterator
  */
