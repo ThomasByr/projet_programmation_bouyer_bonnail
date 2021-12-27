@@ -18,4 +18,4 @@
     *   structure de file de priorité basée sur les tas de Fibonacci
     *   ré-implémentation de l'algorithme de Dijkstra en utilisant les tables de hachage et les files de priorité
     *   bugs précédents dus à des défauts de conception des tests (duplicata de strdup qui ne fait pas partie de -std=c18 pour la copie de chaînes de caractères)
-    *   implémentation d'un itérateur pour la structure de dictionnaire sur le modèle de la structure d'ensembles (renvoi du couple clé-valeur pour les dictionnaires)
+    *   implémentation d'un itérateur pour la structure de dictionnaire sur le modèle de la structure d'ensembles (renvoi au choix de la clé ou de la valeur suivante)
