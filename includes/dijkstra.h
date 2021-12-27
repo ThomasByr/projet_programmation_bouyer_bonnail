@@ -5,9 +5,6 @@
 #ifndef DIJKSTRA_H
 #define DIJKSTRA_H
 
-#include <stdio.h>
-#include <stdlib.h>
-
 #include "hset.h"
 #include "node.h"
 #include "pqueue.h"
@@ -19,8 +16,8 @@
  *
  * @param start start node
  * @param end end node
- * @return vec* - path from end to start
+ * @return int - distance or -1 if no path
  */
-vec_t *dijkstra(node_t *start, node_t *end);
+int dijkstra(node_t *start, node_t *end);
 
 #endif

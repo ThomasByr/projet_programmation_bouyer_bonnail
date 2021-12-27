@@ -66,7 +66,7 @@ int _dict_push_item(dict_t *dict, void *key, void *value) {
     return 1;             // return success 1
 }
 
-static void _maybe_rehash(dict_t *dict) {
+static int _maybe_rehash(dict_t *dict) {
     size_t *old_keys;        // old keys array
     size_t *old_values;      // old values array
     size_t old_capacity, ii; // old capacity, index of the bucket
@@ -80,6 +80,15 @@ static void _maybe_rehash(dict_t *dict) {
         dict->mask = dict->capacity - 1;
         dict->keys = calloc(dict->capacity, sizeof(size_t));
         dict->values = calloc(dict->capacity, sizeof(size_t));
+        if (dict->keys == NULL || dict->values == NULL) {
+            free(dict->keys);
+            free(dict->values);
+            dict->keys = old_keys;
+            dict->values = old_values;
+            dict->capacity = old_capacity;
+            dict->nbits--;
+            return 2;
+        }
 
         dict->nitems = 0;
         dict->n_deleted_items = 0;
@@ -93,6 +102,7 @@ static void _maybe_rehash(dict_t *dict) {
         free(old_keys);
         free(old_values);
     }
+    return 1;
 }
 
 int dict_push(dict_t *dict, void *key, void *value) {
@@ -100,8 +110,8 @@ int dict_push(dict_t *dict, void *key, void *value) {
         return -1;    // return error
 
     int rv = _dict_push_item(dict, key, value); // insert item
-    _maybe_rehash(dict);                        // maybe rehash
-    return rv;                                  // return result
+    int r = _maybe_rehash(dict);                // rehash if needed
+    return rv == 1 ? r : rv;
 }
 
 size_t dict_get(dict_t *dict, void *key) {

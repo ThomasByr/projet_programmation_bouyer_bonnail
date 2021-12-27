@@ -199,6 +199,8 @@ void *pqueue_find_min(pqueue_t *pq) { return pq->min_node->element; }
 
 void *pqueue_pop_min(pqueue_t *pq) {
     heap_node_t *min_node = _extract_min_node(pq);
+    if (min_node == NULL)
+        return NULL;
     void *ret = min_node->element;
     dict_discard(pq->map, ret);
     _free_node(min_node);

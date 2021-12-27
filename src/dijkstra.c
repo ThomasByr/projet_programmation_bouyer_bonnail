@@ -1,18 +1,10 @@
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "dijkstra.h"
 
-void _set_path(vec_t *path, node_t *end) {
-    node_t *node = end;
-    while (node != NULL) {
-        vec_push(path, node->name);
-        node = node->parent;
-    }
-}
-
-vec_t *dijkstra(node_t *start, node_t *end) {
-    vec_t *path = vec_new();
+int dijkstra(node_t *start, node_t *end) {
     hset_t *close = hset_new();
     pqueue_t *open = pqueue_new();
 
@@ -24,11 +16,10 @@ vec_t *dijkstra(node_t *start, node_t *end) {
         current = pqueue_pop_min(open); // pop the node with the lowest weight
         hset_push(close, current);      // add it to the closed set
 
-        if (current == end) {
-            _set_path(path, current);
-            break;
-        }
-        hset_itr_t *itr = current->neighbors;
+        if (current == end)
+            break; // if we found the end, we're done
+
+        hset_itr_t *itr = current->neighbors; // iterate over neighbors
         while (hset_itr_has_next(itr)) {
             node_t *child = (node_t *)hset_itr_value(itr);
             int c = hset_contains(close, (void *)child);
@@ -51,5 +42,5 @@ vec_t *dijkstra(node_t *start, node_t *end) {
     }
     hset_free(close);
     pqueue_free(open);
-    return path;
+    return end->weight == INT_MAX ? -1 : end->weight;
 }
