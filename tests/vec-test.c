@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "macros.h"
+#include "protocol.h"
 #include "vec.h"
 
 void vec_test_0(void) {
@@ -13,22 +14,31 @@ void vec_test_0(void) {
     assert_eq(vec_size(v), 2);
     assert_eq(vec_get_at(v, 0), (void *)"bob1");
     assert_eq(vec_get_at(v, 1), (void *)"bob2");
+
+    char *e = (char *)vec_pop(v);
+    assert_eq(e, (void *)"bob2");
+    assert_eq(vec_size(v), 1);
+    assert_eq(vec_get_at(v, 0), (void *)"bob1");
+    assert_eq(vec_get_at(v, 1), NULL);
     vec_free(v);
 }
 
 void vec_test_1(void) {
     vec_t *v = vec_new();
-    char str[100];
     int n = 1000;
     for (int i = 0; i < n; i++) {
+        char str[100];
         sprintf(str, "bob%d", i);
-        vec_push(v, (void *)str);
+        vec_push(v, (void *)strdup(str));
     }
 
     for (int i = 0; i < n; i++) {
+        char str[100];
         sprintf(str, "bob%d", i);
-        assert_eq(vec_get_at(v, (size_t)i), (void *)str);
+        char *e = (char *)vec_get_at(v, (size_t)i);
+        assert_eq(strcmp(e, str), 0);
     }
+    vec_delete_all(v, free);
     vec_free(v);
 }
 
