@@ -5,9 +5,6 @@
 #ifndef HSET_H
 #define HSET_H
 
-#include <stdio.h>
-#include <stdlib.h>
-
 #include "types.h"
 
 struct hset_s {
@@ -63,7 +60,10 @@ void hset_free(hset_t *hset);
  *
  * @param hset hash set
  * @param item new element
- * @return int - 1 if added, 0 if already present and -1 if error
+ * @return int - `-1` if error (bad item value),
+ * `0` if already present (no change),
+ * `1` if added (new element),
+ * `2` if rehash did not work (set integrity compromised)
  */
 int hset_push(hset_t *hset, void *item);
 

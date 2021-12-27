@@ -66,7 +66,7 @@ int _hset_push_item(hset_t *set, void *item) {
     return 1;               // return success
 }
 
-static void _maybe_rehash(hset_t *set) {
+static int _maybe_rehash(hset_t *set) {
     size_t *old_items;       // old items array
     size_t old_capacity, ii; // old capacity, index of the bucket
 
@@ -78,6 +78,13 @@ static void _maybe_rehash(hset_t *set) {
         set->capacity = (size_t)(1 << set->nbits);
         set->mask = set->capacity - 1;
         set->items = calloc(set->capacity, sizeof(size_t));
+        if (set->items == NULL) {
+            set->nbits--;
+            set->capacity = (size_t)(1 << set->nbits);
+            set->mask = set->capacity - 1;
+            set->items = old_items;
+            return 2;
+        }
 
         set->nitems = 0;
         set->n_deleted_items = 0;
@@ -86,12 +93,13 @@ static void _maybe_rehash(hset_t *set) {
             _hset_push_item(set, (void *)old_items[ii]);
         free(old_items);
     }
+    return 1;
 }
 
 int hset_push(hset_t *set, void *item) {
     int rv = _hset_push_item(set, item); // insert item
-    _maybe_rehash(set);                  // rehash if needed
-    return rv;
+    int r = _maybe_rehash(set);          // rehash if needed
+    return rv == 1 ? r : rv;
 }
 
 int hset_contains(hset_t *set, void *item) {

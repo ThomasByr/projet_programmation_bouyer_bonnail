@@ -5,13 +5,6 @@
 #ifndef ARGS_PARSER_H
 #define ARGS_PARSER_H
 
-#include <ctype.h>
-#include <getopt.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-
 #include "args-options.h"
 
 /**

@@ -12,10 +12,6 @@ It is the caller's responsability to cast the values to the same type.
 #ifndef PROTOCOL_H
 #define PROTOCOL_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #define FOREACH(type, item, array, size)                                   \
     for (size_t X(keep) = 1, X(i) = 0; X(i) < (size); X(keep) = 1, X(i)++) \
         for (type item = (array)[X(i)]; X(keep); X(keep) = 0)
@@ -41,5 +37,11 @@ It is the caller's responsability to cast the values to the same type.
  * @return char* - pointer to the duplicated string
  */
 extern char *strdup(const char *);
+
+/**
+ * @brief display the main usage of the program.
+ *
+ */
+void print_usage(void);
 
 #endif

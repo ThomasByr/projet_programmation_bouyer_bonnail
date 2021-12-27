@@ -5,12 +5,6 @@
 #ifndef XML_PARSER_H
 #define XML_PARSER_H
 
-#include <ctype.h>
-#include <pthread.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include "info-parser.h"
 
 #define NTHREADS 8

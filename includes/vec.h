@@ -3,46 +3,18 @@
 #ifndef VEC_H
 #define VEC_H
 
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/types.h>
-
 #include "types.h"
 
-#if DEBUG || WRITE_LOCK
-#include <assert.h>
-#endif
+#define VEC_MIN_SIZE 1 << 11
 
-#define VEC_MIN_SIZE 1024
-
-typedef struct vec_t {
+struct vec_s {
     void **data;      // this vector only holds pointers
     size_t end_slot;  // index to the end of the vector
     size_t size;      // size of the vector
     size_t free_slot; // index of the last known hole in the vector
     size_t elts;      // number of elements in the vector
-#if DEBUG || WRITE_LOCK
-    /* Write lock. Not thread safe!
-     * Only used with -DWRITE_LOCK or -DDEBUG */
-    int32_t lock;
-#endif
-} vec_t;
-
-#if DEBUG || WRITE_LOCK
-#define LOCK_VEC(v) v->lock = 1;
-#define UNLOCK_VEC(v) v->lock = 0;
-#define IS_VEC_LOCKED(v) (v->lock == 1)
-#define IS_VEC_UNLOCKED(v) (v->lock == 0)
-#define ASSERT_IF_LOCKED(v) assert(!IS_VEC_LOCKED(v))
-#else
-#define LOCK_VEC(v)
-#define UNLOCK_VEC(v)
-#define IS_VEC_LOCKED(v)
-#define IS_VEC_UNLOCKED(v)
-#define ASSERT_IF_LOCKED(v)
-#endif
+};
+typedef struct vec_s vec_t;
 
 /**
  * @brief delete and return the last element
@@ -147,8 +119,8 @@ size_t vec_size(vec_t *v);
  *
  * @param v vector
  * @param ptr pointer to element
- * @return int32_t
+ * @return size_t
  */
-int32_t vec_push(vec_t *v, void *ptr);
+size_t vec_push(vec_t *v, void *ptr);
 
 #endif

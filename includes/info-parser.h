@@ -5,11 +5,6 @@
 #ifndef INFO_PARSER_H
 #define INFO_PARSER_H
 
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 typedef struct parser_context_t {
     int text_count;
     int open_count;
