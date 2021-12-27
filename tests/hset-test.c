@@ -2,41 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "foo.h"
 #include "hset.h"
 #include "macros.h"
-
-typedef struct foo_t {
-    int a;
-    int b;
-    char *id;
-} foo_t;
-
-foo_t *foo_new(int id) {
-    foo_t *foo = malloc(sizeof(foo_t));
-    foo->a = 0;
-    foo->b = 0;
-    foo->id = malloc(sizeof(char) * 1000000);
-    sprintf(foo->id, "%d", id);
-
-    return foo;
-}
-
-void foo_free(foo_t *foo) {
-    free(foo->id);
-    free(foo);
-}
-
-void foo_free_void(void *foo) {
-    foo_t *f = (foo_t *)foo;
-    foo_free(f);
-}
-
-void *foo_cmp_a_void(void *foo, void *a) {
-    foo_t *f = (foo_t *)foo;
-    int *i = (int *)a;
-    assert_eq(f->a, *i);
-    return NULL;
-}
 
 void hset_test_0(void) {
     hset_t *hset = hset_new();
@@ -78,7 +46,7 @@ void hset_test_1(void) {
     size_t count = 0;
     while (hset_itr_has_next(itr)) {
         count++;
-        foo_t *foo = (foo_t *)hset_itr_val(itr);
+        foo_t *foo = (foo_t *)hset_itr_value(itr);
         assert_eq(foo->a, 42);
         foo->a = 1;
         hset_push(hset, foo);
@@ -89,7 +57,7 @@ void hset_test_1(void) {
     hset_itr_reset(itr);
 
     while (hset_itr_has_next(itr)) {
-        foo_t *foo = (foo_t *)hset_itr_val(itr);
+        foo_t *foo = (foo_t *)hset_itr_value(itr);
         foo_free(foo);
         hset_itr_next(itr);
     }

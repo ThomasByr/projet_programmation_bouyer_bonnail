@@ -3,7 +3,9 @@
 #include <string.h>
 
 #include "dict.h"
+#include "foo.h"
 #include "macros.h"
+#include "protocol.h"
 
 void dict_test_0(void) {
     dict_t *dict = dict_new();
@@ -19,21 +21,35 @@ void dict_test_0(void) {
 
 void dict_test_1(void) {
     dict_t *dict = dict_new();
+    dict_itr_t *itr = dict_itr_new(dict);
     int n = 1000;
     for (int i = 0; i < n; i++) {
-        char key[100];
-        sprintf(key, "foo%d", i);
-        dict_push(dict, (void *)key, (void *)"bar");
+        foo_t *foo = foo_new(i);
+        foo->a = 42;
+        int x = dict_push(dict, foo, foo);
+        assert_eq(x, 1);
     }
-    // printf("\nnumber of items: %lu\n", dict_nitems(dict));
-    // assert_eq(dict_nitems(dict), n);
+    assert_eq(dict_nitems(dict), n);
 
-    for (int i = 0; i < n; i++) {
-        char key[100];
-        sprintf(key, "foo%d", i);
-        char *value = (char *)dict_get(dict, (void *)key);
-        assert_eq(strcmp(value, "bar"), 0);
+    size_t count = 0;
+    while (dict_itr_has_next(itr)) {
+        count++;
+        foo_t *foo = (foo_t *)dict_itr_value(itr);
+        assert_eq(foo->a, 42);
+        foo->a = 1;
+        dict_push(dict, foo, foo);
+        dict_itr_next(itr);
     }
+    assert_eq(count, n);
+    assert_eq(dict_nitems(dict), n);
+    dict_itr_reset(itr);
+
+    while (dict_itr_has_next(itr)) {
+        foo_t *foo = (foo_t *)dict_itr_value(itr);
+        foo_free(foo);
+        dict_itr_next(itr);
+    }
+    dict_itr_free(itr);
     dict_free(dict);
 }
 
@@ -45,15 +61,15 @@ void dict_test_2(void) {
 
     dict_discard(dict, (void *)"foo1");
     assert_eq(dict_nitems(dict), 1);
-    assert_eq(dict_get(dict, (void *)"foo1"), NULL);
-    assert_eq(dict_get(dict, (void *)"foo2"), "baz");
+    assert_eq(dict_get(dict, (void *)"foo1"), 0);
+    assert_eq((char *)dict_get(dict, (void *)"foo2"), "baz");
 
     dict_push(dict, (void *)"foo1", (void *)"bar");
     assert_eq(dict_nitems(dict), 2);
     dict_discard(dict, (void *)"foo2");
     assert_eq(dict_nitems(dict), 1);
-    assert_eq(dict_get(dict, (void *)"foo1"), "bar");
-    assert_eq(dict_get(dict, (void *)"foo2"), NULL);
+    assert_eq((char *)dict_get(dict, (void *)"foo1"), "bar");
+    assert_eq(dict_get(dict, (void *)"foo2"), 0);
 
     dict_push(dict, (void *)"foo1", (void *)"bar");
     dict_push(dict, (void *)"foo2", (void *)"baz");
@@ -61,31 +77,9 @@ void dict_test_2(void) {
     dict_push(dict, (void *)"foo2", (void *)"bar");
 
     assert_eq(dict_nitems(dict), 2);
-    assert_eq(dict_get(dict, (void *)"foo1"), "baz");
-    assert_eq(dict_get(dict, (void *)"foo2"), "bar");
+    assert_eq((char *)dict_get(dict, (void *)"foo1"), "baz");
+    assert_eq((char *)dict_get(dict, (void *)"foo2"), "bar");
 
-    dict_free(dict);
-}
-
-void dict_test_3(void) {
-    dict_t *dict = dict_new();
-    int n = 1000;
-    for (int i = 0; i < n; i++) {
-        char key[100] = "";
-        char value[100] = "";
-        sprintf(key, "foo%d", i);
-        sprintf(value, "bar%d", i);
-        dict_push(dict, (void *)key, (void *)value);
-    }
-
-    for (int i = 0; i < n; i++) {
-        char key[100] = "";
-        char value[100] = "";
-        sprintf(key, "foo%d", i);
-        sprintf(value, "bar%d", i);
-        char *v = (char *)dict_get(dict, (void *)key);
-        assert_eq(strcmp(v, value), 0);
-    }
     dict_free(dict);
 }
 
@@ -93,5 +87,4 @@ void dict_test(void) {
     test_case(dict_test_0);
     test_case(dict_test_1);
     test_case(dict_test_2);
-    test_case(dict_test_3);
 }
