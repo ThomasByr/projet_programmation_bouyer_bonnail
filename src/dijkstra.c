@@ -30,7 +30,7 @@ vec_t *dijkstra(node_t *start, node_t *end) {
         }
         hset_itr_t *itr = current->neighbors;
         while (hset_itr_has_next(itr)) {
-            node_t *child = (node_t *)hset_itr_val(itr);
+            node_t *child = (node_t *)hset_itr_value(itr);
             int c = hset_contains(close, (void *)child);
             if (c == 0) {
                 int new_weight = current->weight + 1;

@@ -148,9 +148,8 @@ int hset_itr_has_next(hset_itr_t *itr) {
     if (itr->set->nitems == 0 || itr->index >= itr->set->capacity)
         return 0;
 
-    index = itr->index;                // save index
-    while (index < itr->set->capacity) // while index is less than capacity
-    {
+    index = itr->index; // save index
+    while (index < itr->set->capacity) {
         size_t value = itr->set->items[index++]; // get value at index
         if (value != 0)                          // if value is not 0
             return 1;                            // return success
@@ -170,7 +169,7 @@ size_t hset_itr_next(hset_itr_t *itr) {
     return itr->index; // return index
 }
 
-size_t hset_itr_val(hset_itr_t *itr) {
+size_t hset_itr_value(hset_itr_t *itr) {
     if (itr->set->items[itr->index] == 0) // if value is 0
         hset_itr_next(itr);               // get next valid value
 
@@ -187,7 +186,7 @@ void *hset_itr_for_each(hset_itr_t *itr, for_each_callback_t *fe, void *data) {
     hset_itr_reset(itr); // reset iterator
 
     while (hset_itr_has_next(itr)) {
-        void *value = (void *)hset_itr_val(itr);
+        void *value = (void *)hset_itr_value(itr);
         if (value != NULL) {
             void *p = (fe)(value, data); // call for_each_callback
             if (p != NULL)               // if callback returns non-NULL
@@ -202,7 +201,7 @@ void hset_itr_discard_all(hset_itr_t *itr, delete_callback_t *dc) {
     hset_itr_reset(itr); // reset iterator
 
     while (hset_itr_has_next(itr)) {
-        void *value = (void *)hset_itr_val(itr);
+        void *value = (void *)hset_itr_value(itr);
         if (value != NULL) {
             int p = hset_discard(itr->set, value); // remove value from set
             if (p == 0) {

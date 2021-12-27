@@ -216,7 +216,7 @@ void pqueue_merge(pqueue_t *pq1, pqueue_t *pq2) {
 
 int pqueue_push(pqueue_t *pq, void *element, int key) {
     heap_node_t *node = _create_node(element, key);
-    int rv = dict_get(pq->map, element) != NULL ? 0 : 1;
+    int rv = dict_get(pq->map, element) != 0 ? 0 : 1;
 
     if (rv) {
         _push_node(pq, node);

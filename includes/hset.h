@@ -108,7 +108,7 @@ hset_itr_t *hset_itr_new(hset_t *set);
  * @param itr iterator
  * @return size_t - value at current index
  */
-size_t hset_itr_val(hset_itr_t *itr);
+size_t hset_itr_value(hset_itr_t *itr);
 
 /**
  * @brief return 1 is can advance, 0 otherwise
@@ -119,8 +119,8 @@ size_t hset_itr_val(hset_itr_t *itr);
 int hset_itr_has_next(hset_itr_t *itr);
 
 /**
- * @brief check if iterator can advance, if so advances
- * returns current index if can advance and -1 otherwise
+ * @brief check if iterator can advance, if so advances.
+ * Returns current index if can advance and -1 otherwise
  *
  * @param itr iterator
  * @return size_t

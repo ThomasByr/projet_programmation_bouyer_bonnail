@@ -16,7 +16,7 @@ struct dict_s {
 
     size_t capacity;
     size_t *keys;
-    void **values;
+    size_t *values;
     size_t nitems;
     size_t n_deleted_items;
 };
@@ -25,6 +25,16 @@ struct dict_s {
  *
  */
 typedef struct dict_s dict_t;
+
+struct dict_itr_s {
+    dict_t *dict;
+    size_t index;
+};
+/**
+ * @brief iterator for dictionary, somehow order is preserved but not guaranteed
+ *
+ */
+typedef struct dict_itr_s dict_itr_t;
 
 /**
  * @brief new dictionary
@@ -57,9 +67,9 @@ int dict_push(dict_t *dict, void *key, void *value);
  *
  * @param dict dictionary
  * @param key key
- * @return void* - value or NULL if key not found
+ * @return size_t - value or 0 if key not found
  */
-void *dict_get(dict_t *dict, void *key);
+size_t dict_get(dict_t *dict, void *key);
 
 /**
  * @brief remove key-value pair from dictionary
@@ -77,5 +87,19 @@ int dict_discard(dict_t *dict, void *key);
  * @return size_t
  */
 size_t dict_nitems(dict_t *dict);
+
+dict_itr_t *dict_itr_new(dict_t *dict);
+
+void dict_itr_free(dict_itr_t *itr);
+
+size_t dict_itr_key(dict_itr_t *itr);
+
+size_t dict_itr_value(dict_itr_t *itr);
+
+int dict_itr_has_next(dict_itr_t *itr);
+
+size_t dict_itr_next(dict_itr_t *itr);
+
+void dict_itr_reset(dict_itr_t *itr);
 
 #endif
