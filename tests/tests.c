@@ -14,6 +14,6 @@ int main(void) {
     hset_test();
     dict_test();
     pqueue_test();
-    // dijkstra_test();
     vec_test();
+    dijkstra_test();
 }
