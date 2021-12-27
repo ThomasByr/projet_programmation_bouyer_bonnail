@@ -18,6 +18,10 @@ struct heap_node_s {
     int degree;                 // number of children
     int mark;                   // is this node mark for deletion?
 };
+/**
+ * @brief user should not use this structure directly
+ *
+ */
 typedef struct heap_node_s heap_node_t;
 
 struct pqueue_s {
