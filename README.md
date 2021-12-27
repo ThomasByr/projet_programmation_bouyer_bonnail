@@ -4,13 +4,16 @@
 
 1. [Le sujet](#le-sujet)
 2. [Méthode de résolution](#méthode-de-résolution)
-3. [Benchmarking](#benchmarking)
-4. [Changelog](#changelog)
-5. [Bugs et TODO](#bugs-et-todo)
+3. [Utilisation et pré-requis](#utilisation-et-pré-requis)
+4. [Benchmarking](#benchmarking)
+5. [Changelog](#changelog)
+6. [Bugs et TODO](#bugs-et-todo)
 
 ## Le sujet
 
 ## Méthode de résolution
+
+## Utilisation et pré-requis
 
 ## Benchmarking
 
@@ -29,6 +32,7 @@ Se référer au fichier [changelog](changelog.md) pour la liste exhaustive des m
 *   ré-implémentation de l'algorithme de Dijkstra en utilisant les tables de hachage et les files de priorité
 *   bugs précédents dus à des défauts de conception des tests (duplicata de strdup qui ne fait pas partie de -std=c18 pour la copie de chaînes de caractères)
 *   implémentation d'un itérateur pour la structure de dictionnaire sur le modèle de la structure d'ensembles (renvoi au choix de la clé ou de la valeur suivante)
+*   exclusion de librairies inutilisées et d'imports dans les fichiers .h
 
 </details>
 
