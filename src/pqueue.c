@@ -21,6 +21,9 @@ heap_node_t *_create_node(void *element, int key) {
 void _free_node(heap_node_t *node) { free(node); }
 
 void _clear(heap_node_t *node) {
+    // t1 is used to traversal the circular list.
+    // When t1 == node for the second time (the first time is at t1's
+    // initialization), t1 has completed the traversal.
     if (node != NULL) {
         heap_node_t *t1 = node;
         do {
@@ -28,7 +31,7 @@ void _clear(heap_node_t *node) {
             t1 = t1->right;
             _clear(t2->child);
             _free_node(t2);
-        } while (t1 != node);
+        } while (t1 != node); // clear all children recursively
     }
 }
 
@@ -45,7 +48,7 @@ heap_node_t *_merge(heap_node_t *x, heap_node_t *y) {
     } // swap nodes
     heap_node_t *xr = x->right;
     heap_node_t *yl = y->left;
-    x->right = y;
+    x->right = y; // merge y into x
     y->left = x;
     xr->left = yl;
     yl->right = xr;
@@ -64,11 +67,11 @@ void _unparent_all(heap_node_t *node) {
     do {
         x->parent = NULL;
         x = x->right;
-    } while (x != node);
+    } while (x != node); // make all nodes' parents NULL in a circular list
 }
 
 void _remove_from_circular_list(heap_node_t *node) {
-    if (node->right == node)
+    if (node->right == node) // root list only has one node
         return;
     heap_node_t *left = node->left;
     heap_node_t *right = node->right;
@@ -80,17 +83,20 @@ void _make_child(heap_node_t *child, heap_node_t *parent) {
     _remove_from_circular_list(child);
     child->left = child->right = child;
     child->parent = parent;
+    // add child to parent's child list
     parent->child = _merge(parent->child, child);
     parent->degree++;
     child->mark = 0;
 }
 
 void _cut(pqueue_t *pq, heap_node_t *node1, heap_node_t *node2) {
+    // remove node1 from child list of node2, decrement degree of node2
+    // add node1 to root list, set parent to NULL, set mark to 0
     _remove_from_circular_list(node1);
     if (node1->right == node1)
-        node2->child = NULL;
+        node2->child = NULL; // node1 is the only child of node2
     else
-        node2->child = node1->right;
+        node2->child = node1->right; // update child
 
     node2->degree--;
     _merge(pq->min_node, node1);
@@ -99,6 +105,8 @@ void _cut(pqueue_t *pq, heap_node_t *node1, heap_node_t *node2) {
 }
 
 void _cascading_cut(pqueue_t *pq, heap_node_t *node) {
+    // Continue cutting on the path from the decreased node to the root
+    // until meet one node, which is either a root or is unmarked
     heap_node_t *parent = node->parent;
     if (parent != NULL) {
         if (node->mark == 0)
@@ -122,7 +130,7 @@ void _decrease_key(pqueue_t *pq, heap_node_t *node, int new_key) {
 }
 
 void _consolidate(pqueue_t *pq) {
-    int dn = (int)(log2f((float)pq->total_nodes) / log2f(1.618f));
+    int dn = (int)(log2f((float)pq->total_nodes) / log2f(1.618f)); // magic
     heap_node_t *a[dn + 1];
     for (int i = 0; i <= dn; i++)
         a[i] = NULL;
@@ -140,13 +148,15 @@ void _consolidate(pqueue_t *pq) {
                 heap_node_t *tmp = x;
                 x = y;
                 y = tmp;
-            }                  // x is the smaller node
+            }                  // x is the node with smaller key
             _make_child(y, x); // make y the child of x
-            a[d++] = NULL;     // new node has d+1 child, a[d] = NULL, d = d + 1
+            // now the new node has d + 1 child, so a[d] = NULL, d = d + 1
+            a[d++] = NULL;
         }
         if (break_flag)
             break;
         a[x->degree] = x;
+        x = x->right; // move to the next node in the root list
     }
     pq->min_node = x; // update min node
     heap_node_t *iter = x;
@@ -167,7 +177,7 @@ heap_node_t *_extract_min_node(pqueue_t *pq) {
         if (min_node == min_node->right)
             pq->min_node = NULL;
         else {
-            pq->min_node = min_node->right;
+            pq->min_node = min_node->right; // should now be the min
             _consolidate(pq);
         }
         pq->total_nodes--;
@@ -188,7 +198,7 @@ void pqueue_free(pqueue_t *pq) {
     dict_free(pq->map);
     while (pq->min_node != NULL) {
         heap_node_t *node = _extract_min_node(pq);
-        free(node);
+        _free_node(node);
     }
     free(pq);
 }
