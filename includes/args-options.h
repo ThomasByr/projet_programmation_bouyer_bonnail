@@ -5,10 +5,6 @@
 #ifndef ARGS_OPTIONS_H
 #define ARGS_OPTIONS_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 struct options_s {
     int verbose;
     int debug;

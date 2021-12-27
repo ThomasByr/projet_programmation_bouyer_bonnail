@@ -199,6 +199,8 @@ void *pqueue_find_min(pqueue_t *pq) { return pq->min_node->element; }
 
 void *pqueue_pop_min(pqueue_t *pq) {
     heap_node_t *min_node = _extract_min_node(pq);
+    if (min_node == NULL)
+        return NULL;
     void *ret = min_node->element;
     dict_discard(pq->map, ret);
     _free_node(min_node);
@@ -216,7 +218,7 @@ void pqueue_merge(pqueue_t *pq1, pqueue_t *pq2) {
 
 int pqueue_push(pqueue_t *pq, void *element, int key) {
     heap_node_t *node = _create_node(element, key);
-    int rv = dict_get(pq->map, element) != NULL ? 0 : 1;
+    int rv = dict_get(pq->map, element) != 0 ? 0 : 1;
 
     if (rv) {
         _push_node(pq, node);

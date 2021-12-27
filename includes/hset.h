@@ -5,9 +5,6 @@
 #ifndef HSET_H
 #define HSET_H
 
-#include <stdio.h>
-#include <stdlib.h>
-
 #include "types.h"
 
 struct hset_s {
@@ -63,7 +60,10 @@ void hset_free(hset_t *hset);
  *
  * @param hset hash set
  * @param item new element
- * @return int - 1 if added, 0 if already present and -1 if error
+ * @return int - `-1` if error (bad item value),
+ * `0` if already present (no change),
+ * `1` if added (new element),
+ * `2` if rehash did not work (set integrity compromised)
  */
 int hset_push(hset_t *hset, void *item);
 
@@ -108,7 +108,7 @@ hset_itr_t *hset_itr_new(hset_t *set);
  * @param itr iterator
  * @return size_t - value at current index
  */
-size_t hset_itr_val(hset_itr_t *itr);
+size_t hset_itr_value(hset_itr_t *itr);
 
 /**
  * @brief return 1 is can advance, 0 otherwise
@@ -119,8 +119,8 @@ size_t hset_itr_val(hset_itr_t *itr);
 int hset_itr_has_next(hset_itr_t *itr);
 
 /**
- * @brief check if iterator can advance, if so advances
- * returns current index if can advance and -1 otherwise
+ * @brief check if iterator can advance, if so advances.
+ * Returns current index if can advance and -1 otherwise
  *
  * @param itr iterator
  * @return size_t
@@ -128,7 +128,8 @@ int hset_itr_has_next(hset_itr_t *itr);
 size_t hset_itr_next(hset_itr_t *itr);
 
 /**
- * @brief destroy an iterator
+ * @brief free the iterator's underlying structure.
+ * Does not free the hash set
  *
  * @param itr iterator
  */
