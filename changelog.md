@@ -20,3 +20,6 @@
     *   bugs précédents dus à des défauts de conception des tests (duplicata de strdup qui ne fait pas partie de -std=c18 pour la copie de chaînes de caractères)
     *   implémentation d'un itérateur pour la structure de dictionnaire sur le modèle de la structure d'ensembles (renvoi au choix de la clé ou de la valeur suivante)
     *   exclusion de librairies inutilisées et d'imports dans les fichiers .h
+3.  **v0.0.3** il s'agrait de parser le fichier maintenant...
+    *   merge dev->master
+    *   ajout de quelques commentaires pour aider la re-lecture
