@@ -123,4 +123,11 @@ size_t vec_size(vec_t *v);
  */
 size_t vec_push(vec_t *v, void *ptr);
 
+/**
+ * @brief reverse the order of the vector
+ *
+ * @param v vector
+ */
+void vec_reverse(vec_t *v);
+
 #endif

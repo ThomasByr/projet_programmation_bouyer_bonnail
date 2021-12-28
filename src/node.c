@@ -8,6 +8,7 @@ node_t *node_new(char *name, hset_t *neighbors) {
     node_t *node = malloc(sizeof(node_t));
     node->weight = INT_MAX;
     node->name = name;
+    node->parent = NULL;
     node->neighbors = hset_itr_new(neighbors);
     return node;
 }

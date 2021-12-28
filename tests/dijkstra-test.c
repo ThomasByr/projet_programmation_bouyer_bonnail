@@ -14,9 +14,19 @@ void dijkstra_test_0(void) {
     hset_push(n1->neighbors->set, n2);
 
     int d = dijkstra(n1, n2);
+    vec_t *path = get_path(n2);
     assert_eq(d, 1);
+    assert_eq(n2->weight, 1);
+    assert_eq(n1->weight, 0);
+    assert_eq(n2->parent, n1);
+    assert_eq(n1->parent, NULL);
+    assert_eq(vec_size(path), 2);
+    assert_eq(vec_get_at(path, 0), n1);
+    assert_eq(vec_get_at(path, 1), n2);
+
     hset_free(n1->neighbors->set);
     hset_free(n2->neighbors->set);
+    vec_free(path);
     node_free(n1);
     node_free(n2);
 }

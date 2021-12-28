@@ -20,4 +20,12 @@
  */
 int dijkstra(node_t *start, node_t *end);
 
+/**
+ * @brief get the path from start to end assuming dijkstra was run
+ *
+ * @param end end node
+ * @return vec_t* - path from start to end
+ */
+vec_t *get_path(node_t *end);
+
 #endif
