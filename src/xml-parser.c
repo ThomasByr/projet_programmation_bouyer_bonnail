@@ -11,10 +11,10 @@ static const char end_tag = '/';    // ending tag
 static const char delims[] = " \n"; // delimiters
 
 const char *external[] = {
-    "article",
-    "phdthesis",
-    "mastersthesis",
+    "article",      "inproceedings", "proceedings",   "book",
+    "incollection", "phdthesis",     "mastersthesis", "www",
 };
+
 const char *look_for[] = {
     "title", "author", "date", "school", "year", "pages", "isbn",
 };
