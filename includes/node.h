@@ -11,6 +11,7 @@
 struct node_s {
     char *name;
     hset_itr_t *neighbors;
+    hset_itr_t *publications;
     int weight;
     struct node_s *parent;
 };

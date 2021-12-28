@@ -129,3 +129,12 @@ vec_t *vec_new(void) {
     vec_init(v);
     return v;
 }
+
+void vec_reverse(vec_t *v) {
+    void *tmp = NULL;
+    for (size_t i = 0; i < v->end_slot / 2; i++) {
+        tmp = v->data[i];
+        v->data[i] = v->data[v->end_slot - i - 1];
+        v->data[v->end_slot - i - 1] = tmp;
+    }
+}

@@ -44,3 +44,14 @@ int dijkstra(node_t *start, node_t *end) {
     pqueue_free(open);
     return end->weight == INT_MAX ? -1 : end->weight;
 }
+
+vec_t *get_path(node_t *end) {
+    vec_t *path = vec_new();
+    node_t *current = end;
+    while (current != NULL) {
+        vec_push(path, current);
+        current = current->parent;
+    }
+    vec_reverse(path);
+    return path;
+}
