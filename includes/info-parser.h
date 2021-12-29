@@ -5,26 +5,29 @@
 #ifndef INFO_PARSER_H
 #define INFO_PARSER_H
 
-typedef struct parser_context_t {
+struct parser_context_s {
     int text_count;
     int open_count;
     int close_count;
-} parser_context_t;
+};
+typedef struct parser_context_s parser_context_t;
 
-typedef enum parser_error_type_t {
+enum parser_error_type_e {
     PARSER_OK,
     ERROR_UNABLE_TO_ALLOCATE_MEMORY,
     ERROR_WHILE_READING_FILE,
     ERROR_UNABLE_TO_OPEN_FILE,
     ERROR_UNEXPECTED_END_OF_TAG,
-} parser_error_type_t;
+};
+typedef enum parser_error_type_e parser_error_type_t;
 
-typedef struct parser_info_t {
+struct parser_info_s {
     void (*handleOpenTag)(char *, void *);
     void (*handleCloseTag)(char *, void *);
     void (*handleText)(char *, void *);
     void *data;
-} parser_info_t;
+};
+typedef struct parser_info_s parser_info_t;
 
 /**
  * @brief tell the parser to handle some text between tags

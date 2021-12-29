@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "vec.h"
 #include "xml-parser.h"
 
 int main(int argc, char *argv[]) {
