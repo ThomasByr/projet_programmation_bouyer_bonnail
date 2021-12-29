@@ -16,7 +16,7 @@ const char *external[] = {
 };
 
 const char *look_for[] = {
-    "title", "author", "date", "school", "year", "pages", "isbn",
+    "title", "author", "year", "pages", "url",
 };
 
 void get_tag_id(char *tag) {

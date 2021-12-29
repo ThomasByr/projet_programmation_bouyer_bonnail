@@ -9,11 +9,11 @@
 #include "types.h"
 
 struct node_s {
-    char *name;
-    hset_itr_t *neighbors;
-    hset_itr_t *papers;
-    int weight;
-    struct node_s *parent;
+    char *name;            // name of the author
+    hset_itr_t *neighbors; // set of neighbor nodes
+    hset_itr_t *papers;    // set of paper titles
+    int weight;            // weight of the node (distance from start)
+    struct node_s *parent; // parent node
 };
 typedef struct node_s node_t;
 
@@ -21,8 +21,8 @@ typedef struct node_s node_t;
  * @brief new node with an infinite weight
  *
  * @param name name of the author
- * @param neighbors set of neighbors
- * @param papers set of scientific papers
+ * @param neighbors set of neighbor nodes
+ * @param papers set of scientific paper titles
  * @return node_t*
  */
 node_t *node_new(char *name, hset_t *neighbors, hset_t *papers);
