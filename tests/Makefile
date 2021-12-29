@@ -23,6 +23,9 @@ cov: clean tests
 	lcov -d obj -c -o report.info
 	genhtml -o report -t "Coverage" report.info
 
+check: clean tests
+	time valgrind --leak-check=full -q ./$(TARGET)
+
 $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.c
 	mkdir -p $(OBJDIR)
 	$(CC) -o $@ -c $< $(CFLAGS) -isystem$(INCLUDE_PATH)
