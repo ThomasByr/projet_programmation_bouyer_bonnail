@@ -91,7 +91,7 @@ static unsigned long _no_asserts = 0;
             fprintf(stderr, "\033[0m");                                  \
         } else {                                                         \
             fprintf(stderr, "\033[0;31m");                               \
-            fprintf(stderr, " pending (0)\n");                           \
+            fprintf(stderr, " fake (0)\n");                              \
             fprintf(stderr, "\033[0m");                                  \
         }                                                                \
     } while (0);
