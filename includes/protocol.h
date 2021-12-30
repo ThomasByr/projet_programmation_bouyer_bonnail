@@ -20,7 +20,7 @@ It is the caller's responsability to cast the values to the same type.
     FOREACH(__typeof__(array[0]), item, array, length(array))
 #define foreach(item_in_array) _foreach(item_in_array)
 
-#define in ,
+#define of ,
 #define length(array) (sizeof(array) / sizeof((array)[0]))
 #define CAT(a, b) CAT_HELPER(a, b)
 #define CAT_HELPER(a, b) a##b
@@ -43,5 +43,32 @@ extern char *strdup(const char *);
  *
  */
 void print_usage(void);
+
+/**
+ * @brief compare two strings.
+ *
+ * @param a first string
+ * @param b second string
+ * @return int
+ */
+int compare_strings(const void *a, const void *b);
+
+/**
+ * @brief compare two integers.
+ *
+ * @param a first integer
+ * @param b second integer
+ * @return int - -1 if a < b, 0 if a == b, 1 if a > b
+ */
+int compare_ints(const void *a, const void *b);
+
+/**
+ * @brief compare two floats.
+ *
+ * @param a first float
+ * @param b second float
+ * @return int - -1 if a < b, 0 if a == b, 1 if a > b
+ */
+int compare_floats(const void *a, const void *b);
 
 #endif
