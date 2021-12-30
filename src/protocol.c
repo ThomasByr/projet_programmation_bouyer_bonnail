@@ -29,3 +29,5 @@ int compare_floats(const void *a, const void *b) {
 }
 
 void print_usage(void) { printf("\n"); }
+
+void print_version(void) { printf("\n"); }

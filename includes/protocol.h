@@ -45,6 +45,12 @@ extern char *strdup(const char *);
 void print_usage(void);
 
 /**
+ * @brief display the version of the program.
+ *
+ */
+void print_version(void);
+
+/**
  * @brief compare two strings.
  *
  * @param a first string
