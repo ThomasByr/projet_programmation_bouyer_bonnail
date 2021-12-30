@@ -20,7 +20,7 @@ all : $(BINDIR)/$(TARGET)
 $(BINDIR)/$(TARGET): $(OBJECTS)
 	mkdir -p $(BINDIR)
 	$(CC) -o $@ $^ $(CFLAGS) $(LDLIBS)
-	@echo "Linking complete!"
+	@echo "\033[92mLinking complete!\033[0m"
 
 $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.c $(INCLUDES)
 	mkdir -p $(OBJDIR)

@@ -16,7 +16,7 @@ OBJECTS = $(filter-out $(OBJDIR)/main.o,$(OBJECTS0))
 
 tests: $(OBJECTS) obj/tests.o
 	$(CC) -o $@ $^ $(CFLAGS) $(LDLIBS)
-	@echo "Linking complete!"
+	@echo "\033[92mLinking complete!\033[0m"
 
 cov: clean tests
 	valgrind --leak-check=full -q ./$(TARGET)

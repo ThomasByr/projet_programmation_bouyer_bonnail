@@ -23,3 +23,4 @@
 3.  **v0.0.3** il s'agrait de parser le fichier maintenant...
     *   merge dev->master
     *   ajout de quelques commentaires pour aider la re-lecture
+    *   nouvelles méthodes pour les vecteurs, nouveaux tests et procédures, ajout de couleurs dans la sortie des makefile sur la base des macros de test

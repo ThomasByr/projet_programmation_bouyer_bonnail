@@ -4,7 +4,6 @@
 #include "dict-test.c"
 #include "dijkstra-test.c"
 #include "hset-test.c"
-#include "macros.h"
 #include "pqueue-test.c"
 #include "vec-test.c"
 #include "xml-parser-test.c"

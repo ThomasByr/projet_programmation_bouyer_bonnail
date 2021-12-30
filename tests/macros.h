@@ -17,6 +17,10 @@ are used to check the inequality of two values.
 *   only use `assert_info` when the evaluated expression does not expand to it's
 original form (for example, `assert_info(_a == _b, a == b)` if `a` and `b` are
 casted to the same type in `_a` and `_b`).
+*   `cast_to_same_type` macro is used to cast two values to the same type.
+As specified before, the type of the first argument is arbitrarily chosen.
+This macro thus creates two temporary variables, `_a` and `_b` that will be
+used to perform checks.
 
 */
 
@@ -26,8 +30,11 @@ casted to the same type in `_a` and `_b`).
 #include <stdio.h>
 #include <stdlib.h>
 
+static unsigned long _no_asserts = 0;
+
 #define assert_info(expr, ...)                                         \
     do {                                                               \
+        _no_asserts++;                                                 \
         if (!(expr)) {                                                 \
             fprintf(stderr, "\033[0;31m");                             \
             fprintf(stderr, "\nassertion failed: %s\n", #__VA_ARGS__); \
@@ -37,51 +44,55 @@ casted to the same type in `_a` and `_b`).
     } while (0);
 #define assert(expr) assert_info(expr, expr);
 
+#define cast_to_same_type(a, b) \
+    __typeof__(a) _a = (a);     \
+    __typeof__(a) _b = (b);
+
 #define assert_eq(a, b)                \
     do {                               \
-        __typeof__(a) _a = (a);        \
-        __typeof__(a) _b = (b);        \
+        cast_to_same_type(a, b);       \
         assert_info(_a == _b, a == b); \
     } while (0);
 #define assert_neq(a, b)               \
     do {                               \
-        __typeof__(a) _a = (a);        \
-        __typeof__(a) _b = (b);        \
+        cast_to_same_type(a, b);       \
         assert_info(_a != _b, a != b); \
     } while (0);
 #define assert_lt(a, b)              \
     do {                             \
-        __typeof__(a) _a = (a);      \
-        __typeof__(a) _b = (b);      \
+        cast_to_same_type(a, b);     \
         assert_info(_a < _b, a < b); \
     } while (0);
 #define assert_gt(a, b)              \
     do {                             \
-        __typeof__(a) _a = (a);      \
-        __typeof__(a) _b = (b);      \
+        cast_to_same_type(a, b);     \
         assert_info(_a > _b, a > b); \
     } while (0);
 #define assert_leq(a, b)               \
     do {                               \
-        __typeof__(a) _a = (a);        \
-        __typeof__(a) _b = (b);        \
+        cast_to_same_type(a, b);       \
         assert_info(_a <= _b, a <= b); \
     } while (0);
 #define assert_geq(a, b)               \
     do {                               \
-        __typeof__(a) _a = (a);        \
-        __typeof__(a) _b = (b);        \
+        cast_to_same_type(a, b);       \
         assert_info(_a >= _b, a >= b); \
     } while (0);
 
 #define test_case(name)                                                  \
     do {                                                                 \
-        fprintf(stderr, "\033[0m");                                      \
+        _no_asserts = 0;                                                 \
         fprintf(stderr, "running %s:%d: %s", __FILE__, __LINE__, #name); \
         name();                                                          \
-        fprintf(stderr, "\033[0;32m");                                   \
-        fprintf(stderr, " ok\n");                                        \
-        fprintf(stderr, "\033[0m");                                      \
+        if (_no_asserts > 0) {                                           \
+            fprintf(stderr, "\033[0;32m");                               \
+            fprintf(stderr, " ok (%lu)\n", _no_asserts);                 \
+            fprintf(stderr, "\033[0m");                                  \
+        } else {                                                         \
+            fprintf(stderr, "\033[0;31m");                               \
+            fprintf(stderr, " fake (0)\n");                              \
+            fprintf(stderr, "\033[0m");                                  \
+        }                                                                \
     } while (0);
 
 #endif
