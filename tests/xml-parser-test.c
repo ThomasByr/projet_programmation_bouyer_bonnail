@@ -19,7 +19,7 @@ void xml_test_error_0(void) {
 void xml_test_0(void) {
     char arr[] = "abcdefghijklmnopqrstuvwxyz";
     int count = 0;
-    foreach (item in arr) {
+    foreach (item of arr) {
         (void)item;
         count++;
     }

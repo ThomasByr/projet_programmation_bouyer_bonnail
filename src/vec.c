@@ -94,10 +94,16 @@ size_t vec_used(vec_t *v) { return v->end_slot; }
 
 size_t vec_size(vec_t *v) { return v->elts; }
 
-void vec_delete_at(vec_t *v, size_t index) {
+void vec_delete_at(vec_t *v, size_t index, delete_callback_t *dc) {
+    if (index >= v->end_slot)
+        return;
+    void *ptr = v->data[index];
     v->data[index] = 0x0;
-    v->free_slot = index;
+    v->end_slot--;
     v->elts--;
+
+    if (dc != NULL && ptr != NULL)
+        (dc)(ptr);
 }
 
 void vec_delete_all(vec_t *v, delete_callback_t *dc) {
@@ -137,4 +143,48 @@ void vec_reverse(vec_t *v) {
         v->data[i] = v->data[v->end_slot - i - 1];
         v->data[v->end_slot - i - 1] = tmp;
     }
+}
+
+void vec_print(vec_t *v, print_callback_t *pc) {
+    if (pc == NULL)
+        return;
+
+    for (size_t i = 0; i < v->end_slot; i++) {
+        void *p = v->data[i];
+        if (p == NULL)
+            continue;
+
+        (pc)(p);
+    }
+}
+
+void **vec_to_array(vec_t *v) {
+    void **arr = malloc(sizeof(void *) * v->end_slot);
+    memcpy(arr, v->data, sizeof(void *) * v->end_slot);
+    return arr;
+}
+
+vec_t *vec_from_array(void **array, size_t size) {
+    vec_t *v = vec_new();
+    for (size_t i = 0; i < size; i++) {
+        vec_push(v, array[i]);
+    }
+    return v;
+}
+
+void vec_qsort(vec_t *v, compare_fn_t *cmp) {
+    qsort(v->data, v->end_slot, sizeof(void *), cmp);
+}
+
+vec_t *vec_copy(vec_t *v) {
+    vec_t *v2 = vec_new();
+    void *p = NULL;
+    for (size_t i = 0; i < v->end_slot; i++) {
+        p = vec_get_at(v, i);
+        if (p == NULL)
+            continue;
+
+        vec_push(v2, p);
+    }
+    return v2;
 }
