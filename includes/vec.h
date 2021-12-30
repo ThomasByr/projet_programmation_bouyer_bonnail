@@ -71,15 +71,17 @@ void *vec_set_at(vec_t *v, int index, void *ptr);
 void vec_delete_all(vec_t *v, delete_callback_t *dc);
 
 /**
- * @brief delete element at index
+ * @brief delete element at index and invoke delete_callback on it
  *
  * @param v vector
  * @param index index
+ * @param dc delete callback
  */
-void vec_delete_at(vec_t *v, size_t index);
+void vec_delete_at(vec_t *v, size_t index, delete_callback_t *dc);
 
 /**
- * @brief free vector underlying structure
+ * @brief free vector underlying structure.
+ * It is user's responsability to free the elements.
  *
  * @param v vector
  */
@@ -129,5 +131,47 @@ size_t vec_push(vec_t *v, void *ptr);
  * @param v vector
  */
 void vec_reverse(vec_t *v);
+
+/**
+ * @brief print each non-NULL element in the vector
+ *
+ * @param v vector
+ * @param pc print callback
+ */
+void vec_print(vec_t *v, print_callback_t *pc);
+
+/**
+ * @brief sort the vector.
+ * User should probably remove all NULL elements before calling this.
+ *
+ * @param v vector
+ * @param cmp compare callback
+ */
+void vec_qsort(vec_t *v, compare_fn_t *cmp);
+
+/**
+ * @brief return the array representation of the vector
+ *
+ * @param v vector
+ * @return void**
+ */
+void **vec_to_array(vec_t *v);
+
+/**
+ * @brief make a new vector from an array
+ *
+ * @param array array of void*
+ * @param size size of array
+ * @return vec_t* - new vector
+ */
+vec_t *vec_from_array(void **array, size_t size);
+
+/**
+ * @brief copy vector (shallow copy of non-NULL elements)
+ *
+ * @param v vector
+ * @return vec_t* - new vector
+ */
+vec_t *vec_copy(vec_t *v);
 
 #endif
