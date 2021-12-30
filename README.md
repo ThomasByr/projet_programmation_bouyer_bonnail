@@ -26,6 +26,7 @@ Se référer au fichier [changelog](changelog.md) pour la liste exhaustive des m
 
 *   merge dev->master
 *   ajout de quelques commentaires pour aider la re-lecture
+*   nouvelles méthodes pour les vecteurs, nouveaux tests et procédures, ajout de couleurs dans la sortie des makefile sur la base des macros de test
 
 </details>
 
