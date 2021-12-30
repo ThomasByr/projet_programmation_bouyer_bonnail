@@ -74,7 +74,10 @@ void *pqueue_pop_min(pqueue_t *pq);
  * @param pq priority queue
  * @param element element to insert
  * @param key priority of the element
- * @return int - 1 if success, 0 if element already exists
+ * @return int - `-1` if error (bad key value),
+ * `0` if already present (no change),
+ * `1` if added (new entry),
+ * `2` if rehash did not work (priority queue integrity compromised)
  */
 int pqueue_push(pqueue_t *pq, void *element, int key);
 

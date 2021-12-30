@@ -232,15 +232,16 @@ int pqueue_push(pqueue_t *pq, void *element, int key) {
 
     if (rv) {
         _push_node(pq, node);
-        dict_push(pq->map, element, (void *)node);
+        return dict_push(pq->map, element, (void *)node);
     }
     return rv;
 }
 
 int pqueue_decrease_key(pqueue_t *pq, void *element, int new_key) {
-    heap_node_t *node = (heap_node_t *)dict_get(pq->map, element);
-    if (node == NULL)
+    size_t addr = dict_get(pq->map, element);
+    if (addr == 0)
         return -1;
+    heap_node_t *node = (heap_node_t *)addr;
     if (new_key >= node->key)
         return 0;
 
