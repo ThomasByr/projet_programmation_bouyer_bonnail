@@ -82,7 +82,8 @@ static unsigned long _no_asserts = 0;
 #define test_case(name)                                                  \
     do {                                                                 \
         _no_asserts = 0;                                                 \
-        fprintf(stderr, "running %s:%d: %s", __FILE__, __LINE__, #name); \
+        fprintf(stderr, "running %-20s:%-4d: %-20s", __FILE__, __LINE__, \
+                #name);                                                  \
         name();                                                          \
         if (_no_asserts > 0) {                                           \
             fprintf(stderr, "\033[0;32m");                               \
