@@ -11,8 +11,8 @@ OBJDIR   = obj
 
 SOURCES  := $(wildcard $(SRCDIR)/*.c)
 INCLUDES := $(wildcard $(INCLUDE_PATH)/*.h)
-OBJECTS0  := $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
-OBJECTS = $(filter-out $(OBJDIR)/main.o,$(OBJECTS0))
+OBJECTS0 := $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
+OBJECTS   = $(filter-out $(OBJDIR)/main.o,$(OBJECTS0))
 
 tests: $(OBJECTS) obj/tests.o
 	$(CC) -o $@ $^ $(CFLAGS) $(LDLIBS)
