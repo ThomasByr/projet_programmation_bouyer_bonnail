@@ -18,7 +18,7 @@ OBJECTS  := $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 all : $(BINDIR)/$(TARGET)
 
 debug: CFLAGS += -DDEBUG -g
-debug: $(BINDIR)/$(TARGET)
+debug: clean $(BINDIR)/$(TARGET)
 	@echo "\033[33mRunning in debug mode!\033[0m"
 
 $(BINDIR)/$(TARGET): $(OBJECTS)
