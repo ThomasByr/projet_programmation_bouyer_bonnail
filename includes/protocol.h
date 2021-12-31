@@ -12,6 +12,12 @@ It is the caller's responsability to cast the values to the same type.
 #ifndef PROTOCOL_H
 #define PROTOCOL_H
 
+#ifdef DEBUG
+#define DEBUG_PRINT(...) fprintf(stdout, __VA_ARGS__)
+#else
+#define DEBUG_PRINT(...)
+#endif
+
 #define FOREACH(type, item, array, size)                                   \
     for (size_t X(keep) = 1, X(i) = 0; X(i) < (size); X(keep) = 1, X(i)++) \
         for (type item = (array)[X(i)]; X(keep); X(keep) = 0)
@@ -25,6 +31,9 @@ It is the caller's responsability to cast the values to the same type.
 #define CAT(a, b) CAT_HELPER(a, b)
 #define CAT_HELPER(a, b) a##b
 #define X(name) CAT(__##name, __LINE__)
+
+#define VERSION "0.0.3"
+#define AUTHORS "Julie BONNAIL & Thomas BOUYER"
 
 #define lerp(x, x0, x1, y0, y1) \
     (((y0) * ((x1) - (x)) + (y1) * ((x) - (x0))) / ((x1) - (x0)))
@@ -45,7 +54,7 @@ extern char *strdup(const char *);
 void print_usage(void);
 
 /**
- * @brief display the version of the program.
+ * @brief display the version and additional infos of the program.
  *
  */
 void print_version(void);
