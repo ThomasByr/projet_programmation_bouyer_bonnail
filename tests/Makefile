@@ -1,7 +1,7 @@
 CC = gcc-11
 TARGET = tests
 
-CFLAGS = -march=znver3 -O3 -pipe -std=c18 -pedantic -fprofile-arcs -ftest-coverage -Wall -Wextra -Werror # -g
+CFLAGS = -march=znver3 -O3 -pipe -std=c18 -pedantic -fprofile-arcs -ftest-coverage -Wall -Wextra -Werror -DDEBUG -g
 LDLIBS = -lm # -pthread -ltps -lSDL2 -lSDL2_ttf
 
 INCLUDE_PATH = ../includes
