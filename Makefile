@@ -1,21 +1,25 @@
 CC = gcc-11
 
-CFLAGS ?= -march=znver3 -O3 -pipe -std=c18 -pedantic -Wall -Wextra -Werror # -g
+CFLAGS ?= -march=znver3 -O3 -pipe -std=c18 -pedantic -Wall -Wextra -Werror
 LDLIBS ?= -lm # -pthread -ltps -lSDL2 -lSDL2_ttf
 
 INCLUDE_PATH = ./includes
 
-TARGET   = main
+TARGET = main
 
-SRCDIR   = src
-OBJDIR   = obj
-BINDIR   = bin
+SRCDIR = src
+OBJDIR = obj
+BINDIR = bin
 
 SOURCES  := $(wildcard $(SRCDIR)/*.c)
 INCLUDES := $(wildcard $(INCLUDE_PATH)/*.h)
 OBJECTS  := $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 
 all : $(BINDIR)/$(TARGET)
+
+debug: CFLAGS += -DDEBUG -g
+debug: $(BINDIR)/$(TARGET)
+	@echo "\033[33mRunning in debug mode!\033[0m"
 
 $(BINDIR)/$(TARGET): $(OBJECTS)
 	mkdir -p $(BINDIR)
