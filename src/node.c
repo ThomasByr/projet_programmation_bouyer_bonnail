@@ -6,6 +6,7 @@
 
 node_t *node_new(char *name, hset_t *neighbors, hset_t *papers) {
     node_t *node = malloc(sizeof(node_t));
+    ASSERT(node);
     node->weight = INT_MAX;
     node->name = name;
     node->parent = NULL;

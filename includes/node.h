@@ -6,6 +6,7 @@
 #define NODE_H
 
 #include "hset.h"
+#include "protocol.h"
 #include "types.h"
 
 struct node_s {

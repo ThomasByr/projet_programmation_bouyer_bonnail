@@ -3,6 +3,10 @@
 #ifndef VEC_H
 #define VEC_H
 
+#ifdef DEBUG
+#include <assert.h>
+#endif
+
 #include "types.h"
 
 #define VEC_MIN_SIZE 1 << 11
@@ -13,8 +17,25 @@ struct vec_s {
     size_t size;      // size of the vector
     size_t free_slot; // index of the last known hole in the vector
     size_t elts;      // number of elements in the vector
+#ifdef DEBUG
+    int lock;
+#endif
 };
 typedef struct vec_s vec_t;
+
+#if DEBUG
+#define LOCK_VEC(v) v->lock = 1;
+#define UNLOCK_VEC(v) v->lock = 0;
+#define IS_VEC_LOCKED(v) (v->lock == 1)
+#define IS_VEC_UNLOCKED(v) (v->lock == 0)
+#define ASSERT_IF_LOCKED(v) assert(!IS_VEC_LOCKED(v))
+#else
+#define LOCK_VEC(v)
+#define UNLOCK_VEC(v)
+#define IS_VEC_LOCKED(v)
+#define IS_VEC_UNLOCKED(v)
+#define ASSERT_IF_LOCKED(v)
+#endif
 
 /**
  * @brief delete and return the last element
