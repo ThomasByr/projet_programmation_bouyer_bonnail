@@ -5,6 +5,7 @@
 #ifndef DICT_H
 #define DICT_H
 
+#include "protocol.h"
 #include "types.h"
 
 struct dict_s {

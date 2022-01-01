@@ -8,6 +8,7 @@
 #include "hset.h"
 #include "node.h"
 #include "pqueue.h"
+#include "protocol.h"
 #include "types.h"
 #include "vec.h"
 

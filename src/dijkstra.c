@@ -25,6 +25,7 @@ int dijkstra(node_t *start, node_t *end) {
             int c = hset_contains(close, (void *)child);
             if (c == 0) {
                 int new_weight = current->weight + 1;
+                ASSERT(new_weight > 0 && new_weight < INT_MAX);
 
                 // if child was never visited before, weight is infinity
                 if (new_weight < child->weight) {

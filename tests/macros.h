@@ -42,7 +42,10 @@ static unsigned long _no_asserts = 0;
             abort();                                                   \
         }                                                              \
     } while (0);
+
+#ifndef assert
 #define assert(expr) assert_info(expr, expr);
+#endif
 
 #define cast_to_same_type(a, b) \
     __typeof__(a) _a = (a);     \
@@ -87,11 +90,11 @@ static unsigned long _no_asserts = 0;
         name();                                                          \
         if (_no_asserts > 0) {                                           \
             fprintf(stderr, "\033[0;32m");                               \
-            fprintf(stderr, " ok (%lu)\n", _no_asserts);                 \
+            fprintf(stderr, "ok (%lu)\n", _no_asserts);                  \
             fprintf(stderr, "\033[0m");                                  \
         } else {                                                         \
             fprintf(stderr, "\033[0;31m");                               \
-            fprintf(stderr, " fake (0)\n");                              \
+            fprintf(stderr, "fake (0)\n");                               \
             fprintf(stderr, "\033[0m");                                  \
         }                                                                \
     } while (0);

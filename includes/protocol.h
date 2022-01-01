@@ -13,9 +13,15 @@ It is the caller's responsability to cast the values to the same type.
 #define PROTOCOL_H
 
 #ifdef DEBUG
+#include <assert.h>
+#endif
+
+#ifdef DEBUG
 #define DEBUG_PRINT(...) fprintf(stdout, __VA_ARGS__)
+#define ASSERT(x) assert(x)
 #else
 #define DEBUG_PRINT(...)
+#define ASSERT(x)
 #endif
 
 #define FOREACH(type, item, array, size)                                   \

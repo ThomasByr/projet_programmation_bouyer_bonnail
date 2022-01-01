@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -92,7 +91,8 @@ static int _maybe_rehash(dict_t *dict) {
 
         dict->nitems = 0;
         dict->n_deleted_items = 0;
-        assert(dict->keys);
+        ASSERT(dict->keys);
+        ASSERT(dict->values);
         for (ii = 0; ii < old_capacity; ii++) {
             if (old_keys[ii] != 0 && old_keys[ii] != 1) {
                 _dict_push_item(dict, (void *)old_keys[ii],

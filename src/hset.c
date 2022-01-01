@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -88,7 +87,7 @@ static int _maybe_rehash(hset_t *set) {
 
         set->nitems = 0;
         set->n_deleted_items = 0;
-        assert(set->items);
+        ASSERT(set->items);
         for (ii = 0; ii < old_capacity; ii++)
             _hset_push_item(set, (void *)old_items[ii]);
         free(old_items);

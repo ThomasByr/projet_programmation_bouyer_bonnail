@@ -14,6 +14,8 @@
  * abstractions on top of it is very useful */
 
 size_t vec_push(vec_t *v, void *ptr) {
+    ASSERT_IF_LOCKED(v);
+
     if (v->size == 0) {
         v->size = VEC_MIN_SIZE;
         v->data = (void *)malloc(sizeof(void *) * v->size);
@@ -39,6 +41,8 @@ size_t vec_push(vec_t *v, void *ptr) {
 }
 
 void *vec_pop(vec_t *v) {
+    ASSERT_IF_LOCKED(v);
+
     if (v->end_slot == 0)
         return NULL;
 
@@ -63,9 +67,13 @@ void *vec_get_at(vec_t *v, size_t index) {
 }
 
 void *vec_for_each(vec_t *v, for_each_callback_t *fe, void *data) {
+    ASSERT_IF_LOCKED(v);
+
     void *ret = NULL;
     if (fe == NULL)
         return NULL;
+
+    LOCK_VEC(v);
 
     for (size_t sz = 0; sz < vec_used(v); sz++) {
         void *p = vec_get_at(v, sz);
@@ -74,14 +82,19 @@ void *vec_for_each(vec_t *v, for_each_callback_t *fe, void *data) {
             continue;
 
         ret = (fe)(p, data);
-        if (ret != NULL)
+        if (ret != NULL) {
+            UNLOCK_VEC(v);
             return ret;
+        }
     }
 
+    UNLOCK_VEC(v);
     return NULL;
 }
 
 void *vec_set_at(vec_t *v, int index, void *ptr) {
+    ASSERT_IF_LOCKED(v);
+
     if ((size_t)index >= v->end_slot)
         return NULL;
 
@@ -95,6 +108,8 @@ size_t vec_used(vec_t *v) { return v->end_slot; }
 size_t vec_size(vec_t *v) { return v->elts; }
 
 void vec_delete_at(vec_t *v, size_t index, delete_callback_t *dc) {
+    ASSERT_IF_LOCKED(v);
+
     if (index >= v->end_slot)
         return;
     void *ptr = v->data[index];
@@ -107,8 +122,9 @@ void vec_delete_at(vec_t *v, size_t index, delete_callback_t *dc) {
 }
 
 void vec_delete_all(vec_t *v, delete_callback_t *dc) {
-    void *p = NULL;
+    ASSERT_IF_LOCKED(v);
 
+    void *p = NULL;
     while ((p = vec_pop(v)) != NULL) {
         v->elts--;
         if (dc != NULL)
@@ -117,12 +133,14 @@ void vec_delete_all(vec_t *v, delete_callback_t *dc) {
 }
 
 void vec_free(vec_t *v) {
+    ASSERT_IF_LOCKED(v);
     // memset(v->data, 0x0, v->size);
     free(v->data);
     free(v);
 }
 
 void vec_init(vec_t *v) {
+    UNLOCK_VEC(v);
     v->data = NULL;
     v->size = 0;
     v->end_slot = 0;
@@ -137,6 +155,8 @@ vec_t *vec_new(void) {
 }
 
 void vec_reverse(vec_t *v) {
+    ASSERT_IF_LOCKED(v);
+
     void *tmp = NULL;
     for (size_t i = 0; i < v->end_slot / 2; i++) {
         tmp = v->data[i];
@@ -173,6 +193,7 @@ vec_t *vec_from_array(void **array, size_t size) {
 }
 
 void vec_qsort(vec_t *v, compare_fn_t *cmp) {
+    ASSERT_IF_LOCKED(v);
     qsort(v->data, v->end_slot, sizeof(void *), cmp);
 }
 

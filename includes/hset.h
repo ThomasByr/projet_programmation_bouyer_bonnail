@@ -5,6 +5,7 @@
 #ifndef HSET_H
 #define HSET_H
 
+#include "protocol.h"
 #include "types.h"
 
 struct hset_s {
