@@ -97,9 +97,38 @@ void hset_test_3(void) {
     hset_free(hset);
 }
 
+void hset_test_4(void) {
+    hset_t *hset = hset_new();
+    hset_itr_t *itr = hset_itr_new(hset);
+    size_t n = 2;
+
+    for (size_t i = 0; i < n; i++) {
+        foo_t *foo = foo_new((int)i);
+        foo->a = 42;
+        hset_push(hset, foo);
+    }
+    hset_t *cpy = hset_copy(hset);
+    hset_itr_discard_all(itr, NULL);
+    hset_itr_free(itr);
+
+    assert_eq(hset_nitems(hset), 0);
+    assert_eq(hset_nitems(cpy), n);
+
+    itr = hset_itr_new(cpy);
+    int a = 42;
+    void *data = &a;
+    hset_itr_for_each(itr, foo_cmp_a_void, data);
+    hset_itr_discard_all(itr, foo_free_void);
+
+    hset_itr_free(itr);
+    hset_free(cpy);
+    hset_free(hset);
+}
+
 void hset_test(void) {
     test_case(hset_test_0);
     test_case(hset_test_1);
     test_case(hset_test_2);
     test_case(hset_test_3);
+    test_case(hset_test_4);
 }
