@@ -24,19 +24,11 @@ Se référer au fichier [changelog](changelog.md) pour la liste exhaustive des m
 <details>
     <summary> v0.0.3 : il s'agrait de parser le fichier maintenant... (cliquez ici) </summary>
 
-<<<<<<< HEAD
-*   push initial (+ une erreur dans le .gitignore...)
-*   intégration du tp11 xml-parser-1 : premier test de performances, eta 50s caractère par caractère
-*   amélioration des performances de l'algorithme de parsing : diminution du nombre d'appels aux primitives systèmes, augmentation drastique de l'utilisation mémoire
-*   écriture d'une librairie de vecteurs (l'object c++)
-*   intégration d'une table de hachage à l'algorithme de Dijkstra ainsi que d'arbres de Fibonacci
-=======
 *   merge dev->master
 *   ajout de quelques commentaires pour aider la re-lecture
 *   nouvelles méthodes pour les vecteurs, nouveaux tests et procédures, ajout de couleurs dans la sortie des makefile sur la base des macros de test
 *   ajout d'une license au projet ainsi qu'à la base de données
 *   nouvelle règle debug pour le makefile (option -g et définition de DEBUG)
->>>>>>> 7c92f791ee13737df0c25425f9c58acd01c9783c
 
 </details>
 
