@@ -195,14 +195,4 @@ vec_t *vec_from_array(void **array, size_t size);
  */
 vec_t *vec_copy(vec_t *v);
 
-/**
- * @brief print the size of the vector
- * @param v vector
- * @return void
- */
-
-void vec_print_elts(vec *vec);
-
-void vec_print(vec *vec, void print_elt(void *));
-
 #endif
