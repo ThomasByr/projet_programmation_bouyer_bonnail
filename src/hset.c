@@ -34,6 +34,25 @@ hset_t *hset_new(void) {
     return set;
 }
 
+hset_t *hset_copy(hset_t *hset) {
+    hset_t *set = calloc(1, sizeof(struct hset_s));
+    if (set == NULL)
+        return NULL;
+
+    set->nbits = hset->nbits;
+    set->capacity = hset->capacity;
+    set->mask = hset->mask;
+    set->items = calloc(set->capacity, sizeof(size_t));
+    if (set->items == NULL) {
+        hset_free(set);
+        return NULL;
+    }
+    set->nitems = hset->nitems;
+    set->n_deleted_items = hset->n_deleted_items;
+    memcpy(set->items, hset->items, set->capacity * sizeof(size_t));
+    return set;
+}
+
 void hset_free(hset_t *set) {
     if (set)              // if set is not NULL
         free(set->items); // free items array

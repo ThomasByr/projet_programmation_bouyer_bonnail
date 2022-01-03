@@ -49,6 +49,14 @@ unsigned long hash(char *str);
 hset_t *hset_new(void);
 
 /**
+ * @brief return a new hash set
+ *
+ * @param hset original hash set
+ * @return hset_t* - copy of the original hash set
+ */
+hset_t *hset_copy(hset_t *hset);
+
+/**
  * @brief free a hash set underlying structure.
  * It is the caller's responsibility to free the items
  *
