@@ -27,7 +27,7 @@ int exist_arrete(int depart, int arrive)
     size_t size_ar = sizeof(arretes) / sizeof(arretes[0]);
     int voisin;
 
-    if (depart != size_som - 1)
+    if (depart != (int)size_som - 1)
     {
         voisin = sommets[depart + 1] - sommets[depart];
     }

@@ -20,3 +20,15 @@ void delete_node(node_t *node)
         free(node->parent);
     }
 }
+
+void print_node(node_t *node)
+{
+    if (node != NULL)
+    {
+        printf("%s\n", node->name);
+    }
+    else
+    {
+        printf("erreur: pas de noeud\n");
+    }
+}

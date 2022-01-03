@@ -20,4 +20,7 @@ node_t *create_node(char *name, vec *co_autors);
 
 void delete_node(node_t *name);
 
+/* affiche le nom du noeud*/
+void print_node(node_t *node);
+
 #endif

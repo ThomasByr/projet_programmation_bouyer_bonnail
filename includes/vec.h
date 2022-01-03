@@ -152,4 +152,14 @@ size_t vec_size(vec *v);
  */
 int32_t vec_push(vec *v, void *ptr);
 
+/**
+ * @brief print the size of the vector
+ * @param v vector
+ * @return void
+ */
+
+void vec_print_elts(vec *vec);
+
+void vec_print(vec *vec, void print_elt(void *));
+
 #endif

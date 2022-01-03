@@ -104,7 +104,7 @@ void *vec_set_at(vec *v, int index, void *ptr)
 {
     ASSERT_IF_LOCKED(v);
 
-    if (index >= v->end_slot)
+    if ((size_t)index >= v->end_slot)
     {
         return NULL;
     }
@@ -172,4 +172,29 @@ vec *vec_new(void)
     vec *v = (vec *)malloc(sizeof(vec));
     vec_init(v);
     return v;
+}
+
+void vec_print_elts(vec *vec)
+{
+    if (vec != NULL)
+    {
+        printf("%ld\n", vec->elts);
+    }
+    else
+    {
+        printf("erreur pas de vec\n");
+    }
+}
+
+void vec_print(vec *vec, void print_elt(void *))
+{
+    size_t n = vec_used(vec);
+    for (size_t i = 0; i < n; i++)
+    {
+        void *elt = vec_get_at(vec, i);
+        if (elt != NULL)
+            print_elt(elt);
+        else
+            printf("error: no element at index %lu", i);
+    };
 }
