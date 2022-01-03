@@ -5,6 +5,8 @@
 #ifndef ARGS_OPTIONS_H
 #define ARGS_OPTIONS_H
 
+#define FIELD_LEN 1 << 11
+
 struct options_s {
     int verbose;
     int debug;
@@ -16,12 +18,29 @@ struct options_s {
     int find_authors_within; // find all authors that are within a distance of a
                              // given author
 
-    char *author;
-    char *author1;
-    char *author2;
-    char *word;
+    int n_closest; // max distance between two authors to find
+
+    char input_file[FIELD_LEN];
+    char author[FIELD_LEN];
+    char author1[FIELD_LEN];
+    char author2[FIELD_LEN];
+    char word[FIELD_LEN];
 };
 
 typedef struct options_s options_t;
+
+/**
+ * @brief return a new option with blank values
+ *
+ * @return options_t*
+ */
+options_t *options_new(void);
+
+/**
+ * @brief free the memory allocated for the options
+ *
+ * @param options
+ */
+void options_free(options_t *options);
 
 #endif

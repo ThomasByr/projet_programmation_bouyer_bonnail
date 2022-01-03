@@ -16,4 +16,11 @@
  */
 void parse_args(int argc, char *argv[], options_t *options);
 
+/**
+ * @brief check if the user input is valid once the options are parsed
+ *
+ * @param options - structure containing all options
+ */
+void check_args(options_t *options);
+
 #endif
