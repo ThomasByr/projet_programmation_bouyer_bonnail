@@ -2,11 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "xml-parser.h"
 #include "macros.h"
+#include "protocol.h"
+#include "types.h"
+#include "xml-parser.h"
 
-void test_error_0(void)
-{
+void xml_test_error_0(void) {
     parser_info_t *info = parser_info_new();
 
     char filename[] = "../assets/eg.xml";
@@ -15,6 +16,7 @@ void test_error_0(void)
     assert_eq(err, PARSER_OK);
 }
 
+<<<<<<< HEAD
 void test_0(void)
 {
     char filename[] = "../assets/eg.xml";
@@ -53,4 +55,27 @@ void xml_parser_test()
     test_case(test_error_0);
     // test_case(test_0);
     test_case(test_1);
+=======
+void xml_test_0(void) {
+    char arr[] = "abcdefghijklmnopqrstuvwxyz";
+    int count = 0;
+    foreach (item of arr) {
+        (void)item;
+        count++;
+    }
+    assert_eq(count, 27);
+    assert_eq(lerp(5, 0, 10, 0, 100), 50);
+    assert_eq(lerp(0.5, 0.0, 1.0, -1.0, 1.0), 0);
+}
+
+void xml_test_1(void) {
+    int i = 0;
+    (void)i;
+}
+
+void xml_parser_test() {
+    test_case(xml_test_error_0);
+    test_case(xml_test_0);
+    test_case(xml_test_1);
+>>>>>>> 7c92f791ee13737df0c25425f9c58acd01c9783c
 }

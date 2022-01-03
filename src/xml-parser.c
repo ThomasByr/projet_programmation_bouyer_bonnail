@@ -3,7 +3,32 @@
 #include <string.h>
 #include <pthread.h>
 
+#include "types.h"
 #include "xml-parser.h"
+
+static const char open_tag = '<';   // opening tag
+static const char close_tag = '>';  // closing tag
+static const char end_tag = '/';    // ending tag
+static const char delims[] = " \n"; // delimiters
+
+const char *external[] = {
+    "article",
+    "inproceedings",
+    "proceedings",
+    "book",
+    "incollection",
+    "phdthesis",
+    "mastersthesis",
+    "www",
+};
+
+const char *look_for[] = {
+    "title",
+    "author",
+    "year",
+    "pages",
+    "url",
+};
 
 void get_tag_id(char *tag)
 {
@@ -13,26 +38,19 @@ void get_tag_id(char *tag)
     *p = '\0';
 }
 
-long find_next_tag(char *buffer, long start, long size)
+void *pthread_func(void *arg)
 {
-    long i = start;
-
-    while (i < size)
-    {
-        for each (e, external, 3)
-        {
-            if (strcmp(buffer + i, e) == 0)
-            {
-                return i;
-            }
-        }
-    }
-    return -1;
+    pthread_arg_t *p = (pthread_arg_t *)arg;
+    char *buffer = p->buffer;
+    long size = p->size;
+    parser_info_t *info = p->info;
+    parser_error_type_t err = parse_buffer(buffer, size, info);
+    return (void *)err;
 }
 
 parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info)
 {
-    char *p = buffer;  //current position in buffer
+    char *p = buffer;  // current position in buffer
     char *pp = buffer; // previous position in buffer
 
     char buff[XMLP_BUFFER_SIZE] = "";
@@ -77,50 +95,41 @@ parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info)
                 info->handleCloseTag(buff, info->data);
 
             is_opening_tag = 0;
-            is_ending_tag = 0;
-            reset(index, buff);
             pp = p;
-            p++;
-            continue;
         }
-
-        buff[index] = *p;
-        index++;
-        pp = p;
-        p++;
+        check(is_opening_tag, is_ending_tag);
+        return PARSER_OK;
     }
-    check(is_opening_tag, is_ending_tag);
-    return PARSER_OK;
-}
 
-parser_error_type_t parse(const char *filename, parser_info_t *info)
-{
-    FILE *fp = fopen(filename, "r");
-    if (fp == NULL) // error while opening file
-        return ERROR_UNABLE_TO_OPEN_FILE;
+    parser_error_type_t parse(const char *filename, parser_info_t *info)
+    {
+        FILE *fp = fopen(filename, "r");
+        if (fp == NULL) // error while opening file
+            return ERROR_UNABLE_TO_OPEN_FILE;
 
-    // get size of file
-    fseek(fp, 0, SEEK_END);
-    long size = ftell(fp);
-    rewind(fp);
+        // get size of file
+        fseek(fp, 0, SEEK_END);
+        long size = ftell(fp);
+        rewind(fp);
 
-    // allocate memory to contain the whole file
-    char *buffer = (char *)malloc(sizeof(char) * (size + 1));
-    if (buffer == NULL) // error while allocating memory
-        return ERROR_UNABLE_TO_ALLOCATE_MEMORY;
-    memset(buffer, 0, size);
+        // allocate memory to contain the whole file
+        char *buffer = (char *)malloc(sizeof(char) * (size + 1));
+        if (buffer == NULL) // error while allocating memory
+            return ERROR_UNABLE_TO_ALLOCATE_MEMORY;
+        memset(buffer, 0, size);
 
-    // copy the file into the buffer
-    size_t result = fread(buffer, 1, size, fp);
-    buffer[size] = '\0';
-    if (result != (size_t)size) // error while reading file
-        return ERROR_WHILE_READING_FILE;
+        // copy the file into the buffer
+        size_t result = fread(buffer, 1, size, fp);
+        buffer[size] = '\0';
+        if (result != (size_t)size) // error while reading file
+            return ERROR_WHILE_READING_FILE;
 
-    // close file
-    fclose(fp);
+        // close file
+        fclose(fp);
 
-    // parse the file
-    parser_error_type_t error = parse_buffer(buffer, size, info);
-    free(buffer);
-    return error;
-}
+        // parse the file
+        parser_error_type_t err = parse_buffer(buffer, size, info);
+
+        free(buffer);
+        return err;
+    }
