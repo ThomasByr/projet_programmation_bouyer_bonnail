@@ -49,7 +49,8 @@ unsigned long hash(char *str);
 hset_t *hset_new(void);
 
 /**
- * @brief return a new hash set
+ * @brief return a new hash set.
+ * Does not copy the elements.
  *
  * @param hset original hash set
  * @return hset_t* - copy of the original hash set
