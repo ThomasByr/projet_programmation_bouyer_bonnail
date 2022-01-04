@@ -1,9 +1,9 @@
 pages:
   stage: deploy
+  image: bramas/tps-c:latest
   script:
-    - apt update
-    - apt install dos2unix
     # - bash setup.bash
+    - make check
   artifacts:
     paths:
       - public
