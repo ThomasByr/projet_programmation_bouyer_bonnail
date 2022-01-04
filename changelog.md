@@ -26,3 +26,5 @@
     *   nouvelles méthodes pour les vecteurs, nouveaux tests et procédures, ajout de couleurs dans la sortie des makefile sur la base des macros de test
     *   ajout d'une license au projet ainsi qu'à la base de données
     *   nouvelle règle debug pour le makefile (option -g et définition de DEBUG)
+    *   options pour le parsage des arguments (ligne de commande) conformes à c18
+    *   décompte correct du nombre d'assertions lors des tests (variable externe)
