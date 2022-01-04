@@ -8,6 +8,8 @@
 #include "vec-test.c"
 #include "xml-parser-test.c"
 
+unsigned long _no_asserts = 0;
+
 int main(void) {
     xml_parser_test();
     hset_test();

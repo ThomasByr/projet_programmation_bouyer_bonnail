@@ -30,7 +30,7 @@ used to perform checks.
 #include <stdio.h>
 #include <stdlib.h>
 
-static unsigned long _no_asserts = 0;
+extern unsigned long _no_asserts;
 
 #define assert_info(expr, ...)                                         \
     do {                                                               \
