@@ -5,8 +5,6 @@
 #ifndef ARGS_OPTIONS_H
 #define ARGS_OPTIONS_H
 
-#define FIELD_LEN 1 << 11
-
 struct options_s {
     int verbose;
     int debug;
@@ -20,11 +18,11 @@ struct options_s {
 
     int n_closest; // max distance between two authors to find
 
-    char input_file[FIELD_LEN];
-    char author[FIELD_LEN];
-    char author1[FIELD_LEN];
-    char author2[FIELD_LEN];
-    char word[FIELD_LEN];
+    char *input_file;
+    char *author;
+    char *author1;
+    char *author2;
+    char *word;
 };
 
 typedef struct options_s options_t;

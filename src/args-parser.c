@@ -44,16 +44,16 @@ void parse_args(int argc, char *argv[], options_t *options) {
             break;
 
         case 'i':
-            strncpy(options->input_file, optarg, FIELD_LEN);
+            options->input_file = optarg;
             break;
 
         case 'p':
             if (options->find_shortest_path == 0) {
                 options->find_shortest_path = 1;
-                strncpy(options->author1, optarg, FIELD_LEN);
+                options->author1 = optarg;
             } else if (options->find_authors_within == 1) {
                 options->find_shortest_path = 2;
-                strncpy(options->author2, optarg, FIELD_LEN);
+                options->author2 = optarg;
             } else {
                 fprintf(stderr,
                         "Error: --path can only and must be used twice\n");
@@ -62,12 +62,12 @@ void parse_args(int argc, char *argv[], options_t *options) {
             break;
 
         case 'l':
-            strncpy(options->word, optarg, FIELD_LEN);
+            options->word = optarg;
             options->find_authors_words = 1;
             break;
 
         case 'a':
-            strncpy(options->author, optarg, FIELD_LEN);
+            options->author = optarg;
             options->find_info_author = 1;
             break;
 

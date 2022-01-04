@@ -15,11 +15,11 @@ options_t *options_new(void) {
     options->find_info_author = 0;
     options->find_authors_within = 0;
 
-    options->input_file[0] = '\0';
-    options->author[0] = '\0';
-    options->author1[0] = '\0';
-    options->author2[0] = '\0';
-    options->word[0] = '\0';
+    options->input_file = NULL;
+    options->author = NULL;
+    options->author1 = NULL;
+    options->author2 = NULL;
+    options->word = NULL;
 
     return options;
 }
