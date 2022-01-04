@@ -125,10 +125,35 @@ void hset_test_4(void) {
     hset_free(hset);
 }
 
+void hset_test_5(void) {
+    hset_t *hset = hset_new();
+    size_t n = 1000;
+
+    for (size_t i = 0; i < n; i++) {
+        foo_t *foo = foo_new((int)i);
+        foo->a = 42;
+        foo->b = 24;
+        hset_push(hset, foo);
+    }
+
+    for (size_t i = 0; i < n; i++) {
+        size_t item = hset_pop(hset);
+        assert_gt(item, 0);
+        foo_t *foo = (foo_t *)(item);
+        assert_eq(foo->a, 42);
+        assert_eq(foo->b, 24);
+        assert_geq(atoi(foo->id), 0);
+        assert_eq(hset_nitems(hset), n - i - 1);
+        foo_free(foo);
+    }
+    hset_free(hset);
+}
+
 void hset_test(void) {
     test_case(hset_test_0);
     test_case(hset_test_1);
     test_case(hset_test_2);
     test_case(hset_test_3);
     test_case(hset_test_4);
+    test_case(hset_test_5);
 }

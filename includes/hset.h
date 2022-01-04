@@ -95,6 +95,14 @@ int hset_contains(hset_t *hset, void *item);
 int hset_discard(hset_t *hset, void *item);
 
 /**
+ * @brief return an arbitrary item from the hash set and remove it
+ *
+ * @param hset hash set
+ * @return size_t - 0 if empty, otherwise the item
+ */
+size_t hset_pop(hset_t *hset);
+
+/**
  * @brief get the number of items in the hash set
  *
  * @param hset hash set

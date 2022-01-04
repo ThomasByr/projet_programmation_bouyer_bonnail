@@ -49,7 +49,10 @@ hset_t *hset_copy(hset_t *hset) {
     }
     set->nitems = hset->nitems;
     set->n_deleted_items = hset->n_deleted_items;
-    memcpy(set->items, hset->items, set->capacity * sizeof(size_t));
+    size_t n = set->capacity * sizeof(size_t);
+    void *dest = memcpy(set->items, hset->items, n);
+    ASSERT(dest != NULL);
+    ASSERT(dest == set->items);
     return set;
 }
 
@@ -150,6 +153,25 @@ int hset_discard(hset_t *set, void *item) {
             ii = set->mask & (ii + prime_2); // get index of next bucket
     }
     return 0; // return failure
+}
+
+size_t hset_pop(hset_t *hset) {
+    size_t ii, value;
+
+    if (hset->nitems == 0) // if set is empty
+        return 0;          // return failure
+
+    for (ii = 0; ii < hset->capacity; ii++) {
+        if (hset->items[ii] != 0 && hset->items[ii] != 1) {
+            value = hset->items[ii];
+            hset->items[ii] = 1;
+            hset->nitems--;
+            hset->n_deleted_items++;
+            return value;
+        }
+    }
+    ASSERT(hset->nitems == 0); // should not even occur
+    return 0;
 }
 
 size_t hset_nitems(hset_t *set) { return set->nitems; }
