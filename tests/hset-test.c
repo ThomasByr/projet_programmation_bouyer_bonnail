@@ -100,7 +100,7 @@ void hset_test_3(void) {
 void hset_test_4(void) {
     hset_t *hset = hset_new();
     hset_itr_t *itr = hset_itr_new(hset);
-    size_t n = 2;
+    size_t n = 1000;
 
     for (size_t i = 0; i < n; i++) {
         foo_t *foo = foo_new((int)i);
