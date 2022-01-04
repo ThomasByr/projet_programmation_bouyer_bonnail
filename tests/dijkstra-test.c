@@ -7,7 +7,6 @@
 #include "node.h"
 
 void dijkstra_test_0(void) {
-    // creer deux noeuds voisins et voir si il ressort bien ce qu'il faut
     node_t *n1 = node_new("bob1", hset_new(), hset_new());
     node_t *n2 = node_new("bob2", hset_new(), hset_new());
     hset_push(n2->neighbors->set, n1);
@@ -34,7 +33,6 @@ void dijkstra_test_0(void) {
 }
 
 void dijkstra_test_1(void) {
-    // creer deux noeuds voisins et voir si il ressort bien ce qu'il faut
     node_t *n1 = node_new("bob1", hset_new(), hset_new());
     node_t *n2 = node_new("bob2", hset_new(), hset_new());
 

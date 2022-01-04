@@ -3,7 +3,7 @@ Dummy struct for testing.
 
 Holds arbitrary large number of characters in field `id`.
 You should only assign a value to `a` and `b` because those are stored after the
-1MB `id` field, thus testing if you are effectively saving the hole object.
+1MB `id` field, thus testing if you are effectively accessing the hole object.
 
 */
 
