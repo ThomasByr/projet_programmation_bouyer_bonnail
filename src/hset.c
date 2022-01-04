@@ -230,10 +230,8 @@ void hset_itr_discard_all(hset_itr_t *itr, delete_callback_t *dc) {
         void *value = (void *)hset_itr_value(itr);
         if (value != NULL) {
             int p = hset_discard(itr->set, value); // remove value from set
-            if (p == 0) {
-                fprintf(stderr, "hset_itr_discard_all failed : yielded item "
-                                "could not be found on original hash set\n");
-            } else if (p == 1 && dc != NULL)
+            ASSERT(p == 1);                        // yields success
+            if (p == 1 && dc != NULL)
                 (dc)(value); // invoke delete callback
         }
         hset_itr_next(itr);
