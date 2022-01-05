@@ -11,6 +11,9 @@ int main(int argc, char *argv[]) {
     parser_info_t *info = parser_info_new();
 
     print_version();
+    printf("\n");
+    print_usage();
+    return 0;
 
     char filename[] = "assets/dblp.xml";
     parser_error_type_t err = parse(filename, info);
