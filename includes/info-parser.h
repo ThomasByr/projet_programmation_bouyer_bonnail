@@ -9,6 +9,9 @@ struct parser_context_s {
     int text_count;
     int open_count;
     int close_count;
+
+    char *paper_type;
+    char *inner_tag;
 };
 typedef struct parser_context_s parser_context_t;
 
@@ -22,10 +25,10 @@ enum parser_error_type_e {
 typedef enum parser_error_type_e parser_error_type_t;
 
 struct parser_info_s {
-    void (*handleOpenTag)(char *, void *);
-    void (*handleCloseTag)(char *, void *);
-    void (*handleText)(char *, void *);
-    void *data;
+    void (*handleOpenTag)(char *, struct parser_context_s *);
+    void (*handleCloseTag)(char *, struct parser_context_s *);
+    void (*handleText)(char *, struct parser_context_s *);
+    struct parser_context_s *context;
 };
 typedef struct parser_info_s parser_info_t;
 
@@ -33,25 +36,39 @@ typedef struct parser_info_s parser_info_t;
  * @brief tell the parser to handle some text between tags
  *
  * @param txt some text
- * @param data the data to pass to the callback functions
+ * @param context the context to pass to the callback functions
  */
-void handleText(char *txt, void *data);
+void handleText(char *txt, struct parser_context_s *context);
 
 /**
  * @brief tell the parser to open a tag
  *
  * @param tag tag name (without the <> brackets and any attributes)
- * @param data the data to pass to the callback functions
+ * @param context the context to pass to the callback functions
  */
-void handleOpenTag(char *tag, void *data);
+void handleOpenTag(char *tag, struct parser_context_s *context);
 
 /**
  * @brief tell the parser to close a tag
  *
  * @param tag tag name (without the <> brackets and any attributes)
- * @param data the data to pass to the callback functions
+ * @param context the context to pass to the callback functions
  */
-void handleCloseTag(char *tag, void *data);
+void handleCloseTag(char *tag, struct parser_context_s *context);
+
+/**
+ * @brief new parser context structure
+ *
+ * @return parser_context_t*
+ */
+parser_context_t *parser_context_new(void);
+
+/**
+ * @brief free a parser context underlaying structure
+ *
+ * @param context parser context to free
+ */
+void parser_context_free(parser_context_t *context);
 
 /**
  * @brief new parser info structure

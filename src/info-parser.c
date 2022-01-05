@@ -5,31 +5,53 @@
 
 #include "info-parser.h"
 
-void handleText(char *txt, void *data) {
+const char *external[] = {
+    "article",      "inproceedings", "proceedings",   "book",
+    "incollection", "phdthesis",     "mastersthesis", "www",
+};
+
+const char *look_for[] = {
+    "title", "author", "year", "pages", "url",
+};
+
+void handleText(char *txt, parser_context_t *context) {
     (void)txt;
-    (void)data;
+    (void)context;
     return;
 }
 
-void handleOpenTag(char *tag, void *data) {
+void handleOpenTag(char *tag, parser_context_t *context) {
     (void)tag;
-    (void)data;
+    (void)context;
     return;
 }
 
-void handleCloseTag(char *tag, void *data) {
+void handleCloseTag(char *tag, parser_context_t *context) {
     (void)tag;
-    (void)data;
+    (void)context;
     return;
+}
+
+parser_context_t *parser_context_new(void) {
+    parser_context_t *ctx = malloc(sizeof(parser_context_t));
+    ctx->text_count = 0;
+    ctx->open_count = 0;
+    ctx->close_count = 0;
+
+    ctx->paper_type = NULL;
+    ctx->inner_tag = NULL;
+    return ctx;
+}
+
+void parser_context_free(parser_context_t *context) {
+    if (context == NULL)
+        return;
+    free(context);
 }
 
 parser_info_t *parser_info_new(void) {
     parser_info_t *info = malloc(sizeof(parser_info_t));
-    parser_context_t *context = malloc(sizeof(parser_context_t));
-
-    context->text_count = 0;
-    context->open_count = 0;
-    context->close_count = 0;
+    parser_context_t *context = parser_context_new();
 
     if (info == NULL)
         return NULL;
@@ -38,7 +60,7 @@ parser_info_t *parser_info_new(void) {
         return NULL;
     }
 
-    info->data = context;
+    info->context = context;
     info->handleOpenTag = handleOpenTag;
     info->handleCloseTag = handleCloseTag;
     info->handleText = handleText;
@@ -49,7 +71,7 @@ parser_info_t *parser_info_new(void) {
 void parser_info_free(parser_info_t *info) {
     if (info == NULL)
         return;
-    free(info->data);
+    free(info->context);
     free(info);
 }
 
