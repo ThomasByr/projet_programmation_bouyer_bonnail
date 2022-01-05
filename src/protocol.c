@@ -39,12 +39,22 @@ void print_usage(void) {
     fprintf(stdout, "%s\n", s);
     fprintf(stdout, "Usage: ./bin/main [OPTIONS]...\n");
     fprintf(stdout, "Options:\n");
-    fprintf(stdout, "\t-h, --help\t\t\tDisplay this help\n");
-    fprintf(stdout, "\t-v, --version\t\t\tDisplay the version\n");
-    fprintf(stdout, "\t-V, --verbose\t\t\tGet extensive messages when running "
-                    "the program\n");
-    fprintf(stdout, "\t-D, --debug\t\t\tGet debug messages on errors and "
-                    "warnings on run time\n");
+    fprintf(stdout, "\t%-20s%s", "-h, --help", "Display this help\n");
+    fprintf(stdout, "\t%-20s%s", "-v, --version", "Display the version\n");
+    fprintf(stdout, "\t%-20s%s", "-i, --input_file",
+            "Specify input file (needed)\n");
+    fprintf(stdout, "\t%-20s%s", "-p, --path",
+            "Use it twice to find the closest path between authors\n");
+    fprintf(stdout, "\t%-20s%s", "-l, --list",
+            "List authors whom at least one paper contains a specified word\n");
+    fprintf(stdout, "\t%-20s%s", "-a, --author", "List papers of an author\n");
+    fprintf(stdout, "\t%-20s%s", "-n, --n_closest",
+            "List co-authors of an author (specified with -a) lying withing a "
+            "specified distance\n");
+    fprintf(stdout, "\t%-20s%s", "-V, --verbose",
+            "Get extensive messages when running the program\n");
+    fprintf(stdout, "\t%-20s%s", "-D, --debug",
+            "Get debug messages on errors and warnings on run time\n");
 }
 
 void print_version(void) {

@@ -21,7 +21,7 @@ It is the caller's responsability to cast the values to the same type.
 #define ASSERT(x) assert(x)
 #else
 #define DEBUG_PRINT(...)
-#define ASSERT(x)
+#define ASSERT(x) (void)(x)
 #endif
 
 #define FOREACH(type, item, array, size)                                   \
