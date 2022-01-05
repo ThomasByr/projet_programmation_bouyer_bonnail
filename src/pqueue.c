@@ -217,14 +217,14 @@ void *pqueue_pop_min(pqueue_t *pq) {
     return ret;
 }
 
-void pqueue_merge(pqueue_t *pq1, pqueue_t *pq2) {
-    pq1->min_node = _merge(pq1->min_node, pq2->min_node);
-    pq1->total_nodes += pq2->total_nodes;
-    pq2->min_node = NULL;
-    dict_free(pq2->map);
-    pq2->map = dict_new();
-    pq2->total_nodes = 0;
-}
+// void pqueue_merge(pqueue_t *pq1, pqueue_t *pq2) {
+//     pq1->min_node = _merge(pq1->min_node, pq2->min_node);
+//     pq1->total_nodes += pq2->total_nodes;
+//     pq2->min_node = NULL;
+//     dict_free(pq2->map);
+//     pq2->map = dict_new();
+//     pq2->total_nodes = 0;
+// }
 
 int pqueue_push(pqueue_t *pq, void *element, int key) {
     heap_node_t *node = _create_node(element, key);
