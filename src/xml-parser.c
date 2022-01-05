@@ -10,15 +10,6 @@ static const char close_tag = '>';  // closing tag
 static const char end_tag = '/';    // ending tag
 static const char delims[] = " \n"; // delimiters
 
-const char *external[] = {
-    "article",      "inproceedings", "proceedings",   "book",
-    "incollection", "phdthesis",     "mastersthesis", "www",
-};
-
-const char *look_for[] = {
-    "title", "author", "year", "pages", "url",
-};
-
 void get_tag_id(char *tag) {
     char *p = tag;
     while (*p != '\0' && strchr(delims, *p) == NULL)
@@ -49,7 +40,7 @@ parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info) {
         if (*p == open_tag) {
             if (index > 0) {
                 buff[index] = '\0';
-                info->handleText(buff, info->data);
+                info->handleText(buff, info->context);
             }
             check(is_opening_tag, is_ending_tag);
             is_opening_tag = 1;
@@ -71,9 +62,9 @@ parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info) {
             get_tag_id(buff);
 
             if (is_opening_tag == 1)
-                info->handleOpenTag(buff, info->data);
+                info->handleOpenTag(buff, info->context);
             if (is_ending_tag == 1)
-                info->handleCloseTag(buff, info->data);
+                info->handleCloseTag(buff, info->context);
 
             is_opening_tag = 0;
             is_ending_tag = 0;
