@@ -253,7 +253,7 @@ void hset_itr_discard_all(hset_itr_t *itr, delete_callback_t *dc) {
         if (value != NULL) {
             int p = hset_discard(itr->set, value); // remove value from set
             ASSERT(p == 1);                        // yields success
-            if (p == 1 && dc != NULL)
+            if (dc != NULL)
                 (dc)(value); // invoke delete callback
         }
         hset_itr_next(itr);
