@@ -82,21 +82,20 @@ extern unsigned long _no_asserts;
         assert_info(_a >= _b, a >= b); \
     } while (0);
 
-#define test_case(name)                                                  \
-    do {                                                                 \
-        _no_asserts = 0;                                                 \
-        fprintf(stderr, "running %-20s:%-4d: %-20s", __FILE__, __LINE__, \
-                #name);                                                  \
-        name();                                                          \
-        if (_no_asserts > 0) {                                           \
-            fprintf(stderr, "\033[0;32m");                               \
-            fprintf(stderr, "ok (%lu)\n", _no_asserts);                  \
-            fprintf(stderr, "\033[0m");                                  \
-        } else {                                                         \
-            fprintf(stderr, "\033[0;31m");                               \
-            fprintf(stderr, "fake (0)\n");                               \
-            fprintf(stderr, "\033[0m");                                  \
-        }                                                                \
+#define test_case(name)                                            \
+    do {                                                           \
+        _no_asserts = 0;                                           \
+        fprintf(stderr, "running %-20s:: %-20s", __FILE__, #name); \
+        name();                                                    \
+        if (_no_asserts > 0) {                                     \
+            fprintf(stderr, "\033[0;32m");                         \
+            fprintf(stderr, "ok (%lu)\n", _no_asserts);            \
+            fprintf(stderr, "\033[0m");                            \
+        } else {                                                   \
+            fprintf(stderr, "\033[0;31m");                         \
+            fprintf(stderr, "fake (0)\n");                         \
+            fprintf(stderr, "\033[0m");                            \
+        }                                                          \
     } while (0);
 
 #endif
