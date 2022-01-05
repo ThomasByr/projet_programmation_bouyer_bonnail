@@ -34,6 +34,7 @@ int dijkstra(node_t *start, node_t *end) {
 
                     // if child already in open set, update its weight
                     int rv = pqueue_push(open, child, new_weight);
+                    ASSERT(rv != -1 && rv != 2); // bad key or realloc fail
                     if (rv == 0)
                         pqueue_decrease_key(open, child, new_weight);
                 }
