@@ -83,8 +83,33 @@ void dict_test_2(void) {
     dict_free(dict);
 }
 
+void dict_test_3(void) {
+    dict_t *dict = dict_new();
+    dict_itr_t *itr = dict_itr_new(dict);
+    int n = 1000;
+    for (int i = 0; i < n; i++) {
+        foo_t *foo1 = foo_new(i);
+        foo_t *foo2 = foo_new(i);
+        foo1->a = 42;
+        foo2->a = 24;
+        int x = dict_push(dict, foo1, foo2);
+        assert_eq(x, 1);
+    }
+    assert_eq(dict_nitems(dict), n);
+
+    int a = 42;
+    void *data1 = &a;
+    int b = 24;
+    void *data2 = &b;
+    dict_itr_for_each(itr, foo_cmp_a_void, data1, foo_cmp_a_void, data2);
+    dict_itr_discatd_all(itr, foo_free_void, foo_free_void);
+    dict_itr_free(itr);
+    dict_free(dict);
+}
+
 void dict_test(void) {
     test_case(dict_test_0);
     test_case(dict_test_1);
     test_case(dict_test_2);
+    test_case(dict_test_3);
 }
