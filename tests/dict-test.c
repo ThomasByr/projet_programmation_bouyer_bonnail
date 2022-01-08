@@ -107,9 +107,100 @@ void dict_test_3(void) {
     dict_free(dict);
 }
 
+void dict_test_4(void) {
+    dict_t *dict1 = dict_new();
+    dict_t *dict2 = dict_new();
+    dict_itr_t *itr = dict_itr_new(dict1);
+    int n = 1000;
+    for (int i = 0; i < n; i++) {
+        foo_t *foo1 = foo_new(i);
+        foo_t *foo2 = foo_new(i);
+        foo1->a = 42;
+        foo2->a = 24;
+        int x = dict_push(dict1, foo1, foo2);
+        assert_eq(x, 1);
+        x = dict_push(dict2, foo1, foo2);
+        assert_eq(x, 1);
+    }
+    assert_eq(dict_nitems(dict1), n);
+    assert_eq(dict_nitems(dict2), n);
+
+    size_t rv = dict_merge(dict1, dict2);
+    assert_eq(rv, 0);
+    assert_eq(dict_nitems(dict1), n);
+    assert_eq(dict_nitems(dict2), n);
+
+    dict_itr_discatd_all(itr, foo_free_void, foo_free_void);
+    dict_itr_free(itr);
+    dict_free(dict1);
+    dict_free(dict2);
+}
+
+void dict_test_5(void) {
+    dict_t *dict1 = dict_new();
+    dict_t *dict2 = dict_new();
+    dict_itr_t *itr = dict_itr_new(dict1);
+    int n = 1000;
+    for (int i = 0; i < n; i++) {
+        foo_t *foo1 = foo_new(i);
+        foo_t *foo2 = foo_new(i);
+        foo1->a = 42;
+        foo2->a = 24;
+        int x = dict_push(dict1, foo1, foo1);
+        assert_eq(x, 1);
+        x = dict_push(dict2, foo2, foo2);
+        assert_eq(x, 1);
+    }
+    assert_eq(dict_nitems(dict1), n);
+    assert_eq(dict_nitems(dict2), n);
+
+    size_t rv = dict_merge(dict1, dict2);
+    assert_eq(rv, n);
+    assert_eq(dict_nitems(dict1), 2 * n);
+    assert_eq(dict_nitems(dict2), n);
+
+    dict_itr_discatd_all(itr, foo_free_void, NULL);
+    dict_itr_free(itr);
+    dict_free(dict1);
+    dict_free(dict2);
+}
+
+void dict_test_6(void) {
+    dict_t *dict1 = dict_new();
+    dict_itr_t *itr = dict_itr_new(dict1);
+    int n = 1000;
+    for (int i = 0; i < n; i++) {
+        foo_t *foo = foo_new(i);
+        foo->a = 42;
+        int x = dict_push(dict1, foo, foo);
+        assert_eq(x, 1);
+    }
+    assert_eq(dict_nitems(dict1), n);
+
+    dict_t *dict2 = dict_copy(dict1);
+    assert_eq(dict_nitems(dict2), n);
+
+    for (int i = n; i < 2 * n; i++) {
+        foo_t *foo = foo_new(i);
+        foo->a = 42;
+        int x = dict_push(dict1, foo, foo);
+        assert_eq(x, 1);
+    }
+    assert_eq(dict_nitems(dict1), 2 * n);
+    assert_eq(dict_nitems(dict2), n);
+
+    dict_itr_discatd_all(itr, foo_free_void, NULL);
+    dict_itr_free(itr);
+    dict_free(dict1);
+    dict_free(dict2);
+}
+
 void dict_test(void) {
     test_case(dict_test_0);
     test_case(dict_test_1);
     test_case(dict_test_2);
     test_case(dict_test_3);
+    test_case(dict_test_4);
+    test_case(dict_test_5);
+    test_case(dict_test_6);
 }
