@@ -7,7 +7,7 @@
 #include "types.h"
 #include "xml-parser.h"
 
-void xml_test_error_0(void) {
+void xml_test_0(void) {
     parser_info_t *info = parser_info_new();
 
     char filename[] = "../assets/eg.xml";
@@ -16,11 +16,11 @@ void xml_test_error_0(void) {
     assert_eq(err, PARSER_OK);
 }
 
-void xml_test_0(void) {
+void xml_test_1(void) {
     char arr[] = "abcdefghijklmnopqrstuvwxyz";
     int count = 0;
     foreach (item of arr) {
-        (void)item;
+        assert_eq(item, arr[count]);
         count++;
     }
     assert_eq(count, 27);
@@ -28,13 +28,13 @@ void xml_test_0(void) {
     assert_eq(lerp(0.5, 0.0, 1.0, -1.0, 1.0), 0);
 }
 
-void xml_test_1(void) {
+void xml_test_2(void) {
     int i = 0;
     (void)i;
 }
 
 void xml_parser_test() {
-    test_case(xml_test_error_0);
     test_case(xml_test_0);
     test_case(xml_test_1);
+    test_case(xml_test_2);
 }
