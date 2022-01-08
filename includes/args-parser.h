@@ -23,4 +23,12 @@ void parse_args(int argc, char *argv[], options_t *options);
  */
 void check_args(options_t *options);
 
+/**
+ * @brief execute main program using the options
+ *
+ * @param options previously parsed options
+ * @return int - -1 if error, 0 if success
+ */
+int exec(options_t *options);
+
 #endif

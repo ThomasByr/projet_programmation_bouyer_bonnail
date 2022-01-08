@@ -30,7 +30,7 @@ It is the caller's responsability to cast the values to the same type.
 
 #define _foreach(item, array) \
     FOREACH(__typeof__(array[0]), item, array, length(array))
-#define foreach(item_in_array) _foreach(item_in_array)
+#define foreach(item_of_array) _foreach(item_of_array)
 
 #define of ,
 #define length(array) (sizeof(array) / sizeof((array)[0]))
