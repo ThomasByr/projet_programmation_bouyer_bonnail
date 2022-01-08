@@ -44,14 +44,14 @@ hset_t *hset_copy(hset_t *hset) {
     set->mask = hset->mask;
     set->items = calloc(set->capacity, sizeof(size_t));
     if (set->items == NULL) {
-        hset_free(set);
+        free(set);
         return NULL;
     }
     set->nitems = hset->nitems;
     set->n_deleted_items = hset->n_deleted_items;
     size_t n = set->capacity * sizeof(size_t);
     void *dest = memcpy(set->items, hset->items, n);
-    ASSERT(dest != NULL);
+    ASSERT(dest);
     ASSERT(dest == set->items);
     return set;
 }

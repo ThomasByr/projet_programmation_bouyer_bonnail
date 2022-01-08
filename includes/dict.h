@@ -84,6 +84,25 @@ size_t dict_get(dict_t *dict, void *key);
 int dict_discard(dict_t *dict, void *key);
 
 /**
+ * @brief return a new dictionary
+ * Does not copy any of the key-value pairs
+ *
+ * @param dict dictionary
+ * @return dict_t* - copy of the original dictionary
+ */
+dict_t *dict_copy(dict_t *dict);
+
+/**
+ * @brief merge the second dictionary into the first one.
+ * Does not copy any of the key-value pairs.
+ *
+ * @param dict1 first dictionary
+ * @param dict2 second dictionary
+ * @return size_t* - number of items added to the first dictionary
+ */
+size_t dict_merge(dict_t *dict1, dict_t *dict2);
+
+/**
  * @brief get number of items in dictionary
  *
  * @param dict dictionary

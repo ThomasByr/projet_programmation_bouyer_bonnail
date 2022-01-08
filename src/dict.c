@@ -159,6 +159,58 @@ int dict_discard(dict_t *dict, void *item) {
     return 0; // return error if key is not found
 }
 
+dict_t *dict_copy(dict_t *dict) {
+    dict_t *new_dict = calloc(1, sizeof(struct dict_s));
+    if (new_dict == NULL)
+        return NULL;
+
+    new_dict->capacity = dict->capacity;
+    new_dict->nbits = dict->nbits;
+    new_dict->mask = dict->mask;
+    new_dict->nitems = dict->nitems;
+    new_dict->n_deleted_items = dict->n_deleted_items;
+
+    new_dict->keys = calloc(new_dict->capacity, sizeof(size_t));
+    new_dict->values = calloc(new_dict->capacity, sizeof(size_t));
+    if (new_dict->keys == NULL || new_dict->values == NULL) {
+        if (new_dict->keys != NULL)
+            free(new_dict->keys);
+        if (new_dict->values != NULL)
+            free(new_dict->values);
+
+        free(new_dict);
+        return NULL;
+    }
+
+    size_t n = new_dict->capacity * sizeof(size_t);
+    void *key = memcpy(new_dict->keys, dict->keys, n);
+    void *value = memcpy(new_dict->values, dict->values, n);
+    ASSERT(key);
+    ASSERT(value);
+    ASSERT(key == new_dict->keys);
+    ASSERT(value == new_dict->values);
+    return new_dict;
+}
+
+size_t dict_merge(dict_t *dict1, dict_t *dict2) {
+    size_t count = 0; // number of merged items
+
+    if (dict1 == NULL || dict2 == NULL || dict1 == dict2)
+        return 0;
+
+    size_t ii; // index of the bucket
+    for (ii = 0; ii < dict2->capacity; ii++) {
+        if (dict2->keys[ii] != 0 && dict2->keys[ii] != 1) {
+            int rv = dict_push(dict1, (void *)dict2->keys[ii],
+                               (void *)dict2->values[ii]);
+            ASSERT(rv == 0 || rv == 1);
+            if (rv == 1)
+                count++;
+        }
+    }
+    return count;
+}
+
 size_t dict_nitems(dict_t *dict) { return dict->nitems; }
 
 dict_itr_t *dict_itr_new(dict_t *dict) {
