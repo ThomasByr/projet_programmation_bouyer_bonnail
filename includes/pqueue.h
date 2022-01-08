@@ -94,7 +94,11 @@ int pqueue_decrease_key(pqueue_t *pq, void *element, int new_key);
 
 /**
  * @brief merge second priority queue into the first one.
- * The second priority queue is reset
+ * The second priority queue is reset.
+ * Due to limitations, user should be aware that duplicated nodes
+ * may cause the first priority queue to become corrupted.
+ *
+ * @note Do not use this function please.
  *
  * @param pq1 first priority queue
  * @param pq2 second priority queue
