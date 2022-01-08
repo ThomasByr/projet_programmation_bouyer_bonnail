@@ -141,7 +141,11 @@ int hset_discard(hset_t *set, void *item) {
     size_t value = (size_t)item;               // cast item to size_t
     size_t ii = set->mask & (prime_1 * value); // hash value modulo capacity
 
-    while (set->items[ii] != 0) // find empty or deleted bucket
+    // if set is NULL or value casts to 0 or 1
+    if (set == NULL || value == 0 || value == 1)
+        return -1; // return error
+
+    while (set->items[ii] != 0) // find non empty bucket
     {
         if (set->items[ii] == value) // if item is already in set
         {
@@ -232,9 +236,12 @@ void hset_itr_free(hset_itr_t *itr) {
 
 void *hset_itr_for_each(hset_itr_t *itr, for_each_callback_t *fe, void *data) {
     hset_itr_reset(itr); // reset iterator
+    if (fe == NULL)
+        return NULL;
 
     while (hset_itr_has_next(itr)) {
         void *value = (void *)hset_itr_value(itr);
+        ASSERT(value);
         if (value != NULL) {
             void *p = (fe)(value, data); // call for_each_callback
             if (p != NULL)               // if callback returns non-NULL
@@ -250,6 +257,8 @@ void hset_itr_discard_all(hset_itr_t *itr, delete_callback_t *dc) {
 
     while (hset_itr_has_next(itr)) {
         void *value = (void *)hset_itr_value(itr);
+        ASSERT(value);
+
         if (value != NULL) {
             int p = hset_discard(itr->set, value); // remove value from set
             ASSERT(p == 1);                        // yields success

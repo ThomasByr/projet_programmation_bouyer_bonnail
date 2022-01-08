@@ -76,8 +76,10 @@ size_t dict_get(dict_t *dict, void *key);
  * @brief remove key-value pair from dictionary
  *
  * @param dict dictionary
- * @param key key
- * @return int - 1 if key was removed, 0 if key not found, -1 if error
+ * @param item key of the pair to remove
+ * @return int - -1 if error (bad key value),
+ * `0` if not found (no change),
+ * `1` if removed (key-value pair removed),
  */
 int dict_discard(dict_t *dict, void *key);
 
@@ -108,7 +110,7 @@ void dict_itr_free(dict_itr_t *itr);
  * @brief get next key from iterator
  *
  * @param itr iterator
- * @return size_t
+ * @return size_t - pointer to key
  */
 size_t dict_itr_key(dict_itr_t *itr);
 
@@ -116,7 +118,7 @@ size_t dict_itr_key(dict_itr_t *itr);
  * @brief get next value from iterator
  *
  * @param itr iterator
- * @return size_t
+ * @return size_t - pointer to value
  */
 size_t dict_itr_value(dict_itr_t *itr);
 
@@ -124,7 +126,7 @@ size_t dict_itr_value(dict_itr_t *itr);
  * @brief return 1 if can advance, 0 otherwise
  *
  * @param itr iterator
- * @return int
+ * @return int - 0 if we reached the end, 1 otherwise
  */
 int dict_itr_has_next(dict_itr_t *itr);
 
@@ -143,5 +145,33 @@ size_t dict_itr_next(dict_itr_t *itr);
  * @param itr iterator
  */
 void dict_itr_reset(dict_itr_t *itr);
+
+/**
+ * @brief iterate over dictionary and call the callback for each key-value pair
+ * if the function returns non-null, the iteration is stopped
+ * and the value is returned
+ *
+ * @details it is the caller's responsibility to reset the iterator
+ * after calling this function
+ *
+ * @param itr dictionary iterator
+ * @param fe1 function to call for each key
+ * @param data1 data to pass to callback
+ * @param fe2 function to call for each value
+ * @param data2 data to pass to callback
+ * @return void* - data returned by callback if non-null
+ */
+void *dict_itr_for_each(dict_itr_t *itr, for_each_callback_t *fe1, void *data1,
+                        for_each_callback_t *fe2, void *data2);
+
+/**
+ * @brief discard all key-value pairs from dictionary
+ *
+ * @param itr dictionary iterator
+ * @param dc1 delete callback for each key
+ * @param dc2 delete callback for each value
+ */
+void dict_itr_discatd_all(dict_itr_t *itr, delete_callback_t *dc1,
+                          delete_callback_t *dc2);
 
 #endif

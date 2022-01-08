@@ -91,7 +91,9 @@ int hset_contains(hset_t *hset, void *item);
  *
  * @param hset hash set
  * @param item item to remove
- * @return int - 1 if removed, 0 if not present
+ * @return int - `-1` if error (bad item value),
+ * `0` if not found (no change),
+ * `1` if removed (value removed),
  */
 int hset_discard(hset_t *hset, void *item);
 

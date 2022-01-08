@@ -124,8 +124,7 @@ size_t dict_get(dict_t *dict, void *key) {
 
     ii = dict->mask & (prime_1 * k); // hash value modulo capacity
 
-    while (dict->keys[ii] != 0 &&
-           dict->keys[ii] != 1) // find empty or deleted bucket
+    while (dict->keys[ii] != 0) // find empty or deleted bucket
     {
         if (dict->keys[ii] == k) {   // if key is found
             return dict->values[ii]; // return value
@@ -136,20 +135,19 @@ size_t dict_get(dict_t *dict, void *key) {
     return 0; // return 0 if key is not found
 }
 
-int dict_discard(dict_t *dict, void *key) {
-    size_t k = (size_t)key; // cast key to size_t
-    size_t ii;              // index of the bucket
+int dict_discard(dict_t *dict, void *item) {
+    size_t key = (size_t)item; // cast key to size_t
+    size_t ii;                 // index of the bucket
 
-    if (dict == NULL || k == 0 ||
-        k == 1)    // if dict is NULL or key casts to 0 or 1
+    // if dict is NULL or key casts to 0 or 1
+    if (dict == NULL || key == 0 || key == 1)
         return -1; // return error
 
-    ii = dict->mask & (prime_1 * k); // hash value modulo capacity
+    ii = dict->mask & (prime_1 * key); // hash value modulo capacity
 
-    while (dict->keys[ii] != 0 &&
-           dict->keys[ii] != 1) // find empty or deleted bucket
+    while (dict->keys[ii] != 0) // find non empty bucket
     {
-        if (dict->keys[ii] == k) {   // if key is found
+        if (dict->keys[ii] == key) { // if key is found
             dict->keys[ii] = 1;      // mark bucket as deleted
             dict->nitems--;          // decrease number of items
             dict->n_deleted_items++; // increase number of deleted items
@@ -221,3 +219,53 @@ void dict_itr_free(dict_itr_t *itr) {
 }
 
 void dict_itr_reset(dict_itr_t *itr) { itr->index = 0; }
+
+void *dict_itr_for_each(dict_itr_t *itr, for_each_callback_t *fe1, void *data1,
+                        for_each_callback_t *fe2, void *data2) {
+    dict_itr_reset(itr); // reset iterator
+
+    if (fe1 == NULL && fe2 == NULL)
+        return NULL;
+
+    while (dict_itr_has_next(itr)) {
+        void *key = (void *)dict_itr_key(itr);
+        void *value = (void *)dict_itr_value(itr);
+        ASSERT(key);
+        ASSERT(value);
+
+        if (key != NULL && fe1 != NULL) {
+            void *p = (fe1)(key, data1);
+            if (p != NULL)
+                return p;
+        }
+        if (value != NULL && fe2 != NULL) {
+            void *p = (fe2)(value, data2);
+            if (p != NULL)
+                return p;
+        }
+        dict_itr_next(itr);
+    }
+    return NULL;
+}
+
+void dict_itr_discatd_all(dict_itr_t *itr, delete_callback_t *dc1,
+                          delete_callback_t *dc2) {
+    dict_itr_reset(itr); // reset iterator
+
+    while (dict_itr_has_next(itr)) {
+        void *key = (void *)dict_itr_key(itr);
+        void *value = (void *)dict_itr_value(itr);
+        ASSERT(key);
+        ASSERT(value);
+
+        if (key != NULL) {
+            int p = dict_discard(itr->dict, key); // remove key-value pair
+            ASSERT(p == 1);                       // yields success
+            if (dc1 != NULL)
+                (dc1)(key);
+            if (value != NULL && dc2 != NULL)
+                (dc2)(value);
+        }
+        dict_itr_next(itr);
+    }
+}
