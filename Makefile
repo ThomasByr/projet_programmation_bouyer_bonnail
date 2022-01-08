@@ -5,11 +5,11 @@ LDLIBS ?= -lm # -pthread -ltps -lSDL2 -lSDL2_ttf
 
 INCLUDE_PATH = ./includes
 
-TARGET = main
+TARGET    = main
 
-SRCDIR = src
-OBJDIR = obj
-BINDIR = bin
+SRCDIR    = src
+OBJDIR    = obj
+BINDIR    = bin
 
 SOURCES  := $(wildcard $(SRCDIR)/*.c)
 INCLUDES := $(wildcard $(INCLUDE_PATH)/*.h)
