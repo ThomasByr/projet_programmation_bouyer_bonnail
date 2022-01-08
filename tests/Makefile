@@ -6,8 +6,8 @@ LDLIBS = -lm # -pthread -ltps -lSDL2 -lSDL2_ttf
 
 INCLUDE_PATH = ../includes
 
-SRCDIR   = ../src
-OBJDIR   = obj
+SRCDIR    = ../src
+OBJDIR    = obj
 
 SOURCES  := $(wildcard $(SRCDIR)/*.c)
 INCLUDES := $(wildcard $(INCLUDE_PATH)/*.h)
@@ -17,6 +17,7 @@ OBJECTS   = $(filter-out $(OBJDIR)/main.o,$(OBJECTS0))
 tests: $(OBJECTS) obj/tests.o
 	$(CC) -o $@ $^ $(CFLAGS) $(LDLIBS)
 	@echo "\033[92mLinking complete!\033[0m"
+	@echo "\033[33mRunning in debug mode!\033[0m"
 
 cov: clean tests
 	valgrind --leak-check=full -q ./$(TARGET)
@@ -24,7 +25,7 @@ cov: clean tests
 	genhtml -o report -t "Coverage" report.info
 
 check: clean tests
-	time valgrind --leak-check=full --vgdb=full ./$(TARGET)
+	time valgrind --leak-check=full --show-leak-kinds=all --vgdb=full -s ./$(TARGET)
 
 $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.c
 	mkdir -p $(OBJDIR)
