@@ -1,4 +1,7 @@
-/* vec.h - A simple pointer vector */
+/* vec.h
+A simple pointer vector
+
+*/
 
 #ifndef VEC_H
 #define VEC_H

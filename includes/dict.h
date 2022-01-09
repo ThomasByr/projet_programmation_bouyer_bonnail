@@ -1,4 +1,5 @@
-/*
+/* dict.h
+Efficient storage of key-value pairs.
 
 */
 

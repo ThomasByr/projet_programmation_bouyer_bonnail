@@ -1,4 +1,5 @@
-/*
+/* info-parser.h
+XML parser context and info retrieval.
 
 */
 

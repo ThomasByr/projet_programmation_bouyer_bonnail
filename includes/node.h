@@ -1,4 +1,5 @@
-/*
+/* node.h
+Main node struct for the data base.
 
 */
 

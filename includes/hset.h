@@ -1,4 +1,5 @@
-/*
+/* hset.h
+Collection of unique elements using a hash table.
 
 */
 

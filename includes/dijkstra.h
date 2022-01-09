@@ -1,4 +1,10 @@
-/*
+/* dijkstra.h
+Dijkstra's algorithm for finding the shortest path between two nodes.
+
+Assuming Dijkstra's algorithm was run on the graph, you can get the shortest
+path between two nodes by using the `get_path` function.
+By using a set and a priority queue, the algorithm runs in O(E + V log V) time
+where E is the number of edges and V is the number of vertices.
 
 */
 

@@ -1,4 +1,7 @@
-/*
+/* xml-parser.h
+XML parser for the data base.
+
+Was originally intended to be run in parallel...
 
 */
 

@@ -1,4 +1,7 @@
-/*
+/* pqueue.h
+Priority queue implementation using a Fibonacci heap.
+
+User should not use `heap_node_t` directly.
 
 */
 

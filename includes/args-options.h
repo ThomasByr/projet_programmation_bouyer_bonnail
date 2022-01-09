@@ -1,4 +1,5 @@
-/*
+/* args-options.h
+Options for the command line arguments.
 
 */
 

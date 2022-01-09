@@ -1,4 +1,5 @@
-/*
+/* args-parser.c
+Functions to parse and check the validity of the command line arguments.
 
 */
 
