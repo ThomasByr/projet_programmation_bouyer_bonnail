@@ -30,13 +30,18 @@ int compare_floats(const void *a, const void *b) {
     }
 }
 
-void print_usage(void) {
-    fprintf(stdout, "\"Projet Programmation\" Bouyer Bonnail\n");
-    fprintf(stdout, "Version: %s\n", VERSION);
+void print_sep(void) {
     char s[_width + 1];
     memset(s, '=', _width);
     s[_width] = '\0';
     fprintf(stdout, "%s\n", s);
+}
+
+void print_usage(void) {
+    fprintf(stdout, "\"Projet Programmation\" Bouyer Bonnail\n");
+    fprintf(stdout, "Version: %s\n", VERSION);
+
+    print_sep();
     fprintf(stdout, "Usage: ./bin/main [OPTIONS]...\n");
     fprintf(stdout, "Options:\n");
     fprintf(stdout, "\t%-20s%s", "-h, --help", "Display this help\n");
@@ -63,10 +68,8 @@ void print_version(void) {
     fprintf(stdout, "Compilation date: %s\n", __DATE__);
     fprintf(stdout, "Compilation time: %s\n", __TIME__);
     DEBUG_PRINT("Compilation mode : debug\n");
-    char s[_width + 1];
-    memset(s, '=', _width);
-    s[_width] = '\0';
-    fprintf(stdout, "%s\n", s);
+
+    print_sep();
     fprintf(stdout, "Licence: GPLv3\n");
     fprintf(stdout, "Authors: %s\n", AUTHORS);
 }
