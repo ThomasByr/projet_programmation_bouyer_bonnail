@@ -98,3 +98,57 @@ void parse_args(int argc, char *argv[], options_t *options) {
         exit(EXIT_FAILURE);
     }
 }
+
+void check_args(options_t *options) {
+    int has_error = 0;
+
+    // if --author is used but not set
+    if (options->find_info_author == 1 && options->author == NULL) {
+        fprintf(stderr, "Error: --author requires an argument\n");
+        has_error = 1;
+    }
+    // if --list is used but not set
+    if (options->find_authors_words == 1 && options->word == NULL) {
+        fprintf(stderr, "Error: --list requires an argument\n");
+        has_error = 1;
+    }
+    // if --n_closest is used but not set
+    if (options->find_authors_within == 1 && options->n_closest == 0) {
+        fprintf(stderr,
+                "Error: --n_closest requires an non trivial argument\n");
+        has_error = 1;
+    }
+    // if --path is used but not set
+    if (options->find_shortest_path != 0 &&
+        (options->author1 == NULL || options->author2 == NULL)) {
+        fprintf(stderr, "Error: --path requires an argument\n");
+        has_error = 1;
+    }
+    // if --path is used but not exactly twice
+    if (options->find_shortest_path != 0 && options->find_shortest_path != 2) {
+        fprintf(stderr, "Error: --path should and must be used twice\n");
+        has_error = 1;
+    }
+
+    // if --n_closest is used but not author is specified
+    if (options->find_authors_within == 1 && options->author == NULL) {
+        fprintf(stderr, "Error: --n_closest requires an author\n");
+        has_error = 1;
+    }
+
+    // if --input_file not set
+    if (options->input_file == NULL) {
+        fprintf(stderr, "Error: --input_file must be set\n");
+        has_error = 1;
+    }
+
+    if (has_error) {
+        print_usage();
+        exit(EXIT_FAILURE);
+    }
+}
+
+int exec(options_t *options) {
+    (void)options;
+    return 0;
+}
