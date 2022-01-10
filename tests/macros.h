@@ -27,34 +27,6 @@ used to perform checks.
 #ifndef MACROS_H
 #define MACROS_H
 
-<<<<<<< HEAD
-#define assert_eq(a, b)                                                 \
-    if (a != b)                                                         \
-    {                                                                   \
-        printf("failed %s:%d: %s != %s\n", __FILE__, __LINE__, #a, #b); \
-        exit(1);                                                        \
-    }                                                                   \
-    else                                                                \
-    {                                                                   \
-        printf("ok %s:%d: %s == %s\n", __FILE__, __LINE__, #a, #b);     \
-    }
-
-#define assert_neq(a, b)                                                \
-    if (a == b)                                                         \
-    {                                                                   \
-        printf("failed %s:%d: %s == %s\n", __FILE__, __LINE__, #a, #b); \
-        exit(1);                                                        \
-    }                                                                   \
-    else                                                                \
-    {                                                                   \
-        printf("ok %s:%d: %s != %s\n", __FILE__, __LINE__, #a, #b);     \
-    }
-
-#define test_case(name)                                         \
-    printf("\nrunning %s:%d: %s\n", __FILE__, __LINE__, #name); \
-    name();                                                     \
-    printf("\n");
-=======
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -126,6 +98,5 @@ static unsigned long _no_asserts = 0;
             fprintf(stderr, "\033[0m");                                  \
         }                                                                \
     } while (0);
->>>>>>> 7c92f791ee13737df0c25425f9c58acd01c9783c
 
 #endif

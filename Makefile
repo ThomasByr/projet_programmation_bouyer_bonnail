@@ -1,13 +1,7 @@
-<<<<<<< HEAD
-CC ?= gcc-11
-CFLAGS ?= -march=x86-64 -O3 -pipe -Wall -Wextra -Werror # -g
-LDLIBS ?= -pthread # -lm -ltps -lSDL2 -lSDL2_ttf
-=======
 CC = gcc-11
 
 CFLAGS ?= -march=znver3 -Ofast -pipe -std=c18 -pedantic -Wall -Wextra -Werror
 LDLIBS ?= -lm # -pthread -ltps -lSDL2 -lSDL2_ttf
->>>>>>> 7c92f791ee13737df0c25425f9c58acd01c9783c
 
 INCLUDE_PATH = ./includes
 

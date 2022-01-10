@@ -18,8 +18,7 @@
     if (is1 == 1 || is2 == 1) \
         return ERROR_UNEXPECTED_END_OF_TAG;
 
-struct pthread_arg
-{
+struct pthread_arg {
     char *buffer;
     long size;
     parser_info_t *info;
@@ -36,7 +35,7 @@ void get_tag_id(char *tag);
 
 /**
  * @brief find the first occurence of any of `external` in `buffer`
- * 
+ *
  * @param buffer buffer to parse
  * @param start starting position
  * @param size size of buffer

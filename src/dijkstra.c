@@ -4,8 +4,7 @@
 
 #include "dijkstra.h"
 
-int dijkstra(node_t *start, node_t *end)
-{
+int dijkstra(node_t *start, node_t *end) {
     hset_t *close = hset_new();
     pqueue_t *open = pqueue_new();
 
@@ -13,8 +12,7 @@ int dijkstra(node_t *start, node_t *end)
     current->weight = 0;
     pqueue_push(open, current, current->weight);
 
-    while (pqueue_size(open) > 0ul)
-    {
+    while (pqueue_size(open) > 0ul) {
         current = pqueue_pop_min(open); // pop the node with the lowest weight
         hset_push(close, current);      // add it to the closed set
 
@@ -22,18 +20,15 @@ int dijkstra(node_t *start, node_t *end)
             break; // if we found the end, we're done
 
         hset_itr_t *itr = current->neighbors; // iterate over neighbors
-        while (hset_itr_has_next(itr))
-        {
+        while (hset_itr_has_next(itr)) {
             node_t *child = (node_t *)hset_itr_value(itr);
             int c = hset_contains(close, (void *)child);
-            if (c == 0)
-            {
+            if (c == 0) {
                 int new_weight = current->weight + 1;
                 ASSERT(new_weight > 0 && new_weight < INT_MAX);
 
                 // if child was never visited before, weight is infinity
-                if (new_weight < child->weight)
-                {
+                if (new_weight < child->weight) {
                     child->weight = new_weight;
                     child->parent = current;
 
@@ -46,18 +41,15 @@ int dijkstra(node_t *start, node_t *end)
             hset_itr_next(itr); // advance to next child
         }
     }
-    return (-1);
     hset_free(close);
     pqueue_free(open);
     return end->weight == INT_MAX ? -1 : end->weight;
 }
 
-vec_t *get_path(node_t *end)
-{
+vec_t *get_path(node_t *end) {
     vec_t *path = vec_new();
     node_t *current = end;
-    while (current != NULL)
-    {
+    while (current != NULL) {
         vec_push(path, current);
         current = current->parent;
     }
