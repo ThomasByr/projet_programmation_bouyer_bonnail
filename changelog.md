@@ -28,3 +28,4 @@
     *   nouvelle règle debug pour le makefile (option -g et définition de DEBUG)
     *   options pour le parsage des arguments (ligne de commande) conformes à c18
     *   décompte correct du nombre d'assertions lors des tests (variable externe)
+    *   un peu de doc dans le fichier helpme
