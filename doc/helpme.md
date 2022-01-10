@@ -6,7 +6,7 @@ So here it is... Our programming project, used to parse a large xml database (le
 2. [hset_t, a collection of unique elements](#hset_t-a-collection-of-unique-elements)
 3. [dict_t, efficient key-value pairs storage](#dict_t-efficient-key-value-pairs-storage)
 4. [pqueue_t, priority queue using a Fibonacci heap](#pqueue_t-priority-queue-using-a-fibonacci-heap)
-5. [benches ? benches](#benches--benches)
+5. [lets do some benches](#lets-do-some-benches)
 
 ## [vec_t](../includes/vec.h), a vector class
 
@@ -825,7 +825,7 @@ void pqueue_merge(pqueue_t *pq1, pqueue_t *pq2);
 void pqueue_free(pqueue_t *pq);
 ```
 
-## benches ? benches
+## lets do some benches
 
 So here benches will be performed on 2 different computers (one being a remote). They will be named after their cpu. So the mobile one has : Ryzen 7 5800hs (3200 MHz base clock speed, 4.6 on boost, 16MB L3), NVidia rxt 3060 (120W, 6Go gddr6, 192 bits), 16Go dual ddr4 ram, 512GO nvme pcle 4 ssd (4200 Mo average speed seek). The battlestation one has : Ryzen 9 5950x (3600 MHz base clock speed, 4.9 on boost, 7.3 when overclocked, 64MB L3), NVidia rtx 3090 (350W, CUDA cores 10496, 24Go gddr6x, 384 bits), 128Go quad ddr4 ram, 3To nvme pcle 4 ssd (8100 MO average speed seek). Given range represent when on performance mode and boost or overclocked (averages are made on eta 200 runs).
 
