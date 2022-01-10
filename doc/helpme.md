@@ -827,7 +827,7 @@ void pqueue_free(pqueue_t *pq);
 
 ## benches ? benches
 
-So here benches will be performed on 2 different computers (one being a remote). They will be named after their cpu. So the mobile one has : Ryzen 7 5800hs (3200 MHz base clock speed, 4.6 on boost, 16MB L3), NVidia rxt 3060 (120W, 6Go gddr6, 192 bits), 16Go dual ddr4 ram, 512GO nvme pcle 4 ssd (4200 Mo average speed seek). The battlestation one has : Ryzen 9 5950x (3600 MHz base clock speed, 4.9 on boost, 7.3 when overclocked, 64MB L3), NVidia rtx 3090 (350W, CUDA cores 10496, 24Go gddr6x, 384 bits), 128Go quad ddr4 ram, 3To nvme pcle 4 ssd (8100 MO average speed seek). Given range are when on performance mode and boost or overclocked (average are made on eta 200 runs).
+So here benches will be performed on 2 different computers (one being a remote). They will be named after their cpu. So the mobile one has : Ryzen 7 5800hs (3200 MHz base clock speed, 4.6 on boost, 16MB L3), NVidia rxt 3060 (120W, 6Go gddr6, 192 bits), 16Go dual ddr4 ram, 512GO nvme pcle 4 ssd (4200 Mo average speed seek). The battlestation one has : Ryzen 9 5950x (3600 MHz base clock speed, 4.9 on boost, 7.3 when overclocked, 64MB L3), NVidia rtx 3090 (350W, CUDA cores 10496, 24Go gddr6x, 384 bits), 128Go quad ddr4 ram, 3To nvme pcle 4 ssd (8100 MO average speed seek). Given range represent when on performance mode and boost or overclocked (average are made on eta 200 runs).
 
 | Test performed                 | average time on mobile | average time on desktop |
 | ------------------------------ | ---------------------- | ----------------------- |
