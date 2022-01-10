@@ -102,7 +102,7 @@ void dict_test_3(void) {
     int b = 24;
     void *data2 = &b;
     dict_itr_for_each(itr, foo_cmp_a_void, data1, foo_cmp_a_void, data2);
-    dict_itr_discatd_all(itr, foo_free_void, foo_free_void);
+    dict_itr_discard_all(itr, foo_free_void, foo_free_void);
     dict_itr_free(itr);
     dict_free(dict);
 }
@@ -130,7 +130,7 @@ void dict_test_4(void) {
     assert_eq(dict_nitems(dict1), n);
     assert_eq(dict_nitems(dict2), n);
 
-    dict_itr_discatd_all(itr, foo_free_void, foo_free_void);
+    dict_itr_discard_all(itr, foo_free_void, foo_free_void);
     dict_itr_free(itr);
     dict_free(dict1);
     dict_free(dict2);
@@ -159,7 +159,7 @@ void dict_test_5(void) {
     assert_eq(dict_nitems(dict1), 2 * n);
     assert_eq(dict_nitems(dict2), n);
 
-    dict_itr_discatd_all(itr, foo_free_void, NULL);
+    dict_itr_discard_all(itr, foo_free_void, NULL);
     dict_itr_free(itr);
     dict_free(dict1);
     dict_free(dict2);
@@ -189,7 +189,7 @@ void dict_test_6(void) {
     assert_eq(dict_nitems(dict1), 2 * n);
     assert_eq(dict_nitems(dict2), n);
 
-    dict_itr_discatd_all(itr, foo_free_void, NULL);
+    dict_itr_discard_all(itr, foo_free_void, NULL);
     dict_itr_free(itr);
     dict_free(dict1);
     dict_free(dict2);
@@ -220,7 +220,7 @@ void dict_test_7(void) {
     assert_eq(dict_nitems(dict1), 2 * n);
     assert_eq(dict_nitems(dict2), 2 * n);
 
-    dict_itr_discatd_all(itr, foo_free_void, NULL);
+    dict_itr_discard_all(itr, foo_free_void, NULL);
     dict_itr_free(itr);
     dict_free(dict1);
     dict_free(dict2);

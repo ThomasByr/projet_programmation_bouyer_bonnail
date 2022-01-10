@@ -300,7 +300,7 @@ void *dict_itr_for_each(dict_itr_t *itr, for_each_callback_t *fe1, void *data1,
     return NULL;
 }
 
-void dict_itr_discatd_all(dict_itr_t *itr, delete_callback_t *dc1,
+void dict_itr_discard_all(dict_itr_t *itr, delete_callback_t *dc1,
                           delete_callback_t *dc2) {
     dict_itr_reset(itr); // reset iterator
 
