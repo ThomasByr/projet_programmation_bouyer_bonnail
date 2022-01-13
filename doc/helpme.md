@@ -1,6 +1,6 @@
 # Projet Programmation 2021/2022 | Julie BONNAIL & Thomas BOUYER
 
-So here it is... Our programming project, used to parse a large xml database (learn more [here](https://dblp.org/)). Normally this entire project should be written in English (except for the [README](../README.md) and the [changelog](../changelog.md)) so we won't go into extensive usage details here. Instead, we will focus on explaining the main structures used, and how they can be exported to other projects. Such things that won't be found inside comments.
+So here it is... Our programming project, used to parse a large xml database (learn more [here](https://dblp.org/)). Normally this entire project should be written in English (except for the [README](../README.md) and the [changelog](../changelog.md)) so we won't go into extensive usage details here. Instead, we will focus on explaining the main structures used, and how they can be exported to other projects. Such things that won't be found inside comments. Note that [type.h](../includes/types.h) is a global requirement and does not add any functionalities.
 
 1. [vec_t, a vector class](#vec_t-a-vector-class)
 2. [hset_t, a collection of unique elements](#hset_t-a-collection-of-unique-elements)
@@ -14,7 +14,7 @@ Maybe you are (or maybe you are not) familiar with the generic `Vec<T>` class pr
 
 It obviously has the obligatory `push` method, not that there are methods in C but anyway... You can push, pop, insert, get and set elements. Also in a concern of space management, any suppressed element will be replaced with the next push. So the order is not presserved, which kind of defeats the purpose of growable length arrays, and is a cheap optimisation anyway. Thinking of it right now, this might go away...
 
-This structure does not have any dependencies, is c18 compliant and does not rely on any GNU extentions.
+This structure does not have any dependencies (except from [types.h](../includes/types.h) which is a global requirement), is c18 compliant and does not rely on any GNU extentions.
 
 *   `vec_init(v)` takes an existing vector and initialises it
 
@@ -61,7 +61,7 @@ void *vec_pop(vec_t *v);
 void *vec_get_end(vec_t *v);
 ```
 
-*   `vec_get_at(v, ii)` returns the ii-th element of the vector (might beb NULL)
+*   `vec_get_at(v, ii)` returns the ii-th element of the vector (might be NULL)
 
 ```c
 /**
@@ -827,7 +827,7 @@ void pqueue_free(pqueue_t *pq);
 
 ## lets do some benches
 
-So here benches will be performed on 2 different computers (one being a remote). They will be named after their cpu. So the mobile one has : Ryzen 7 5800hs (8 cores, 3200 MHz base clock speed, 4.6 on boost, 16MB L3), NVidia rxt 3060 (120W, 6Go gddr6, 192 bits), 16Go dual ddr4 ram, 512GO nvme pcle 4 ssd (4200 Mo average speed seek). The battlestation one has : Ryzen 9 5950x (16 cores, 3600 MHz base clock speed, 4.9 on boost, 7.3 when overclocked, 64MB L3), NVidia rtx 3090 (350W, CUDA cores 10496, 24Go gddr6x, 384 bits), 128Go quad ddr4 ram, 3To nvme pcle 4 ssd (8100 MO average speed seek). Given range represent when on performance mode and boost or overclocked (averages are made on eta 200 runs).
+So here benches will be performed on 2 different computers (one being a remote because I do not have it here at Illkirch). They will be named after their cpu. So the mobile one has : Ryzen 7 5800hs (8 cores, 3200 MHz base clock speed, 4.6 on boost, 16MB L3), NVidia rxt 3060 (120W, 6Go gddr6, 192 bits), 16Go dual ddr4 ram, 512GO nvme pcle 4 ssd (4200 Mo average speed seek). The battlestation one has : Ryzen 9 5950x (16 cores, 3600 MHz base clock speed, 4.9 on boost, 7.3 when overclocked, 64MB L3), NVidia rtx 3090 (350W, CUDA cores 10496, 24Go gddr6x, 384 bits), 128Go quad ddr4 ram, 3To nvme pcle 4 ssd (8100 MO average speed seek). Given range represent when on performance mode and boost or overclocked (averages are made on eta 200 runs).
 
 | Test performed                 | average time on mobile | average time on desktop |
 | ------------------------------ | ---------------------- | ----------------------- |
