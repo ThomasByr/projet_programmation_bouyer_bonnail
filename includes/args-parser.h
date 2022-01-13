@@ -28,7 +28,7 @@ void check_args(options_t *options);
  * @brief execute main program using the options
  *
  * @param options previously parsed options
- * @return int - -1 if error, 0 if success
+ * @return int - 0 if success, 1 if error
  */
 int exec(options_t *options);
 
