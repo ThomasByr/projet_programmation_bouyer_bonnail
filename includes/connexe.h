@@ -10,8 +10,8 @@
 /**
  * @brief diametre finds diameter of connected component
  *
- * @param nodes autors of a connected component
- * 
+ * @param component autors of a connected component
+ *
  * @return return the diameter
  */
 int diametre(hset_t *component);
@@ -20,7 +20,7 @@ int diametre(hset_t *component);
  * @brief connexe finds number of connected component and their diameter
  *
  * @param nodes all of the autors
- * 
+ *
  * @return return list of diameters
  */
 vec_t *connexe(hset_t *nodes);
