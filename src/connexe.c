@@ -64,6 +64,12 @@ vec_t *connexe(hset_t *nodes) {
         sprintf(str, "%d", d);
         vec_push(list, strdup(str));
         hset_itr_next(itr_all);
+        hset_free(component);
+        hset_free(open);
+        hset_free(close);
     }
+    hset_free(all);
+    hset_itr_free(itr);
+    hset_itr_free(itr_all);
     return list;
 }
