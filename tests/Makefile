@@ -25,7 +25,7 @@ cov: clean tests
 	genhtml -o report -t "Coverage" report.info
 
 check: clean tests
-	time valgrind --leak-check=full --show-leak-kinds=all --vgdb=full -s ./$(TARGET)
+	/bin/time valgrind --leak-check=full --show-leak-kinds=all --vgdb=full -s ./$(TARGET)
 
 $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.c
 	mkdir -p $(OBJDIR)
