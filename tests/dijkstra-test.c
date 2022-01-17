@@ -7,8 +7,8 @@
 #include "node.h"
 
 void dijkstra_test_0(void) {
-    node_t *n1 = node_new("bob1", hset_new(), hset_new());
-    node_t *n2 = node_new("bob2", hset_new(), hset_new());
+    node_t *n1 = node_new("bob1", hset_new(), dict_new());
+    node_t *n2 = node_new("bob2", hset_new(), dict_new());
     hset_push(n2->neighbors->set, n1);
     hset_push(n1->neighbors->set, n2);
 
@@ -25,23 +25,23 @@ void dijkstra_test_0(void) {
 
     hset_free(n1->neighbors->set);
     hset_free(n2->neighbors->set);
-    hset_free(n1->papers->set);
-    hset_free(n2->papers->set);
+    dict_free(n1->papers->dict);
+    dict_free(n2->papers->dict);
     vec_free(path);
     node_free(n1);
     node_free(n2);
 }
 
 void dijkstra_test_1(void) {
-    node_t *n1 = node_new("bob1", hset_new(), hset_new());
-    node_t *n2 = node_new("bob2", hset_new(), hset_new());
+    node_t *n1 = node_new("bob1", hset_new(), dict_new());
+    node_t *n2 = node_new("bob2", hset_new(), dict_new());
 
     int d = dijkstra(n1, n2);
     assert_eq(d, -1);
     hset_free(n1->neighbors->set);
     hset_free(n2->neighbors->set);
-    hset_free(n1->papers->set);
-    hset_free(n2->papers->set);
+    dict_free(n1->papers->dict);
+    dict_free(n2->papers->dict);
     node_free(n1);
     node_free(n2);
 }
