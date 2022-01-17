@@ -14,9 +14,7 @@ int diametre(hset_t *component) {
             node_t *beggin = (node_t *)hset_itr_value(itr_beggin);
             node_t *end = (node_t *)hset_itr_value(itr_end);
             int a = dijkstra(beggin, end);
-            if (a > max) {
-                max = a;
-            }
+            max = (a > max) ? a : max;
             hset_itr_next(itr_end);
         }
         hset_itr_next(itr_beggin);
