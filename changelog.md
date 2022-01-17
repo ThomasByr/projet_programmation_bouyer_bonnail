@@ -29,3 +29,5 @@
     *   options pour le parsage des arguments (ligne de commande) conformes à c18
     *   décompte correct du nombre d'assertions lors des tests (variable externe)
     *   un peu de doc dans le fichier helpme
+    *   merge de dev-julie dans dev-thomas, changement de certains set en dict et inversement
+    *   création de io, exécutable principal
