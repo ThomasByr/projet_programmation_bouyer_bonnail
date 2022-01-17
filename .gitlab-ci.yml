@@ -3,6 +3,7 @@ pages:
   image: bramas/tps-c:latest
   script:
     # - bash setup.bash
+    - cd tests
     - make check
   artifacts:
     paths:
