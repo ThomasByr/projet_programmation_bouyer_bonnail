@@ -7,6 +7,8 @@
 
 int diametre(hset_t *component)
 {
+
+    //detection of the biggest distance between two nodes of the same connected component
     int max = 0;
     hset_itr_t *itr_beggin = hset_itr_new(component);
     while (hset_itr_has_next(itr_beggin))
