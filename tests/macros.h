@@ -92,7 +92,7 @@ extern unsigned long _no_asserts;
             fprintf(stderr, "ok (%lu)\n", _no_asserts);            \
             fprintf(stderr, "\033[0m");                            \
         } else {                                                   \
-            fprintf(stderr, "\033[0;31m");                         \
+            fprintf(stderr, "\033[0;33m");                         \
             fprintf(stderr, "fake (0)\n");                         \
             fprintf(stderr, "\033[0m");                            \
         }                                                          \
