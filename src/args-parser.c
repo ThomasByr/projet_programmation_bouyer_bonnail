@@ -15,6 +15,7 @@ void parse_args(int argc, char *argv[], options_t *options) {
     static struct option long_options[] = {
         {"help", no_argument, 0, 'h'},
         {"version", no_argument, 0, 'v'},
+        {"quiet", no_argument, 0, 'q'},
         {"input_file", required_argument, 0, 'i'},
         {"path", required_argument, 0, 'p'},
         {"list", required_argument, 0, 'l'},
@@ -43,6 +44,10 @@ void parse_args(int argc, char *argv[], options_t *options) {
             exit(EXIT_SUCCESS);
             break;
 
+        case 'q':
+            options->quiet = 1;
+            break;
+
         case 'i':
             options->input_file = optarg;
             break;
@@ -55,8 +60,7 @@ void parse_args(int argc, char *argv[], options_t *options) {
                 options->find_shortest_path = 2;
                 options->author2 = optarg;
             } else {
-                fprintf(stderr,
-                        "Error: --path can only and must be used twice\n");
+                complain("Error: --path can only and must be used twice\n");
                 exit(EXIT_FAILURE);
             }
             break;
@@ -86,14 +90,14 @@ void parse_args(int argc, char *argv[], options_t *options) {
 
         case '?':
         default:
-            fprintf(stderr, "Error: unknown option\n");
+            complain("Error: unknown option\n");
             exit(EXIT_FAILURE);
             break;
         }
     }
 
     if (optind < argc) {
-        fprintf(stderr, "Invalid argument: %s\n", argv[optind]);
+        complain("Invalid argument: %s\n", argv[optind]);
         print_usage();
         exit(EXIT_FAILURE);
     }
@@ -104,51 +108,51 @@ void check_args(options_t *options) {
 
     // if --author is used but not set
     if (options->find_info_author == 1 && options->author == NULL) {
-        fprintf(stderr, "Error: --author requires an argument\n");
+        complain("Error: --author requires an argument\n");
         has_error = 1;
     }
     // if --list is used but not set
     if (options->find_authors_words == 1 && options->word == NULL) {
-        fprintf(stderr, "Error: --list requires an argument\n");
+        complain("Error: --list requires an argument\n");
         has_error = 1;
     }
     // if --n_closest is used but not set
     if (options->find_authors_within == 1 && options->n_closest == 0) {
-        fprintf(stderr,
-                "Error: --n_closest requires an non trivial argument\n");
+        complain("Error: --n_closest requires an non trivial argument\n");
         has_error = 1;
     }
     // if --path is used but not set
     if (options->find_shortest_path != 0 &&
         (options->author1 == NULL || options->author2 == NULL)) {
-        fprintf(stderr, "Error: --path requires an argument\n");
+        complain("Error: --path requires an argument\n");
         has_error = 1;
     }
     // if --path is used but not exactly twice
     if (options->find_shortest_path != 0 && options->find_shortest_path != 2) {
-        fprintf(stderr, "Error: --path should and must be used twice\n");
+        complain("Error: --path should and must be used twice\n");
         has_error = 1;
     }
 
     // if --n_closest is used but not author is specified
     if (options->find_authors_within == 1 && options->author == NULL) {
-        fprintf(stderr, "Error: --n_closest requires an author\n");
+        complain("Error: --n_closest requires an author\n");
         has_error = 1;
     }
 
     // if --input_file not set
     if (options->input_file == NULL) {
-        fprintf(stderr, "Error: --input_file must be set\n");
+        complain("Error: --input_file must be set\n");
+        has_error = 1;
+    }
+
+    // if both verbose and quiet flags are used
+    if (options->verbose == 1 && options->quiet == 1) {
+        complain("Error: --quiet and --verbose cannot be used together\n");
         has_error = 1;
     }
 
     if (has_error) {
         print_usage();
         exit(EXIT_FAILURE);
-    }
-}
-
-int exec(options_t *options) {
-    (void)options;
-    return 0;
+    } // go on if no error, exec should be called
 }

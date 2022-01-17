@@ -124,7 +124,7 @@ size_t dict_get(dict_t *dict, void *key) {
 
     ii = dict->mask & (prime_1 * k); // hash value modulo capacity
 
-    while (dict->keys[ii] != 0) // find empty or deleted bucket
+    while (dict->keys[ii] != 0) // find empty bucket (step over deleled ones)
     {
         if (dict->keys[ii] == k) {   // if key is found
             return dict->values[ii]; // return value

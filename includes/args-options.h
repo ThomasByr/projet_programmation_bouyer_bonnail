@@ -9,6 +9,7 @@ Options for the command line arguments.
 struct options_s {
     int verbose;
     int debug;
+    int quiet;
 
     int find_connex_components; // find connex components in the graph
     int find_shortest_path;     // find shortest path between two authors

@@ -1,3 +1,5 @@
+#include <errno.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -28,6 +30,20 @@ int compare_floats(const void *a, const void *b) {
     } else {
         return 0;
     }
+}
+
+void complain(const char *msg, ...) {
+    va_list args;
+    va_start(args, msg);
+    fprintf(stderr, "\033[0;31m");
+    vfprintf(stderr, msg, args);
+    if (errno) {
+        fprintf(stderr, ": %s\n", strerror(errno));
+    } else {
+        fprintf(stderr, "\n");
+    }
+    fprintf(stderr, "\033[0m");
+    va_end(args);
 }
 
 void print_sep(void) {

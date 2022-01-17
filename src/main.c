@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "args-parser.h"
+#include "io.h"
 #include "protocol.h"
 #include "xml-parser.h"
 

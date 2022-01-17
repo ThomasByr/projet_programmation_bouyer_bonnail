@@ -127,7 +127,7 @@ int hset_contains(hset_t *set, void *item) {
     size_t value = (size_t)item;               // cast item to size_t
     size_t ii = set->mask & (prime_1 * value); // hash value modulo capacity
 
-    while (set->items[ii] != 0) // find empty or deleted bucket
+    while (set->items[ii] != 0) // find empty bucket (step over deleted ones)
     {
         if (set->items[ii] == value)         // if item is already in set
             return 1;                        // return success
@@ -145,7 +145,7 @@ int hset_discard(hset_t *set, void *item) {
     if (set == NULL || value == 0 || value == 1)
         return -1; // return error
 
-    while (set->items[ii] != 0) // find non empty bucket
+    while (set->items[ii] != 0) // find empty bucket
     {
         if (set->items[ii] == value) // if item is already in set
         {

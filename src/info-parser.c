@@ -40,12 +40,22 @@ parser_context_t *parser_context_new(void) {
 
     ctx->paper_type = NULL;
     ctx->inner_tag = NULL;
+
+    ctx->current_node = NULL;
+
+    ctx->auth_co_auth = dict_new();
+    ctx->auth_papers = dict_new();
+    ctx->auth_node = dict_new();
+    ctx->nodes = hset_new();
     return ctx;
 }
 
 void parser_context_free(parser_context_t *context) {
     if (context == NULL)
         return;
+    dict_free(context->auth_co_auth);
+    dict_free(context->auth_papers);
+    dict_free(context->auth_node);
     free(context);
 }
 
@@ -71,7 +81,7 @@ parser_info_t *parser_info_new(void) {
 void parser_info_free(parser_info_t *info) {
     if (info == NULL)
         return;
-    free(info->context);
+    parser_context_free(info->context);
     free(info);
 }
 

@@ -6,6 +6,10 @@ XML parser context and info retrieval.
 #ifndef INFO_PARSER_H
 #define INFO_PARSER_H
 
+#include "dict.h"
+#include "hset.h"
+#include "node.h"
+
 struct parser_context_s {
     int text_count;
     int open_count;
@@ -13,6 +17,13 @@ struct parser_context_s {
 
     char *paper_type;
     char *inner_tag;
+
+    node_t *current_node;
+
+    dict_t *auth_co_auth;
+    dict_t *auth_papers;
+    dict_t *auth_node;
+    hset_t *nodes;
 };
 typedef struct parser_context_s parser_context_t;
 
