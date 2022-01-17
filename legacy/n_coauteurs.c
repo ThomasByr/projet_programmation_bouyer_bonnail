@@ -11,7 +11,7 @@ vec *n_coauteurs(node_t *begin, int n)
 
     vec *voisin_begin = begin->co_autors;
     size_t taille_voisin_begin = vec_size(voisin_begin);
-    int index = 0;
+    size_t index = 0;
 
     while (index <= taille_voisin_begin)
     {
@@ -30,11 +30,11 @@ vec *n_coauteurs(node_t *begin, int n)
     {
 
         size_t taille_a_explorer = vec_size(v_open);
-        int index = 0;
+        size_t index = 0;
         while (index <= taille_a_explorer)
         {
             vec *voisin_a_explorer = ((node_t *)vec_get_at(v_open, index))->co_autors;
-            int index_new = 0;
+            size_t index_new = 0;
             size_t taille_voisin_explorer = vec_size(voisin_a_explorer);
             while (index_new <= taille_voisin_explorer)
             {

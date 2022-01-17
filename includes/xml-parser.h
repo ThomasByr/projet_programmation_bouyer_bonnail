@@ -37,6 +37,16 @@ typedef struct pthread_arg pthread_arg_t;
 void get_tag_id(char *tag);
 
 /**
+ * @brief find the first occurence of any of `external` in `buffer`
+ *
+ * @param buffer buffer to parse
+ * @param start starting position
+ * @param size size of buffer
+ * @return long - position of <
+ */
+long find_next_tag(char *buffer, long start, long size);
+
+/**
  * @brief parse the buffer of size `size`
  *
  * @param buffer buffer to parse

@@ -4,7 +4,8 @@
 
 #include "node.h"
 
-node_t *node_new(char *name, hset_t *neighbors, hset_t *papers) {
+node_t *node_new(char *name, hset_t *neighbors, hset_t *papers)
+{
     node_t *node = malloc(sizeof(node_t));
     ASSERT(node);
     node->weight = INT_MAX;
@@ -15,7 +16,8 @@ node_t *node_new(char *name, hset_t *neighbors, hset_t *papers) {
     return node;
 }
 
-void node_free(node_t *node) {
+void node_free(node_t *node)
+{
     hset_itr_free(node->neighbors);
     hset_itr_free(node->papers);
     free(node);

@@ -9,7 +9,8 @@ Collection of unique elements using a hash table.
 #include "protocol.h"
 #include "types.h"
 
-struct hset_s {
+struct hset_s
+{
     size_t nbits;
     size_t mask;
 
@@ -24,7 +25,8 @@ struct hset_s {
  */
 typedef struct hset_s hset_t;
 
-struct hset_itr_s {
+struct hset_itr_s
+{
     hset_t *set;
     size_t index;
 };

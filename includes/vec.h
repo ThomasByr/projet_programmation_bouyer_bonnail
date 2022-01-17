@@ -14,7 +14,8 @@ A simple pointer vector
 
 #define VEC_MIN_SIZE 1 << 11
 
-struct vec_s {
+struct vec_s
+{
     void **data;      // this vector only holds pointers
     size_t end_slot;  // index to the end of the vector
     size_t size;      // size of the vector
@@ -197,5 +198,15 @@ vec_t *vec_from_array(void **array, size_t size);
  * @return vec_t* - new vector
  */
 vec_t *vec_copy(vec_t *v);
+
+/**
+ * @brief print the size of the vector
+ * @param v vector
+ * @return void
+ */
+
+void vec_print_elts(vec_t *vec);
+
+void vec_print(vec_t *vec, void print_elt(void *));
 
 #endif
