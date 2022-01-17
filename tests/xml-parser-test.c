@@ -12,6 +12,7 @@ void xml_test_0(void) {
 
     char filename[] = "../assets/eg.xml";
     parser_error_type_t err = parse(filename, info);
+    hset_free(info->context->nodes);
     parser_info_free(info);
     assert_eq(err, PARSER_OK);
 }
