@@ -56,12 +56,28 @@ It is the caller's responsability to cast the values to the same type.
 extern char *strdup(const char *);
 
 /**
+ * @brief send a error to the client.
+ * Does not exit the process.
+ *
+ * @param msg message to send
+ */
+void alert(const char *msg, ...);
+
+/**
+ * @brief send a warning to the client.
+ * Does not exit the process.
+ *
+ * @param msg message to send
+ */
+void warn(const char *msg, ...);
+
+/**
  * @brief send a message to the client.
  * Does not exit the process.
  *
  * @param msg message to send
  */
-void complain(const char *msg, ...);
+void award(const char *msg, ...);
 
 /**
  * @brief display the main usage of the program.

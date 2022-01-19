@@ -32,16 +32,35 @@ int compare_floats(const void *a, const void *b) {
     }
 }
 
-void complain(const char *msg, ...) {
+void alert(const char *msg, ...) {
     va_list args;
     va_start(args, msg);
     fprintf(stderr, "\033[0;31m");
     vfprintf(stderr, msg, args);
     if (errno) {
         fprintf(stderr, ": %s\n", strerror(errno));
-    } else {
-        fprintf(stderr, "\n");
     }
+    fprintf(stderr, "\033[0m");
+    va_end(args);
+}
+
+void warn(const char *msg, ...) {
+    va_list args;
+    va_start(args, msg);
+    fprintf(stderr, "\033[0;33m");
+    vfprintf(stderr, msg, args);
+    if (errno) {
+        fprintf(stderr, ": %s\n", strerror(errno));
+    }
+    fprintf(stderr, "\033[0m");
+    va_end(args);
+}
+
+void award(const char *msg, ...) {
+    va_list args;
+    va_start(args, msg);
+    fprintf(stderr, "\033[0;32m");
+    vfprintf(stderr, msg, args);
     fprintf(stderr, "\033[0m");
     va_end(args);
 }
@@ -76,8 +95,6 @@ void print_usage(void) {
             "specified distance\n");
     fprintf(stdout, "\t%-20s%s", "-V, --verbose",
             "Get extensive messages when running the program\n");
-    fprintf(stdout, "\t%-20s%s", "-D, --debug",
-            "Get debug messages on errors and warnings on run time\n");
 }
 
 void print_version(void) {
@@ -93,6 +110,17 @@ void print_version(void) {
 }
 
 void disp_progress(size_t current, size_t total) {
+    static long counter = 0;
+    static unsigned long state = 0;
+    if (state != total) {
+        counter = 0;
+        state = total;
+    }
+
+    counter++;
+    if (counter < (long)(total / 1000ul))
+        return;
+
     char bar[BAR_WIDTH + 1];
     memset(bar, ' ', BAR_WIDTH);
     bar[BAR_WIDTH] = '\0';
@@ -101,6 +129,7 @@ void disp_progress(size_t current, size_t total) {
         bar[i] = '#';
     }
     double percent = (double)(current + 1) / total * 100;
-    fprintf(stdout, "\rin progress... [%s] %.2f%%", bar, percent);
+    fprintf(stdout, "\rin progress... [%s] %.1f%%", bar, percent);
     fflush(stdout);
+    counter = 0;
 }
