@@ -38,7 +38,7 @@ It is the caller's responsability to cast the values to the same type.
 #define CAT_HELPER(a, b) a##b
 #define X(name) CAT(__##name, __LINE__)
 
-#define VERSION "0.0.3"
+#define VERSION "0.0.4"
 #define AUTHORS "Julie BONNAIL & Thomas BOUYER"
 
 #define BAR_WIDTH 20ul
