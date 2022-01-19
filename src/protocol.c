@@ -6,7 +6,7 @@
 
 #include "protocol.h"
 
-static const unsigned long _width = 80;
+static const unsigned long _width = 20;
 
 int compare_strings(const void *a, const void *b) {
     return strcmp(*(char **)a, *(char **)b);
@@ -62,6 +62,8 @@ void print_usage(void) {
     fprintf(stdout, "Options:\n");
     fprintf(stdout, "\t%-20s%s", "-h, --help", "Display this help\n");
     fprintf(stdout, "\t%-20s%s", "-v, --version", "Display the version\n");
+    fprintf(stdout, "\t%-20s%s", "-q, --quiet",
+            "Quiet mode (no output, conflicts will be ignored)\n");
     fprintf(stdout, "\t%-20s%s", "-i, --input_file",
             "Specify input file (needed)\n");
     fprintf(stdout, "\t%-20s%s", "-p, --path",
@@ -88,4 +90,17 @@ void print_version(void) {
     print_sep();
     fprintf(stdout, "Licence: GPLv3\n");
     fprintf(stdout, "Authors: %s\n", AUTHORS);
+}
+
+void disp_progress(size_t current, size_t total) {
+    char bar[BAR_WIDTH + 1];
+    memset(bar, ' ', BAR_WIDTH);
+    bar[BAR_WIDTH] = '\0';
+    size_t i;
+    for (i = 0; i <= BAR_WIDTH * current / total; i++) {
+        bar[i] = '#';
+    }
+    double percent = (double)(current + 1) / total * 100;
+    fprintf(stdout, "\rin progress... [%s] %.2f%%", bar, percent);
+    fflush(stdout);
 }

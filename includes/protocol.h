@@ -41,6 +41,8 @@ It is the caller's responsability to cast the values to the same type.
 #define VERSION "0.0.3"
 #define AUTHORS "Julie BONNAIL & Thomas BOUYER"
 
+#define BAR_WIDTH 20ul
+
 #define lerp(x, x0, x1, y0, y1) \
     (((y0) * ((x1) - (x)) + (y1) * ((x) - (x0))) / ((x1) - (x0)))
 
@@ -72,6 +74,14 @@ void print_usage(void);
  *
  */
 void print_version(void);
+
+/**
+ * @brief diaplay the progress of some operation.
+ *
+ * @param current current tick
+ * @param total total number of ticks
+ */
+void disp_progress(size_t current, size_t total);
 
 /**
  * @brief compare two strings.
