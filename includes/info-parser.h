@@ -37,9 +37,9 @@ enum parser_error_type_e {
 typedef enum parser_error_type_e parser_error_type_t;
 
 struct parser_info_s {
-    void (*handleOpenTag)(char *, struct parser_context_s *);
-    void (*handleCloseTag)(char *, struct parser_context_s *);
-    void (*handleText)(char *, struct parser_context_s *);
+    void (*hndl_otg)(char *, struct parser_context_s *);
+    void (*hndl_ctg)(char *, struct parser_context_s *);
+    void (*hndl_txt)(char *, struct parser_context_s *);
     struct parser_context_s *context;
 };
 typedef struct parser_info_s parser_info_t;
@@ -50,7 +50,7 @@ typedef struct parser_info_s parser_info_t;
  * @param txt some text
  * @param context the context to pass to the callback functions
  */
-void handleText(char *txt, struct parser_context_s *context);
+void hndl_txt(char *txt, struct parser_context_s *context);
 
 /**
  * @brief tell the parser to open a tag
@@ -58,7 +58,7 @@ void handleText(char *txt, struct parser_context_s *context);
  * @param tag tag name (without the <> brackets and any attributes)
  * @param context the context to pass to the callback functions
  */
-void handleOpenTag(char *tag, struct parser_context_s *context);
+void hndl_otg(char *tag, struct parser_context_s *context);
 
 /**
  * @brief tell the parser to close a tag
@@ -66,7 +66,7 @@ void handleOpenTag(char *tag, struct parser_context_s *context);
  * @param tag tag name (without the <> brackets and any attributes)
  * @param context the context to pass to the callback functions
  */
-void handleCloseTag(char *tag, struct parser_context_s *context);
+void hndl_ctg(char *tag, struct parser_context_s *context);
 
 /**
  * @brief new parser context structure

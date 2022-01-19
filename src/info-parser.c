@@ -14,19 +14,19 @@ const char *look_for[] = {
     "title", "author", "year", "pages", "url",
 };
 
-void handleText(char *txt, parser_context_t *context) {
+void hndl_txt(char *txt, parser_context_t *context) {
     (void)txt;
     (void)context;
     return;
 }
 
-void handleOpenTag(char *tag, parser_context_t *context) {
+void hndl_otg(char *tag, parser_context_t *context) {
     (void)tag;
     (void)context;
     return;
 }
 
-void handleCloseTag(char *tag, parser_context_t *context) {
+void hndl_ctg(char *tag, parser_context_t *context) {
     (void)tag;
     (void)context;
     return;
@@ -71,9 +71,9 @@ parser_info_t *parser_info_new(void) {
     }
 
     info->context = context;
-    info->handleOpenTag = handleOpenTag;
-    info->handleCloseTag = handleCloseTag;
-    info->handleText = handleText;
+    info->hndl_otg = hndl_otg;
+    info->hndl_ctg = hndl_ctg;
+    info->hndl_txt = hndl_txt;
 
     return info;
 }

@@ -40,7 +40,7 @@ parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info) {
         if (*p == open_tag) {
             if (index > 0) {
                 buff[index] = '\0';
-                info->handleText(buff, info->context);
+                info->hndl_txt(buff, info->context);
             }
             check(is_opening_tag, is_ending_tag);
             is_opening_tag = 1;
@@ -62,9 +62,9 @@ parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info) {
             get_tag_id(buff);
 
             if (is_opening_tag == 1)
-                info->handleOpenTag(buff, info->context);
+                info->hndl_otg(buff, info->context);
             if (is_ending_tag == 1)
-                info->handleCloseTag(buff, info->context);
+                info->hndl_ctg(buff, info->context);
 
             is_opening_tag = 0;
             is_ending_tag = 0;
