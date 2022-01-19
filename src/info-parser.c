@@ -14,6 +14,15 @@ const char *look_for[] = {
     "title", "author", "year", "pages", "url",
 };
 
+int contains(const char **str, const char *s) {
+    foreach (item of str) {
+        if (strcmp(item, s) == 0) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 void hndl_txt(char *txt, parser_context_t *context) {
     (void)txt;
     (void)context;
@@ -21,8 +30,15 @@ void hndl_txt(char *txt, parser_context_t *context) {
 }
 
 void hndl_otg(char *tag, parser_context_t *context) {
+    node_t *node = context->current_node;
+    if (node == NULL) {
+        return;
+    }
+
+    char *inner_tag = context->inner_tag;
+
+    (void)inner_tag;
     (void)tag;
-    (void)context;
     return;
 }
 

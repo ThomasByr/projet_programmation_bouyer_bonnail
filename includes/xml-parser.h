@@ -52,18 +52,21 @@ long find_next_tag(char *buffer, long start, long size);
  * @param buffer buffer to parse
  * @param size size of the buffer
  * @param info the info constaining the handler functions
+ * @param flag user flag : 2 if quiet, 1 if verbose, 0 otherwise
  * @return parser_error_type_t
  */
-parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info);
+parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info,
+                                 int flag);
 
 /**
  * @brief open and parse the file pointed by `filename`
  *
  * @param filename the name of the file to parse
  * @param info the info containing the handler functions
+ * @param flag user flag : 2 if quiet, 1 if verbose, 0 otherwise
  *
  * @return PARSER_OK if everything went fine, an error otherwise
  */
-parser_error_type_t parse(const char *filename, parser_info_t *info);
+parser_error_type_t parse(const char *filename, parser_info_t *info, int flag);
 
 #endif

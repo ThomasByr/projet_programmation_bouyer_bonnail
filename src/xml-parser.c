@@ -17,16 +17,8 @@ void get_tag_id(char *tag) {
     *p = '\0';
 }
 
-void *pthread_func(void *arg) {
-    pthread_arg_t *p = (pthread_arg_t *)arg;
-    char *buffer = p->buffer;
-    long size = p->size;
-    parser_info_t *info = p->info;
-    parser_error_type_t err = parse_buffer(buffer, size, info);
-    return (void *)err;
-}
-
-parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info) {
+parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info,
+                                 int flag) {
     char *p = buffer;  // current position in buffer
     char *pp = buffer; // previous position in buffer
 
@@ -37,6 +29,14 @@ parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info) {
 
     // read the buffer character by character
     while (p < buffer + size) {
+
+        if (flag == 1) {
+            // current character number
+            size_t curr = p - buffer;
+            size_t tot = (size_t)size;
+            disp_progress(curr, tot);
+        }
+
         if (*p == open_tag) {
             if (index > 0) {
                 buff[index] = '\0';
@@ -83,7 +83,7 @@ parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info) {
     return PARSER_OK;
 }
 
-parser_error_type_t parse(const char *filename, parser_info_t *info) {
+parser_error_type_t parse(const char *filename, parser_info_t *info, int flag) {
     FILE *fp = fopen(filename, "r");
     if (fp == NULL) // error while opening file
         return ERROR_UNABLE_TO_OPEN_FILE;
@@ -94,6 +94,8 @@ parser_error_type_t parse(const char *filename, parser_info_t *info) {
     rewind(fp);
 
     // allocate memory to contain the whole file
+    if (flag == 1)
+        fprintf(stdout, "allocating %ld bytes of memory\n", size);
     char *buffer = (char *)malloc(sizeof(char) * (size + 1));
     if (buffer == NULL) // error while allocating memory
         return ERROR_UNABLE_TO_ALLOCATE_MEMORY;
@@ -109,7 +111,12 @@ parser_error_type_t parse(const char *filename, parser_info_t *info) {
     fclose(fp);
 
     // parse the file
-    parser_error_type_t err = parse_buffer(buffer, size, info);
+    if (flag == 1)
+        fprintf(stdout, "parsing file %s\n", filename);
+    parser_error_type_t err = parse_buffer(buffer, size, info, flag);
+
+    if (flag == 1)
+        fprintf(stdout, "\n");
 
     free(buffer);
     return err;
