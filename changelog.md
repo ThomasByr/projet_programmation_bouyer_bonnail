@@ -31,3 +31,6 @@
     *   un peu de doc dans le fichier helpme
     *   merge de dev-julie dans dev-thomas, changement de certains set en dict et inversement
     *   création de io, exécutable principal
+4.  **v0.0.4** mis bout à bouts
+    *   nouvelle option pour éviter un affichage intrusif et une résolution automatique de conflits
+    *   affichage d'une barre de progression
