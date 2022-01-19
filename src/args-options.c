@@ -5,9 +5,8 @@
 #include "args-options.h"
 
 options_t *options_new(void) {
-    options_t *options = malloc(sizeof(options_t));
+    options_t *options = malloc(sizeof(struct options_s));
     options->verbose = 0;
-    options->debug = 0;
     options->quiet = 0;
 
     options->find_connex_components = 0;
