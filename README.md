@@ -1,6 +1,6 @@
 # Projet Programmation 2021/2022 | Julie BONNAIL & Thomas BOUYER
 
-> version 0.0.3 fr
+> version 0.0.4 fr
 
 1. [Le sujet](#le-sujet)
 2. [Méthode de résolution](#méthode-de-résolution)
@@ -22,18 +22,10 @@
 Se référer au fichier [changelog](changelog.md) pour la liste exhaustive des modifications.
 
 <details>
-    <summary> v0.0.3 : il s'agrait de parser le fichier maintenant... (cliquez ici) </summary>
+    <summary> v0.0.4 : mis bout à bouts (cliquez ici) </summary>
 
-*   merge dev->master
-*   ajout de quelques commentaires pour aider la re-lecture
-*   nouvelles méthodes pour les vecteurs, nouveaux tests et procédures, ajout de couleurs dans la sortie des makefile sur la base des macros de test
-*   ajout d'une license au projet ainsi qu'à la base de données
-*   nouvelle règle debug pour le makefile (option -g et définition de DEBUG)
-*   options pour le parsage des arguments (ligne de commande) conformes à c18
-*   décompte correct du nombre d'assertions lors des tests (variable externe)
-*   un peu de doc dans le fichier helpme
-*   merge de dev-julie dans dev-thomas, changement de certains set en dict et inversement
-*   création de io, exécutable principal
+*   nouvelle option pour éviter un affichage intrusif et une résolution automatique de conflits
+*   affichage d'une barre de progression
 
 </details>
 
