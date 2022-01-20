@@ -114,7 +114,6 @@ parser_error_type_t parse(const char *filename, parser_info_t *info, int flag) {
     if (flag == 1)
         fprintf(stdout, "parsing file %s\n", filename);
     parser_error_type_t err = parse_buffer(buffer, size, info, flag);
-
     if (flag == 1)
         fprintf(stdout, "\n");
 
