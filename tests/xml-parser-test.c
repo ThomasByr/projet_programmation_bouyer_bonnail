@@ -8,10 +8,10 @@
 #include "xml-parser.h"
 
 void xml_test_0(void) {
-    parser_info_t *info = parser_info_new();
+    parser_info_t *info = parser_info_new(2);
 
     char filename[] = "../assets/eg.xml";
-    parser_error_type_t err = parse(filename, info);
+    parser_error_type_t err = parse(filename, info, 2);
     hset_free(info->context->nodes);
     parser_info_free(info);
     assert_eq(err, PARSER_OK);
