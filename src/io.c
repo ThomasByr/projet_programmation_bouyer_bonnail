@@ -20,9 +20,8 @@
 #include "io.h"
 
 int exec(options_t *options) {
-    parser_info_t *info = parser_info_new();
-
     int flag = options->quiet == 1 ? 2 : options->verbose == 1 ? 1 : 0;
+    parser_info_t *info = parser_info_new(flag);
     parser_error_type_t err = parse(options->input_file, info, flag);
 
     int rv = 0;
