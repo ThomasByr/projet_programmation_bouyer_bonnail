@@ -23,36 +23,69 @@ int contains(const char **str, const char *s) {
     return 0;
 }
 
-void hndl_txt(char *txt, parser_context_t *context) {
+int hndl_txt(char *txt, parser_context_t *context) {
     (void)txt;
     (void)context;
-    return;
+    return 0;
 }
 
-void hndl_otg(char *tag, parser_context_t *context) {
+int hndl_otg(char *tag, parser_context_t *context) {
+    int is_external = contains(external, tag);
+    int is_look_for = contains(look_for, tag);
+
+    if (is_external == 0 && is_look_for == 0) {
+        return 0;
+    } // skip unwanted tags
+
+    if (is_look_for == 1) {
+        context->inner_tag = tag;
+    }
+    if (is_external == 1) {
+        context->paper_type = tag;
+    }
+    return 0;
+}
+
+int hndl_ctg(char *tag, parser_context_t *context) {
+
+    int is_external = contains(external, tag);
+    if (is_external == 0)
+        return 0;
+
     node_t *node = context->current_node;
+    // dict_t *auth_co_auth = context->auth_co_auth;
+    // dict_t *auth_node = context->auth_node;
+    // dict_t *auth_papers = context->auth_papers;
+    hset_t *nodes = context->nodes;
     if (node == NULL) {
-        return;
+        return 0;
     }
 
-    char *inner_tag = context->inner_tag;
-
-    (void)inner_tag;
-    (void)tag;
-    return;
+    int rv = hset_push(nodes, node);
+    if (context->flag < 2) {
+        if (rv == -1) {
+            alert("node casts to 0 or 1");
+            return -1;
+        }
+        if (rv == 2) {
+            warn("set did not rehash properly");
+            if (ask("continue?") == 0) {
+                return -1;
+            }
+        }
+    } else {
+        if (rv == -1 || rv == 2)
+            return -1;
+    }
+    return 0;
 }
 
-void hndl_ctg(char *tag, parser_context_t *context) {
-    (void)tag;
-    (void)context;
-    return;
-}
-
-parser_context_t *parser_context_new(void) {
+parser_context_t *parser_context_new(int flag) {
     parser_context_t *ctx = malloc(sizeof(parser_context_t));
     ctx->text_count = 0;
     ctx->open_count = 0;
     ctx->close_count = 0;
+    ctx->flag = flag;
 
     ctx->paper_type = NULL;
     ctx->inner_tag = NULL;
@@ -75,9 +108,9 @@ void parser_context_free(parser_context_t *context) {
     free(context);
 }
 
-parser_info_t *parser_info_new(void) {
+parser_info_t *parser_info_new(int flag) {
     parser_info_t *info = malloc(sizeof(parser_info_t));
-    parser_context_t *context = parser_context_new();
+    parser_context_t *context = parser_context_new(flag);
 
     if (info == NULL)
         return NULL;
