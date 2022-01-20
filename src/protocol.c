@@ -65,6 +65,21 @@ void award(const char *msg, ...) {
     va_end(args);
 }
 
+int ask(const char *msd, ...) {
+    va_list args;
+    va_start(args, msd);
+    fprintf(stderr, "\033[0;34m");
+    vfprintf(stderr, msd, args);
+    fprintf(stderr, "\033[0m");
+    va_end(args);
+    char buf[BUFSIZ];
+    char *rv = fgets(buf, BUFSIZ, stdin);
+    if (rv == NULL) {
+        return -1;
+    }
+    return buf[0] == 'y' || buf[0] == 'Y';
+}
+
 void print_sep(void) {
     char s[_width + 1];
     memset(s, '=', _width);
@@ -110,7 +125,7 @@ void print_version(void) {
 }
 
 void disp_progress(size_t current, size_t total) {
-    static long counter = 0;
+    static unsigned long counter = 0;
     static unsigned long state = 0;
     if (state != total) {
         counter = 0;
@@ -118,7 +133,7 @@ void disp_progress(size_t current, size_t total) {
     }
 
     counter++;
-    if (counter < (long)(total / 1000ul))
+    if (counter < (total / 1000ul))
         return;
 
     char bar[BAR_WIDTH + 1];

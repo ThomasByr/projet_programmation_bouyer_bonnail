@@ -80,6 +80,14 @@ void warn(const char *msg, ...);
 void award(const char *msg, ...);
 
 /**
+ * @brief ask the user to confirm an action.
+ *
+ * @param msg message to send
+ * @return int - 1 if the user confirms, 0 otherwise, -1 if error
+ */
+int ask(const char *msg, ...);
+
+/**
  * @brief display the main usage of the program.
  *
  */
