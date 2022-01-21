@@ -37,7 +37,7 @@ typedef struct pthread_arg pthread_arg_t;
 void get_tag_id(char *tag);
 
 /**
- * @brief find the first occurence of any of `external` in `buffer`
+ * @brief find the first occurrence of any of `external` in `buffer`
  *
  * @param buffer buffer to parse
  * @param start starting position

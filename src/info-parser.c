@@ -37,12 +37,14 @@ int hndl_otg(char *tag, parser_context_t *context) {
         return 0;
     } // skip unwanted tags
 
-    if (is_look_for == 1) {
-        context->inner_tag = tag;
+    if (is_external) {
     }
-    if (is_external == 1) {
-        context->paper_type = tag;
+    if (is_look_for) {
     }
+
+    (void)tag;
+    (void)context;
+
     return 0;
 }
 
@@ -51,32 +53,8 @@ int hndl_ctg(char *tag, parser_context_t *context) {
     int is_external = contains(external, tag);
     if (is_external == 0)
         return 0;
-
-    node_t *node = context->current_node;
-    // dict_t *auth_co_auth = context->auth_co_auth;
-    // dict_t *auth_node = context->auth_node;
-    // dict_t *auth_papers = context->auth_papers;
-    hset_t *nodes = context->nodes;
-    if (node == NULL) {
-        return 0;
-    }
-
-    int rv = hset_push(nodes, node);
-    if (context->flag < 2) {
-        if (rv == -1) {
-            alert("node casts to 0 or 1");
-            return -1;
-        }
-        if (rv == 2) {
-            warn("set did not rehash properly");
-            if (ask("continue?") == 0) {
-                return -1;
-            }
-        }
-    } else {
-        if (rv == -1 || rv == 2)
-            return -1;
-    }
+    (void)tag;
+    (void)context;
     return 0;
 }
 
@@ -88,6 +66,8 @@ parser_context_t *parser_context_new(int flag) {
     ctx->flag = flag;
 
     ctx->paper_type = NULL;
+    ctx->paper_title = NULL;
+    ctx->author = NULL;
     ctx->inner_tag = NULL;
 
     ctx->current_node = NULL;
@@ -105,6 +85,13 @@ void parser_context_free(parser_context_t *context) {
     dict_free(context->auth_co_auth);
     dict_free(context->auth_papers);
     dict_free(context->auth_node);
+
+    if (context->paper_type != NULL) {
+        free(context->paper_type);
+    }
+    if (context->inner_tag != NULL) {
+        free(context->inner_tag);
+    }
     free(context);
 }
 

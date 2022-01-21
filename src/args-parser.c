@@ -52,6 +52,7 @@ void parse_args(int argc, char *argv[], options_t *options) {
             break;
 
         case 'p':
+            options->need_graph = 1;
             if (options->find_shortest_path == 0) {
                 options->find_shortest_path = 1;
                 options->author1 = optarg;
@@ -66,16 +67,19 @@ void parse_args(int argc, char *argv[], options_t *options) {
             break;
 
         case 'l':
+            options->need_graph = 1;
             options->word = optarg;
             options->find_authors_words = 1;
             break;
 
         case 'a':
+            options->need_graph = 1;
             options->author = optarg;
             options->find_info_author = 1;
             break;
 
         case 'n':
+            options->need_graph = 1;
             options->n_closest = atoi(optarg);
             options->find_authors_within = 1;
             break;

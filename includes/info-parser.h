@@ -16,8 +16,10 @@ struct parser_context_s {
     int close_count; // number of close tags
     int flag;        // flag for the client
 
-    char *paper_type; // paper type (external)
-    char *inner_tag;  // inner tag (look_for)
+    char *paper_type;  // paper type (external)
+    char *paper_title; // last paper title
+    char *author;      // last author name
+    char *inner_tag;   // inner tag (look_for)
 
     node_t *current_node; // current node
 
