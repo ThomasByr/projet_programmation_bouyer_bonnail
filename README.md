@@ -35,3 +35,4 @@ Se référer au fichier [changelog](changelog.md) pour la liste exhaustive des m
 *   ~~bug sur le renvoi du nombre d'items dans le dictionnaire (dict_test_1) mais le dictionnaire contient bien toutes les valeurs (?)~~ (v0.0.2)
 *   ~~bug énorme sur les dictionnaires, les valeurs clefs sont modifiées par d'autres entrées~~ (v0.0.2)
 *   ~~bug sur l'affichage du nombre d'appel aux macros assert_* lors de callbacks~~ (v0.0.3)
+*   bug sur l'algorithme de Dijkstra
