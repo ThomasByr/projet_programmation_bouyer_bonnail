@@ -149,6 +149,79 @@ void hset_test_5(void) {
     hset_free(hset);
 }
 
+void hset_test_6(void) {
+    hset_t *hset = hset_new();
+    size_t n = 1000;
+
+    for (size_t i = 0; i < n; i++) {
+        char id[100];
+        sprintf(id, "%s", "test string");
+        int rv = hset_push(hset, strdup(id));
+        assert_eq(rv, 1);
+    }
+    for (size_t i = 0; i < n; i++) {
+        char *id = (char *)hset_pop(hset);
+        assert_eq(strcmp(id, "test string"), 0);
+        free(id);
+    }
+    hset_free(hset);
+}
+
+void hset_test_7(void) {
+    hset_t *hset0 = hset_new();
+    hset_t *hset1 = hset_new(1);
+
+    char *str = "foo";
+    char *str1 = strdup(str);
+    char *str2 = strdup(str);
+
+    hset_push(hset0, str1);
+    hset_push(hset0, str2);
+    hset_push(hset1, str1);
+    hset_push(hset1, str2);
+
+    assert_eq(hset_nitems(hset0), 2);
+    assert_eq(hset_nitems(hset1), 1);
+
+    free(str1);
+    free(str2);
+    hset_free(hset0);
+    hset_free(hset1);
+}
+
+void hset_test_8(void) {
+    hset_t *hset0 = hset_new();
+    hset_t *hset1 = hset_new(1);
+    int n = 1000;
+
+    char *str = "foo";
+    char *str1 = strdup(str);
+    hset_push(hset0, str1);
+    hset_push(hset1, str1);
+
+    for (int i = 0; i < n; i++) {
+        str1 = strdup(str);
+        assert_eq(hset_contains(hset0, str1), 0);
+        assert_eq(hset_contains(hset1, str1), 1);
+        int rv0 = hset_push(hset0, str1);
+        int rv1 = hset_push(hset1, str1);
+        assert_eq(rv0, 1);
+        assert_eq(rv1, 0);
+        assert_eq(hset_contains(hset0, str1), 1);
+        assert_eq(hset_contains(hset1, str1), 1);
+    }
+    assert_eq(hset_nitems(hset0), n + 1);
+    assert_eq(hset_nitems(hset1), 1);
+
+    for (int i = 0; i < n + 1; i++) {
+        char *str1 = (char *)hset_pop(hset0);
+        assert_eq(strcmp(str1, str), 0);
+        free(str1);
+    }
+    hset_free(hset0);
+    hset_free(hset1);
+}
+
 void hset_test(void) {
     test_case(hset_test_0);
     test_case(hset_test_1);
@@ -156,4 +229,7 @@ void hset_test(void) {
     test_case(hset_test_3);
     test_case(hset_test_4);
     test_case(hset_test_5);
+    test_case(hset_test_6);
+    test_case(hset_test_7);
+    test_case(hset_test_8);
 }
