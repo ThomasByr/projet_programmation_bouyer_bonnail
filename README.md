@@ -26,6 +26,7 @@ Se référer au fichier [changelog](changelog.md) pour la liste exhaustive des m
 
 *   nouvelle option pour éviter un affichage intrusif et une résolution automatique de conflits
 *   affichage d'une barre de progression
+*   nouvelles méthodes de hachage pour les structures d'ensemble et de dictionnaire (les méthodes de création sont maintenant issues de #define et acceptent un argument optionnel)
 
 </details>
 
