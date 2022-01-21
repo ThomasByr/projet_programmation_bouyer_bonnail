@@ -217,6 +217,43 @@ void dict_test_7(void) {
     dict_free(dict2);
 }
 
+void dict_test_8(void) {
+    dict_t *dict0 = dict_new();
+    dict_t *dict1 = dict_new(1);
+    dict_itr_t *itr = dict_itr_new(dict0);
+    int n = 1000;
+
+    char *str = "foo";
+    char *str1 = strdup(str);
+    dict_push(dict0, str1, str1);
+    dict_push(dict1, str1, str1);
+
+    for (int i = 0; i < n; i++) {
+        str1 = strdup(str);
+
+        size_t s0 = dict_get(dict0, str1);
+        size_t s1 = dict_get(dict1, str1);
+        assert_eq(s0, 0);
+        assert_gt(s1, 0);
+        int rv0 = dict_push(dict0, str1, str1);
+        int rv1 = dict_push(dict1, str1, str1);
+        assert_eq(rv0, 1);
+        assert_eq(rv1, 0);
+        s0 = dict_get(dict0, str1);
+        s1 = dict_get(dict1, str1);
+        assert_gt(s0, 0);
+        assert_gt(s1, 0);
+    }
+
+    assert_eq(dict_nitems(dict0), n + 1);
+    assert_eq(dict_nitems(dict1), 1);
+
+    dict_itr_discard_all(itr, free, NULL);
+    dict_itr_free(itr);
+    dict_free(dict0);
+    dict_free(dict1);
+}
+
 void dict_test(void) {
     test_case(dict_test_0);
     test_case(dict_test_1);
@@ -226,4 +263,5 @@ void dict_test(void) {
     test_case(dict_test_5);
     test_case(dict_test_6);
     test_case(dict_test_7);
+    test_case(dict_test_8);
 }
