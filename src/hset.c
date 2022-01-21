@@ -7,20 +7,18 @@
 static const unsigned int prime_1 = 3079;
 static const unsigned int prime_2 = 1572869;
 
-unsigned long hash(char *str) {
-    unsigned long hash = 5381;
-    int c;
-    while ((c = *str++))
-        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
-    return hash;
+hset_t *_hset_new_args(hset_args_t args) {
+    int hash_content = args.hash_content ? args.hash_content : 0;
+    return _hset_new(hash_content);
 }
 
-hset_t *hset_new(void) {
+hset_t *_hset_new(int hash_content) {
     hset_t *set = calloc(1, sizeof(struct hset_s));
 
     if (set == NULL) // out of memory
         return NULL;
 
+    set->hash_content = hash_content;
     set->nbits = 3;                            // 2^3 = 8 buckets
     set->capacity = (size_t)(1 << set->nbits); // is increased when needed
     set->mask = set->capacity - 1;             // 2^3 - 1 = 7
@@ -63,8 +61,17 @@ void hset_free(hset_t *set) {
 }
 
 int _hset_push_item(hset_t *set, void *item) {
-    size_t value = (size_t)item; // cast item to size_t
-    size_t ii;                   // index of the bucket
+    size_t value;
+    switch (set->hash_content) {
+    case 0:
+        value = (size_t)item; // cast item to size_t
+        break;
+    case 1:
+    default:
+        value = hash((char *)item); // hash item before casting
+        break;
+    }
+    size_t ii; // index of the bucket
 
     if (value == 0 || value == 1) // if item casts to 0 or 1
         return -1;                // return error
@@ -74,7 +81,8 @@ int _hset_push_item(hset_t *set, void *item) {
     while (set->items[ii] != 0 &&
            set->items[ii] != 1) // find empty or deleted bucket
     {
-        if (set->items[ii] == value)         // if item is already in set
+        // if item is already in set
+        if (compare(set->hash_content, set->items[ii], (size_t)item))
             return 0;                        // return failure
         else                                 // else
             ii = set->mask & (ii + prime_2); // get index of next bucket
@@ -83,8 +91,8 @@ int _hset_push_item(hset_t *set, void *item) {
     if (set->items[ii] == 1)    // if bucket is deleted
         set->n_deleted_items--; // decrease number of deleted items
 
-    set->items[ii] = value; // insert item
-    return 1;               // return success
+    set->items[ii] = (size_t)item; // insert item
+    return 1;                      // return success
 }
 
 static int _maybe_rehash(hset_t *set) {
@@ -124,12 +132,27 @@ int hset_push(hset_t *set, void *item) {
 }
 
 int hset_contains(hset_t *set, void *item) {
-    size_t value = (size_t)item;               // cast item to size_t
+    size_t value;
+    switch (set->hash_content) {
+    case 0:
+        value = (size_t)item; // cast item to size_t
+        break;
+    case 1:
+    default:
+        value = hash((char *)item); // hash item before casting
+        break;
+    }
+
+    // if set is NULL or item casts to 0 or 1
+    if (set == NULL || value == 0 || value == 1)
+        return 0; // return error
+
     size_t ii = set->mask & (prime_1 * value); // hash value modulo capacity
 
     while (set->items[ii] != 0) // find empty bucket (step over deleted ones)
     {
-        if (set->items[ii] == value)         // if item is already in set
+        // if item is already in set
+        if (compare(set->hash_content, set->items[ii], (size_t)item))
             return 1;                        // return success
         else                                 // else
             ii = set->mask & (ii + prime_2); // get index of next bucket
@@ -138,17 +161,27 @@ int hset_contains(hset_t *set, void *item) {
 }
 
 int hset_discard(hset_t *set, void *item) {
-    size_t value = (size_t)item;               // cast item to size_t
-    size_t ii = set->mask & (prime_1 * value); // hash value modulo capacity
+    size_t value;
+    switch (set->hash_content) {
+    case 0:
+        value = (size_t)item; // cast item to size_t
+        break;
+    case 1:
+    default:
+        value = hash((char *)item); // hash item before casting
+        break;
+    }
 
     // if set is NULL or value casts to 0 or 1
     if (set == NULL || value == 0 || value == 1)
         return -1; // return error
 
+    size_t ii = set->mask & (prime_1 * value); // hash value modulo capacity
+
     while (set->items[ii] != 0) // find empty bucket
     {
-        if (set->items[ii] == value) // if item is already in set
-        {
+        // if item is already in set
+        if (compare(set->hash_content, set->items[ii], (size_t)item)) {
             set->items[ii] = 1;              // mark bucket as deleted
             set->nitems--;                   // decrease number of items
             set->n_deleted_items++;          // increase number of deleted items

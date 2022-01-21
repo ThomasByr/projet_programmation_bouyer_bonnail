@@ -38,9 +38,9 @@ void alert(const char *msg, ...) {
     fprintf(stderr, "\033[0;31m");
     vfprintf(stderr, msg, args);
     if (errno) {
-        fprintf(stderr, ": %s\n", strerror(errno));
+        fprintf(stderr, ": %s", strerror(errno));
     }
-    fprintf(stderr, "\033[0m");
+    fprintf(stderr, "\033[0m\n");
     va_end(args);
 }
 
@@ -50,9 +50,9 @@ void warn(const char *msg, ...) {
     fprintf(stderr, "\033[0;33m");
     vfprintf(stderr, msg, args);
     if (errno) {
-        fprintf(stderr, ": %s\n", strerror(errno));
+        fprintf(stderr, ": %s", strerror(errno));
     }
-    fprintf(stderr, "\033[0m");
+    fprintf(stderr, "\033[0m\n");
     va_end(args);
 }
 
@@ -61,7 +61,7 @@ void award(const char *msg, ...) {
     va_start(args, msg);
     fprintf(stderr, "\033[0;32m");
     vfprintf(stderr, msg, args);
-    fprintf(stderr, "\033[0m");
+    fprintf(stderr, "\033[0m\n");
     va_end(args);
 }
 
@@ -70,7 +70,7 @@ int ask(const char *msd, ...) {
     va_start(args, msd);
     fprintf(stderr, "\033[0;34m");
     vfprintf(stderr, msd, args);
-    fprintf(stderr, "\033[0m");
+    fprintf(stderr, "\033[0m [y/n] ");
     va_end(args);
     char buf[BUFSIZ];
     char *rv = fgets(buf, BUFSIZ, stdin);
@@ -137,7 +137,7 @@ void disp_progress(size_t current, size_t total) {
         return;
 
     char bar[BAR_WIDTH + 1];
-    memset(bar, ' ', BAR_WIDTH);
+    memset(bar, '.', BAR_WIDTH);
     bar[BAR_WIDTH] = '\0';
     size_t i;
     for (i = 0; i <= BAR_WIDTH * current / total; i++) {
@@ -147,4 +147,27 @@ void disp_progress(size_t current, size_t total) {
     fprintf(stdout, "\rin progress... [%s] %.1f%%", bar, percent);
     fflush(stdout);
     counter = 0;
+}
+
+unsigned long hash(char *str) {
+    if (str == NULL)
+        return 0;
+    unsigned long hash = 5381;
+    int c;
+    while ((c = *str++))
+        hash = ((hash << 5) + hash) + c;
+    return hash;
+}
+
+int compare(int hash_content, size_t item, size_t value) {
+    if (item == 0 || item == 1 || value == 0 || value == 1)
+        return -1;
+
+    switch (hash_content) {
+    case 0:
+        return item == value;
+    case 1:
+    default:
+        return strcmp((char *)value, (char *)item) == 0;
+    }
 }

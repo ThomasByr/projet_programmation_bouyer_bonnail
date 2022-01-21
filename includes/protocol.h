@@ -134,4 +134,22 @@ int compare_ints(const void *a, const void *b);
  */
 int compare_floats(const void *a, const void *b);
 
+/**
+ * @brief djb2 hash function by Dan Bernstein
+ *
+ * @param str string to hash
+ * @return unsigned long
+ */
+unsigned long hash(char *str);
+
+/**
+ * @brief compare two size_t, interpreted as either pointers or strings
+ *
+ * @param hash_content 0 for pointer, non-zero for string
+ * @param item first item
+ * @param value second item
+ * @return int - result of the comparison
+ */
+int compare(int hash_content, size_t item, size_t value);
+
 #endif

@@ -9,8 +9,8 @@ Collection of unique elements using a hash table.
 #include "protocol.h"
 #include "types.h"
 
-struct hset_s
-{
+struct hset_s {
+    int hash_content;
     size_t nbits;
     size_t mask;
 
@@ -25,8 +25,7 @@ struct hset_s
  */
 typedef struct hset_s hset_t;
 
-struct hset_itr_s
-{
+struct hset_itr_s {
     hset_t *set;
     size_t index;
 };
@@ -36,20 +35,21 @@ struct hset_itr_s
  */
 typedef struct hset_itr_s hset_itr_t;
 
-/**
- * @brief djb2 hash function by Dan Bernstein
- *
- * @param str string to hash
- * @return unsigned long
- */
-unsigned long hash(char *str);
+struct hset_args_s {
+    int hash_content;
+};
+typedef struct hset_args_s hset_args_t;
 
 /**
  * @brief create a new hash set
  *
  * @return hset_t*
  */
-hset_t *hset_new(void);
+hset_t *_hset_new(int hash_content);
+
+hset_t *_hset_new_args(hset_args_t args);
+
+#define hset_new(...) _hset_new_args((hset_args_t){__VA_ARGS__})
 
 /**
  * @brief return a new hash set.

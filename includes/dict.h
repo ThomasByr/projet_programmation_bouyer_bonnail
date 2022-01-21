@@ -9,8 +9,8 @@ Efficient storage of key-value pairs.
 #include "protocol.h"
 #include "types.h"
 
-struct dict_s
-{
+struct dict_s {
+    int hash_content;
     size_t nbits;
     size_t mask;
 
@@ -26,8 +26,7 @@ struct dict_s
  */
 typedef struct dict_s dict_t;
 
-struct dict_itr_s
-{
+struct dict_itr_s {
     dict_t *dict;
     size_t index;
 };
@@ -37,12 +36,21 @@ struct dict_itr_s
  */
 typedef struct dict_itr_s dict_itr_t;
 
+struct dict_args_s {
+    int hash_content;
+};
+typedef struct dict_args_s dict_args_t;
+
 /**
  * @brief new dictionary
  *
  * @return dict_t*
  */
-dict_t *dict_new(void);
+dict_t *_dict_new(int hash_content);
+
+dict_t *_dict_new_args(dict_args_t args);
+
+#define dict_new(...) _dict_new_args((dict_args_t){__VA_ARGS__})
 
 /**
  * @brief free dictionary underlying structure.
