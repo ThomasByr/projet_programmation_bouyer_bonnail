@@ -14,7 +14,7 @@ Main node struct for the data base.
 struct node_s {
     char *name;            // name of the author
     hset_itr_t *neighbors; // set of neighbor nodes
-    dict_itr_t *papers;    // paper title : year
+    dict_itr_t *papers;    // paper title -> year
     int weight;            // weight of the node (distance from start)
     struct node_s *parent; // parent node
     // int year;           //year of publication
