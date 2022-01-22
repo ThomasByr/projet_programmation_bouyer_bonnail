@@ -18,5 +18,7 @@ node_t *node_new(char *name, hset_t *neighbors, dict_t *papers) {
 void node_free(node_t *node) {
     hset_itr_free(node->neighbors);
     dict_itr_free(node->papers);
+    // if (node->name)
+    //     free(node->name);
     free(node);
 }

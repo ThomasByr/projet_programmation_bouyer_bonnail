@@ -149,8 +149,8 @@ int hset_contains(hset_t *set, void *item) {
 
     size_t ii = set->mask & (prime_1 * value); // hash value modulo capacity
 
-    while (set->items[ii] != 0) // find empty bucket (step over deleted ones)
-    {
+    // continue searching for item until empty bucket is found
+    while (set->items[ii] != 0) {
         // if item is already in set
         if (compare(set->hash_content, set->items[ii], (size_t)item))
             return 1;                        // return success
@@ -178,8 +178,8 @@ int hset_discard(hset_t *set, void *item) {
 
     size_t ii = set->mask & (prime_1 * value); // hash value modulo capacity
 
-    while (set->items[ii] != 0) // find empty bucket
-    {
+    // continue searching for item until empty bucket is found
+    while (set->items[ii] != 0) {
         // if item is already in set
         if (compare(set->hash_content, set->items[ii], (size_t)item)) {
             set->items[ii] = 1;              // mark bucket as deleted
@@ -233,10 +233,10 @@ int hset_itr_has_next(hset_itr_t *itr) {
     if (itr->set->nitems == 0 || itr->index >= itr->set->capacity)
         return 0;
 
-    index = itr->index; // save index
+    index = itr->index; // don't modify itr->index
     while (index < itr->set->capacity) {
         size_t value = itr->set->items[index++]; // get value at index
-        if (value != 0)                          // if value is not 0
+        if (value != 0 && value != 1)            // if value is a valid item
             return 1;                            // return success
     }
     return 0; // return failure
@@ -248,15 +248,17 @@ size_t hset_itr_next(hset_itr_t *itr) {
 
     itr->index++; // increase index
     while (itr->index < itr->set->capacity &&
-           itr->set->items[(itr->index)] == 0)
+           (itr->set->items[(itr->index)] == 0 ||
+            itr->set->items[(itr->index)] == 1))
         itr->index++;
 
     return itr->index; // return index
 }
 
 size_t hset_itr_value(hset_itr_t *itr) {
-    if (itr->set->items[itr->index] == 0) // if value is 0
-        hset_itr_next(itr);               // get next valid value
+    // if value is not a valid item
+    if (itr->set->items[itr->index] == 0 || itr->set->items[itr->index] == 1)
+        hset_itr_next(itr); // get next valid value
 
     return itr->set->items[itr->index]; // return value at current index
 }

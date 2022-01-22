@@ -148,8 +148,8 @@ size_t dict_get(dict_t *dict, void *key) {
 
     size_t ii = dict->mask & (prime_1 * k); // hash value modulo capacity
 
-    while (dict->keys[ii] != 0) // find empty bucket (step over deleled ones)
-    {
+    // continue searching for item until empty bucket is found
+    while (dict->keys[ii] != 0) {
         // if key is found
         if (compare(dict->hash_content, dict->keys[ii], (size_t)key)) {
             return dict->values[ii]; // return value
@@ -178,8 +178,8 @@ int dict_discard(dict_t *dict, void *item) {
 
     size_t ii = dict->mask & (prime_1 * key); // hash value modulo capacity
 
-    while (dict->keys[ii] != 0) // find non empty bucket
-    {
+    // continue searching for item until empty bucket is found
+    while (dict->keys[ii] != 0) {
         // if key is found
         if (compare(dict->hash_content, dict->keys[ii], (size_t)item)) {
             dict->keys[ii] = 1;      // mark bucket as deleted
@@ -278,21 +278,22 @@ size_t dict_itr_next(dict_itr_t *itr) {
 
     itr->index++;
     while (itr->index < itr->dict->capacity &&
-           itr->dict->keys[(itr->index)] == 0)
+           (itr->dict->keys[(itr->index)] == 0 ||
+            itr->dict->keys[(itr->index)] == 1))
         itr->index++;
 
     return itr->index;
 }
 
 size_t dict_itr_key(dict_itr_t *itr) {
-    if (itr->dict->keys[itr->index] == 0)
+    if (itr->dict->keys[itr->index] == 0 || itr->dict->keys[itr->index] == 1)
         dict_itr_next(itr);
 
     return itr->dict->keys[itr->index];
 }
 
 size_t dict_itr_value(dict_itr_t *itr) {
-    if (itr->dict->keys[itr->index] == 0)
+    if (itr->dict->keys[itr->index] == 0 || itr->dict->keys[itr->index] == 1)
         dict_itr_next(itr);
 
     return itr->dict->values[itr->index];
