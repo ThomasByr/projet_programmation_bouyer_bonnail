@@ -20,6 +20,8 @@ heap_node_t *_create_node(void *element, int key) {
 
 void _free_node(heap_node_t *node) { free(node); }
 
+void _free_node_void(void *node) { _free_node((heap_node_t *)node); }
+
 void _clear(heap_node_t *node) {
     // t1 is used to traversal the circular list.
     // When t1 == node for the second time (the first time is at t1's
@@ -195,11 +197,16 @@ pqueue_t *pqueue_new() {
 }
 
 void pqueue_free(pqueue_t *pq) {
+    // dict_free(pq->map);
+    // while (pq->min_node != NULL) {
+    //     heap_node_t *node = _extract_min_node(pq);
+    //     _free_node(node);
+    // }
+    // free(pq);
+    dict_itr_t *itr = dict_itr_new(pq->map);
+    dict_itr_discard_all(itr, NULL, _free_node_void);
+    dict_itr_free(itr);
     dict_free(pq->map);
-    while (pq->min_node != NULL) {
-        heap_node_t *node = _extract_min_node(pq);
-        _free_node(node);
-    }
     free(pq);
 }
 
@@ -212,7 +219,8 @@ void *pqueue_pop_min(pqueue_t *pq) {
     if (min_node == NULL)
         return NULL;
     void *ret = min_node->element;
-    dict_discard(pq->map, ret);
+    int rv = dict_discard(pq->map, ret);
+    ASSERT(rv == 1);
     _free_node(min_node);
     return ret;
 }
@@ -231,16 +239,16 @@ int pqueue_push(pqueue_t *pq, void *element, int key) {
     heap_node_t *node = _create_node(element, key);
     int rv = dict_get(pq->map, element) != 0 ? 0 : 1;
 
-    if (rv) {
+    if (rv == 1) {
         _push_node(pq, node);
         return dict_push(pq->map, element, (void *)node);
     }
-    return rv;
+    return 0;
 }
 
 int pqueue_decrease_key(pqueue_t *pq, void *element, int new_key) {
     size_t addr = dict_get(pq->map, element);
-    if (addr == 0)
+    if (addr == 0 || addr == 1)
         return -1;
     heap_node_t *node = (heap_node_t *)addr;
     if (new_key >= node->key)

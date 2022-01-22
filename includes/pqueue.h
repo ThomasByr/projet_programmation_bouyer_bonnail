@@ -11,8 +11,7 @@ User should not use `heap_node_t` directly.
 #include "dict.h"
 #include "types.h"
 
-struct heap_node_s
-{
+struct heap_node_s {
     void *element;              // pointer to the element
     int key;                    // priority of the element
     struct heap_node_s *parent; // parent node
@@ -28,8 +27,7 @@ struct heap_node_s
  */
 typedef struct heap_node_s heap_node_t;
 
-struct pqueue_s
-{
+struct pqueue_s {
     dict_t *map;           // correspondence between elements and nodes
     heap_node_t *min_node; // minimum node
     size_t total_nodes;    // total number of nodes
@@ -111,7 +109,7 @@ int pqueue_decrease_key(pqueue_t *pq, void *element, int new_key);
 void pqueue_merge(pqueue_t *pq1, pqueue_t *pq2);
 
 /**
- * @brief free the priority queue and all its nodes (might be expensive)
+ * @brief free the priority queue and all its nodes in linear time
  *
  * @param pq priority queue
  */
