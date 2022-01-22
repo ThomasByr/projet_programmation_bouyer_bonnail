@@ -160,9 +160,6 @@ unsigned long hash(char *str) {
 }
 
 int compare(int hash_content, size_t item, size_t value) {
-    if (item == 0 || item == 1 || value == 0 || value == 1)
-        return -1;
-
     switch (hash_content) {
     case 0:
         return item == value;
