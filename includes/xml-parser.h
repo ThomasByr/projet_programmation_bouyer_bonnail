@@ -21,6 +21,8 @@ Was originally intended to be run in parallel...
     if (is1 == 1 || is2 == 1) \
         return ERROR_UNEXPECTED_END_OF_TAG;
 
+extern status_t _status;
+
 struct pthread_arg {
     char *buffer;
     long size;

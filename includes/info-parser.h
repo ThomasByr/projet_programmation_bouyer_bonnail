@@ -10,6 +10,8 @@ XML parser context and info retrieval.
 #include "hset.h"
 #include "node.h"
 
+extern status_t _status;
+
 struct parser_context_s {
     int text_count;  // number of fields
     int open_count;  // number of open tags

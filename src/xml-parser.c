@@ -1,3 +1,4 @@
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -26,10 +27,11 @@ parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info,
     int index = 0;
     int is_opening_tag = 0;
     int is_ending_tag = 0;
+    _status = PARSING_XML;
 
     // read the buffer character by character
     while (p < buffer + size) {
-
+        _status = PARSING_XML;
         if (flag == 1) {
             // current character number
             size_t curr = p - buffer;
@@ -74,6 +76,7 @@ parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info,
             continue;
         }
 
+        _status = PARSING_XML;
         buff[index] = *p;
         index++;
         pp = p;
@@ -96,12 +99,14 @@ parser_error_type_t parse(const char *filename, parser_info_t *info, int flag) {
     // allocate memory to contain the whole file
     if (flag == 1)
         fprintf(stdout, "allocating %ld bytes of memory\n", size);
+    _status = ALLOCATING_MEMORY;
     char *buffer = (char *)malloc(sizeof(char) * (size + 1));
     if (buffer == NULL) // error while allocating memory
         return ERROR_UNABLE_TO_ALLOCATE_MEMORY;
     memset(buffer, 0, size);
 
     // copy the file into the buffer
+    _status = READING_FILE;
     size_t result = fread(buffer, 1, size, fp);
     buffer[size] = '\0';
     if (result != (size_t)size) // error while reading file

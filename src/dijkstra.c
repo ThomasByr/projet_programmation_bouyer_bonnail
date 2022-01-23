@@ -11,6 +11,7 @@ int dijkstra(node_t *start, node_t *end) {
     node_t *current = start;
     current->weight = 0;
     pqueue_push(open, current, current->weight);
+    _status = GRAPH_WALKTHROUGH;
 
     while (pqueue_size(open) > 0ul) {
         current = pqueue_pop_min(open); // pop the node with the lowest weight

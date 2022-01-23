@@ -1,8 +1,10 @@
 #include <errno.h>
+#include <signal.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include "protocol.h"
 
@@ -35,6 +37,7 @@ int compare_floats(const void *a, const void *b) {
 void alert(const char *msg, ...) {
     va_list args;
     va_start(args, msg);
+    fflush(stdout);
     fprintf(stderr, "\033[0;31m");
     vfprintf(stderr, msg, args);
     if (errno) {
@@ -47,6 +50,7 @@ void alert(const char *msg, ...) {
 void warn(const char *msg, ...) {
     va_list args;
     va_start(args, msg);
+    fflush(stdout);
     fprintf(stderr, "\033[0;33m");
     vfprintf(stderr, msg, args);
     if (errno) {
@@ -59,6 +63,7 @@ void warn(const char *msg, ...) {
 void award(const char *msg, ...) {
     va_list args;
     va_start(args, msg);
+    fflush(stdout);
     fprintf(stderr, "\033[0;32m");
     vfprintf(stderr, msg, args);
     fprintf(stderr, "\033[0m\n");
@@ -68,6 +73,7 @@ void award(const char *msg, ...) {
 int ask(const char *msd, ...) {
     va_list args;
     va_start(args, msd);
+    fflush(stdout);
     fprintf(stderr, "\033[0;34m");
     vfprintf(stderr, msd, args);
     fprintf(stderr, "\033[0m [y/n] ");
@@ -166,5 +172,79 @@ int compare(int hash_content, size_t item, size_t value) {
     case 1:
     default:
         return strcmp((char *)value, (char *)item) == 0;
+    }
+}
+
+void see_progress(void) {
+    if (ask("See estimated running progress?"))
+        fprintf(stdout, "%s\n", status_to_string(_status));
+}
+
+void handle_sigint(int count) {
+    if (count < THRESHOLD) {
+        warn("\rInterrupt signal received - resend signal to stop process");
+        signal(SIGINT, handle_signal);
+    } else {
+        alert("\r\nInterrupt signal received - process will be stopped");
+        see_progress();
+        abort();
+    }
+}
+
+void handle_sigsev(void) {
+    alert("\r\nSegmentation fault - process will be stopped");
+    see_progress();
+    abort();
+}
+
+void handle_signal(int sig) {
+    static int count = 0;
+    static int last_sig = 0;
+
+    if (last_sig != sig) {
+        count = 0;
+        last_sig = sig;
+    }
+    count++;
+
+    switch (sig) {
+    case SIGINT:
+        handle_sigint(count);
+        break;
+    case SIGSEGV:
+        handle_sigsev();
+
+    default:
+        break;
+    }
+}
+
+char *status_to_string(status_t status) {
+    switch (status) {
+    case LAUNCH:
+        return "launching program";
+    case THREADING:
+        return "initial handling of signals";
+    case ALLOCATING_MEMORY:
+        return "allocating large amount of memory";
+    case READING_FILE:
+        return "reading file";
+    case WRITING_FILE:
+        return "writing file";
+    case PARSING_XML:
+        return "parsing xml database";
+    case PARSING_BIN:
+        return "parsing binary data";
+    case PARSING_ARGS:
+        return "parsing command line arguments";
+    case CHECKING_ARGS:
+        return "checking command line arguments validity";
+    case MAKING_GRAPH:
+        return "making graph";
+    case GRAPH_WALKTHROUGH:
+        return "walking through the graph";
+
+    default:
+        return "unknown";
     }
 }

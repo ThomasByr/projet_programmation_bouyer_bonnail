@@ -24,12 +24,14 @@ int contains(const char **str, const char *s) {
 }
 
 int hndl_txt(char *txt, parser_context_t *context) {
+    _status = WRITING_FILE;
     (void)txt;
     (void)context;
     return 0;
 }
 
 int hndl_otg(char *tag, parser_context_t *context) {
+    _status = WRITING_FILE;
     int is_external = contains(external, tag);
     int is_look_for = contains(look_for, tag);
 
@@ -49,7 +51,7 @@ int hndl_otg(char *tag, parser_context_t *context) {
 }
 
 int hndl_ctg(char *tag, parser_context_t *context) {
-
+    _status = WRITING_FILE;
     int is_external = contains(external, tag);
     if (is_external == 0)
         return 0;

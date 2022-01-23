@@ -42,9 +42,31 @@ It is the caller's responsability to cast the values to the same type.
 #define AUTHORS "Julie BONNAIL & Thomas BOUYER"
 
 #define BAR_WIDTH 20ul
+#define THRESHOLD 2
 
 #define lerp(x, x0, x1, y0, y1) \
     (((y0) * ((x1) - (x)) + (y1) * ((x) - (x0))) / ((x1) - (x0)))
+
+enum status_e {
+    LAUNCH,
+    THREADING,
+    ALLOCATING_MEMORY,
+    READING_FILE,
+    WRITING_FILE,
+    PARSING_XML,
+    PARSING_BIN,
+    PARSING_ARGS,
+    CHECKING_ARGS,
+    MAKING_GRAPH,
+    GRAPH_WALKTHROUGH,
+};
+/**
+ * @brief The status_t struct is used to store the status of the program
+ *
+ */
+typedef enum status_e status_t;
+
+extern status_t _status;
 
 /**
  * @brief duplicate a string.
@@ -151,5 +173,20 @@ unsigned long hash(char *str);
  * @return int - result of the comparison
  */
 int compare(int hash_content, size_t item, size_t value);
+
+/**
+ * @brief handle signals
+ *
+ * @param sig signal to handle
+ */
+void handle_signal(int sig);
+
+/**
+ * @brief get string representation of a status_t
+ *
+ * @param status status to get the string representation of
+ * @return char* - string representation of the status
+ */
+char *status_to_string(status_t status);
 
 #endif

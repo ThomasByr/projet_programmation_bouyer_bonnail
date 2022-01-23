@@ -12,6 +12,7 @@
 void parse_args(int argc, char *argv[], options_t *options) {
     int c;
     int option_index = 0;
+    _status = PARSING_ARGS;
     static struct option long_options[] = {
         {"help", no_argument, 0, 'h'},
         {"version", no_argument, 0, 'v'},
@@ -107,6 +108,7 @@ void parse_args(int argc, char *argv[], options_t *options) {
 
 void check_args(options_t *options) {
     int has_error = 0;
+    _status = CHECKING_ARGS;
 
     // if --author is used but not set
     if (options->find_info_author == 1 && options->author == NULL) {
