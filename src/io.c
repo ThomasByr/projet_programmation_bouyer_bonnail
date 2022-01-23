@@ -52,6 +52,7 @@ int exec(options_t *options) {
             }
             break;
         }
+
     } else if (strcmp(ext, "bin") == 0 || options->need_graph == 1) {
         // read .bin file to make graph
     }
