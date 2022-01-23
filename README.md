@@ -27,6 +27,8 @@ Se référer au fichier [changelog](changelog.md) pour la liste exhaustive des m
 *   nouvelle option pour éviter un affichage intrusif et une résolution automatique de conflits
 *   affichage d'une barre de progression
 *   nouvelles méthodes de hachage pour les structures d'ensemble et de dictionnaire (les méthodes de création sont maintenant issues de #define et acceptent un argument optionnel)
+*   ajout de commentaires générés par IA dans les fichiers de test pour faciliter la relecture
+*   la libération de la mémoire pour les tas de Fibonacci est plus rapide
 
 </details>
 
@@ -36,4 +38,5 @@ Se référer au fichier [changelog](changelog.md) pour la liste exhaustive des m
 *   ~~bug sur le renvoi du nombre d'items dans le dictionnaire (dict_test_1) mais le dictionnaire contient bien toutes les valeurs (?)~~ (v0.0.2)
 *   ~~bug énorme sur les dictionnaires, les valeurs clefs sont modifiées par d'autres entrées~~ (v0.0.2)
 *   ~~bug sur l'affichage du nombre d'appel aux macros assert_* lors de callbacks~~ (v0.0.3)
-*   bug sur l'algorithme de Dijkstra
+*   ~~bug sur l'algorithme de Dijkstra~~ (v0.0.4)
+*   ~~bug sur les tables de hachages~~ (v0.0.4)
