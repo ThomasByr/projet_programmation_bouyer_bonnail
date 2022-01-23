@@ -35,3 +35,6 @@
     *   nouvelle option pour éviter un affichage intrusif et une résolution automatique de conflits
     *   affichage d'une barre de progression
     *   nouvelles méthodes de hachage pour les structures d'ensemble et de dictionnaire (les méthodes de création sont maintenant issues de #define et acceptent un argument optionnel)
+    *   ajout de commentaires générés par IA dans les fichiers de test pour faciliter la relecture
+    *   la libération de la mémoire pour les tas de Fibonacci est plus rapide
+    *   résolution des bugs sur Dijkstra et les tables de hachage : les pointeurs sur 0 et 1 n'étaient pas comparés (à la suite des nouvelles méthodes de hachage)
