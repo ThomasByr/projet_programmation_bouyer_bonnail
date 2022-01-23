@@ -47,6 +47,6 @@ void dijkstra_test_1(void) {
 }
 
 void dijkstra_test(void) {
-    // test_case(dijkstra_test_0);
-    // test_case(dijkstra_test_1);
+    test_case(dijkstra_test_0);
+    test_case(dijkstra_test_1);
 }

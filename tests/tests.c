@@ -7,14 +7,15 @@
 #include "pqueue-test.c"
 #include "vec-test.c"
 #include "xml-parser-test.c"
+// todo: do not include .c files
 
 unsigned long _no_asserts = 0;
 
 int main(void) {
-    xml_parser_test();
-    hset_test();
-    dict_test();
-    pqueue_test();
-    vec_test();
-    dijkstra_test();
+    xml_parser_test(); // generic tests and parsing examples
+    hset_test();       // hash set tests
+    dict_test();       // dictionary tests
+    pqueue_test();     // Fibonacci heap tests
+    vec_test();        // vector tests
+    dijkstra_test();   // Dijkstra's algorithm tests
 }
