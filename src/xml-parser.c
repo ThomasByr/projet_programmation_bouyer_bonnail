@@ -32,12 +32,8 @@ parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info,
     // read the buffer character by character
     while (p < buffer + size) {
         _status = PARSING_XML;
-        if (flag == 1) {
-            // current character number
-            size_t curr = p - buffer;
-            size_t tot = (size_t)size;
-            disp_progress(curr, tot);
-        }
+        if (flag == 1)
+            disp_progress(p - buffer, size);
 
         if (*p == open_tag) {
             if (index > 0) {
