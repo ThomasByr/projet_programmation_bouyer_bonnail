@@ -12,8 +12,8 @@
  * @brief word lists autors where word is in the title of an article
  *
  * @param word word searched
- * 
- * @return print autors
+ *
+ * @return print authors
  */
 void word(char *word, hset_t *nodes);
 
