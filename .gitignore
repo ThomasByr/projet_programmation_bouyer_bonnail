@@ -1,3 +1,6 @@
+# Huge XML file
+assets/dblp*
+
 ### vs ###
 
 # User-specific files
@@ -176,9 +179,6 @@ report.*
 # Translations
 *.mo
 *.pot
-
-# Huge XML file
-assets/dblp*
 
 # NCrunch
 _NCrunch_*
