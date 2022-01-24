@@ -131,6 +131,9 @@ int dict_push(dict_t *dict, void *key, void *value) {
 }
 
 size_t dict_get(dict_t *dict, void *key) {
+    if (dict == NULL || key == NULL)
+        return 0; // return error
+
     size_t k;
     switch (dict->hash_content) {
     case 0:
@@ -161,6 +164,9 @@ size_t dict_get(dict_t *dict, void *key) {
 }
 
 int dict_discard(dict_t *dict, void *item) {
+    if (dict == NULL || item == NULL)
+        return 0; // return error
+
     size_t key;
     switch (dict->hash_content) {
     case 0:

@@ -111,6 +111,16 @@ parser_error_type_t parse(const char *filename, parser_info_t *info, int flag) {
     // close file
     fclose(fp);
 
+    // open bin file for writing
+    char *ext = strrchr(filename, '.');
+    if (ext == NULL)
+        ext = ""; // no extension
+    char out[BUFSIZ] = "";
+    size_t n = strlen(filename) - strlen(ext);
+    memcpy(out, filename, n);
+    strcat(out, ".bin");
+    info->context->out = fopen(out, "wb");
+
     // parse the file
     if (flag == 1)
         fprintf(stdout, "parsing file %s\n", filename);

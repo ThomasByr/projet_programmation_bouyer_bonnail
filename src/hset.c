@@ -132,6 +132,9 @@ int hset_push(hset_t *set, void *item) {
 }
 
 int hset_contains(hset_t *set, void *item) {
+    if (item == NULL)
+        return 0; // return error
+
     size_t value;
     switch (set->hash_content) {
     case 0:
@@ -161,6 +164,9 @@ int hset_contains(hset_t *set, void *item) {
 }
 
 int hset_discard(hset_t *set, void *item) {
+    if (set == NULL || item == NULL)
+        return 0; // return error
+
     size_t value;
     switch (set->hash_content) {
     case 0:
