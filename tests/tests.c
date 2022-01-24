@@ -10,6 +10,7 @@
 // todo: do not include .c files
 
 unsigned long _no_asserts = 0;
+status_t _status = LAUNCH;
 
 int main(void) {
     xml_parser_test(); // generic tests and parsing examples
