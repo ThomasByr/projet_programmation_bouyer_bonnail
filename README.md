@@ -16,6 +16,32 @@ Analyse d’une base de données d’articles de recherche en informatique.
 
 ## Utilisation et pré-requis
 
+Ce programme ne suppose aucun pré-requis mise à part une distribution récente d'un noyau unix. Les différents Makefile sont préparés pour des architectures spécifiques ainsi que pour le compilateur gcc-11 : il faut les modifier au besoin.
+
+Compiler avec
+
+```bash
+make
+```
+
+ou
+
+```bash
+make debug
+```
+
+Lancer le programme avec
+
+```bash
+./bin/main [OPTIONS]
+```
+
+Pour afficher l'aide intégrée, taper
+
+```bash
+./bin/main --help
+```
+
 ## Changelog
 
 Se référer au fichier [changelog](changelog.md) pour la liste exhaustive des modifications.
