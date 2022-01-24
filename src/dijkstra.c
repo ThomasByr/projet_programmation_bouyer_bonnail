@@ -58,9 +58,9 @@ vec_t *get_path(node_t *end) {
     vec_t *path = vec_new();
     node_t *current = end;
     while (current != NULL) {
-        vec_push(path, current);
-        current = current->parent;
-    }
-    vec_reverse(path);
+        vec_push(path, current);   // add current to path
+        current = current->parent; // move to parent
+    }                              // path is in reverse order
+    vec_reverse(path);             // reverse path
     return path;
 }
