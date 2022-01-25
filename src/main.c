@@ -12,6 +12,7 @@ status_t _status = LAUNCH;
 int main(int argc, char *argv[]) {
     _status = THREADING;
     signal(SIGINT, handle_signal);
+    signal(SIGSEGV, handle_signal);
 
     options_t *options = options_new();
 
