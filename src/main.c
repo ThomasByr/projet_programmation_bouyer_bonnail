@@ -11,8 +11,14 @@ status_t _status = LAUNCH;
 
 int main(int argc, char *argv[]) {
     _status = THREADING;
-    signal(SIGINT, handle_signal);
-    signal(SIGSEGV, handle_signal);
+    if (signal(SIGINT, handle_signal) == SIG_ERR) {
+        alert("Cannot catch SIGINT");
+        return EXIT_FAILURE;
+    }
+    if (signal(SIGSEGV, handle_signal) == SIG_ERR) {
+        alert("Cannot catch SIGSEGV");
+        return EXIT_FAILURE;
+    }
 
     options_t *options = options_new();
 

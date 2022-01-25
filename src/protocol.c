@@ -184,7 +184,10 @@ void see_progress(void) {
 void handle_sigint(int count) {
     if (count < THRESHOLD) {
         warn("\rInterrupt signal received - resend signal to stop process");
-        signal(SIGINT, handle_signal);
+        if (signal(SIGINT, handle_signal) == SIG_ERR) {
+            alert("Failed to register signal handler");
+            exit(EXIT_FAILURE);
+        }
     } else {
         alert("\r\nInterrupt signal received - process will be stopped");
         see_progress();
