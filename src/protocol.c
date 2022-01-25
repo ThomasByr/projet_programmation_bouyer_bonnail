@@ -81,6 +81,7 @@ int ask(const char *msd, ...) {
     char buf[BUFSIZ];
     char *rv = fgets(buf, BUFSIZ, stdin);
     if (rv == NULL) {
+        alert("Failed to read from stdin");
         return -1;
     }
     return buf[0] == 'y' || buf[0] == 'Y';
