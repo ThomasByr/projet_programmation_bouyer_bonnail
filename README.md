@@ -12,7 +12,21 @@
 
 Analyse d’une base de données d’articles de recherche en informatique.
 
+L'analyse repose sur la création d'un graphe où chaque noeud représente un auteur, et les arrêtes sont positionnées entre les noeuds où deux auteurs ont co-écrit au moins un article.
+
 ## Méthode de résolution
+
+L'algorithme se décompose en 3 étapes principales
+
+*   le parsage de la base de donnée dans un fichier binaire
+*   la construction d'un graphe à partir du fichier binaire
+*   différents parcours de graphe
+
+Le parsage de la base de donnée est basée sur le principe du TP 11 des exercices C faits en cours.
+
+La construction du graphe repose sur des structures de dictionnaire pour pourvoir stocker efficacement la relation de notre graphe. On précise ici quelques champ présents dans les noeuds de notre graphe : le nom de l'auteur, un ensemble de noeuds co-auteurs, un ensemble de correspondances entre les articles écrits et leur date de parution et un noeud parent.
+
+Les différents parcours de graphes sont des parcours en largeur. Ils permettent notamment la recherche efficace d'information, l'énumération des composantes connexes et de leur diamètre et la recherche de plus courts chemins entre autres.
 
 ## Utilisation et pré-requis
 
