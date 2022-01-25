@@ -69,6 +69,14 @@ hset_t *hset_copy(hset_t *hset);
 void hset_free(hset_t *hset);
 
 /**
+ * @brief reset a hash set to empty.
+ * Does not free the items, neither does it reset its capacity.
+ *
+ * @param hset hash set
+ */
+void hset_reset(hset_t *hset);
+
+/**
  * @brief add a new element to the hash set, does nothing if already present
  *
  * @param hset hash set

@@ -55,9 +55,18 @@ hset_t *hset_copy(hset_t *hset) {
 }
 
 void hset_free(hset_t *set) {
-    if (set)              // if set is not NULL
-        free(set->items); // free items array
-    free(set);            // free set
+    if (set == NULL)
+        return;
+    free(set->items); // free items array
+    free(set);        // free set
+}
+
+void hset_reset(hset_t *hset) {
+    if (hset == NULL)
+        return;
+    hset->nitems = 0;
+    hset->n_deleted_items = 0;
+    memset(hset->items, 0, hset->capacity * sizeof(size_t));
 }
 
 int _hset_push_item(hset_t *set, void *item) {
