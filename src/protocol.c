@@ -181,7 +181,7 @@ void see_progress(void) {
         fprintf(stdout, "%s\n", status_to_string(_status));
 }
 
-void handle_sigint(int count) {
+void handle_sigint(sig_atomic_t count) {
     if (count < THRESHOLD) {
         warn("\rInterrupt signal received - resend signal to stop process");
         if (signal(SIGINT, handle_signal) == SIG_ERR) {
@@ -202,7 +202,7 @@ void handle_sigsev(void) {
 }
 
 void handle_signal(int sig) {
-    static int count = 0;
+    static volatile sig_atomic_t count = 0;
     static int last_sig = 0;
 
     if (last_sig != sig) {
