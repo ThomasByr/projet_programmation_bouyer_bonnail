@@ -87,7 +87,7 @@ int ask(const char *msd, ...) {
     return buf[0] == 'y' || buf[0] == 'Y';
 }
 
-void print_sep(void) {
+void _print_sep(void) {
     char s[_width + 1];
     memset(s, '=', _width);
     s[_width] = '\0';
@@ -98,7 +98,7 @@ void print_usage(void) {
     fprintf(stdout, "\"Projet Programmation\" Bouyer Bonnail\n");
     fprintf(stdout, "Version: %s\n", VERSION);
 
-    print_sep();
+    _print_sep();
     fprintf(stdout, "Usage: ./bin/main [OPTIONS]...\n");
     fprintf(stdout, "Options:\n");
     fprintf(stdout, "\t%-20s%s", "-h, --help", "Display this help\n");
@@ -126,7 +126,7 @@ void print_version(void) {
     fprintf(stdout, "Compilation time: %s\n", __TIME__);
     DEBUG_PRINT("Compilation mode : debug\n");
 
-    print_sep();
+    _print_sep();
     fprintf(stdout, "Licence: GPLv3\n");
     fprintf(stdout, "Authors: %s\n", AUTHORS);
 }
@@ -181,10 +181,14 @@ void see_progress(void) {
         fprintf(stdout, "%s\n", status_to_string(_status));
 }
 
-void handle_sigint(sig_atomic_t count) {
+void _handle_sigint(sig_atomic_t count) {
     if (count < THRESHOLD) {
         warn("\rInterrupt signal received - resend signal to stop process");
         if (signal(SIGINT, handle_signal) == SIG_ERR) {
+            alert("Failed to register signal handler");
+            exit(EXIT_FAILURE);
+        }
+        if (signal(SIGSEGV, handle_signal) == SIG_ERR) {
             alert("Failed to register signal handler");
             exit(EXIT_FAILURE);
         }
@@ -195,7 +199,7 @@ void handle_sigint(sig_atomic_t count) {
     }
 }
 
-void handle_sigsev(void) {
+void _handle_sigsev(void) {
     alert("\r\nSegmentation fault - process will be stopped");
     see_progress();
     abort();
@@ -213,10 +217,10 @@ void handle_signal(int sig) {
 
     switch (sig) {
     case SIGINT:
-        handle_sigint(count);
+        _handle_sigint(count);
         break;
     case SIGSEGV:
-        handle_sigsev();
+        _handle_sigsev();
 
     default:
         break;
