@@ -10,14 +10,14 @@ Collection of unique elements using a hash table.
 #include "types.h"
 
 struct hset_s {
-    int hash_content;
-    size_t nbits;
-    size_t mask;
+    int hash_content; // 0: hash pointer, otherwise hash content
+    size_t nbits;     // number of bits of the mask
+    size_t mask;      // mask for the number of buckets
 
-    size_t capacity;
-    size_t *items;
-    size_t nitems;
-    size_t n_deleted_items;
+    size_t capacity;        // number of buckets
+    size_t *items;          // array of buckets
+    size_t nitems;          // number of items
+    size_t n_deleted_items; // number of deleted items
 };
 /**
  * @brief hash set data structure that holds a collection of unique items

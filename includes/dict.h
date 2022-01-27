@@ -10,15 +10,15 @@ Efficient storage of key-value pairs.
 #include "types.h"
 
 struct dict_s {
-    int hash_content;
-    size_t nbits;
-    size_t mask;
+    int hash_content; // 0: hash pointer, otherwise hash content
+    size_t nbits;     // number of bits of the mask
+    size_t mask;      // mask for the number of buckets
 
-    size_t capacity;
-    size_t *keys;
-    size_t *values;
-    size_t nitems;
-    size_t n_deleted_items;
+    size_t capacity;        // number of buckets
+    size_t *keys;           // keys array
+    size_t *values;         // values array
+    size_t nitems;          // number of items
+    size_t n_deleted_items; // number of deleted items
 };
 /**
  * @brief dictionary data structure that maps uniques keys to some value
