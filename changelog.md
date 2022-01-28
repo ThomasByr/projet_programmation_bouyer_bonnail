@@ -38,4 +38,4 @@
     *   ajout de commentaires générés par IA dans les fichiers de test pour faciliter la relecture
     *   la libération de la mémoire pour les tas de Fibonacci est plus rapide
     *   résolution des bugs sur Dijkstra et les tables de hachage : les pointeurs sur 0 et 1 n'étaient pas comparés (à la suite des nouvelles méthodes de hachage)
-    *   gestion de signaux (sur quelques signaux qui stoppent le processus, affichage approximatif du processus arrêté)
+    *   gestion de signaux (sur quelques signaux qui stoppent le processus, affichage approximatif du processus arrêté) (la fonction signal étant une extension GNU, -std=c18 lors de la compilation modifie son comportement, ce qui explique ses nombreux appels)
