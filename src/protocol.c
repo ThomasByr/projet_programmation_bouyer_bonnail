@@ -106,7 +106,7 @@ void print_usage(void) {
     fprintf(stdout, "\t%-20s%s", "-q, --quiet",
             "Quiet mode (no output, conflicts will be ignored)\n");
     fprintf(stdout, "\t%-20s%s", "-i, --input_file",
-            "Specify input file (needed)\n");
+            "Specify input file (needed), either xml database or bin\n");
     fprintf(stdout, "\t%-20s%s", "-p, --path",
             "Use it twice to find the closest path between authors\n");
     fprintf(stdout, "\t%-20s%s", "-l, --list",
