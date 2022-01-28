@@ -30,7 +30,7 @@ Les différents parcours de graphes sont des parcours en largeur. Ils permettent
 
 ## Utilisation et pré-requis
 
-Ce programme ne suppose aucun pré-requis mise à part une distribution récente d'un noyau unix. Les différents Makefile sont préparés pour des architectures spécifiques ainsi que pour le compilateur gcc-11 : il faut les modifier au besoin.
+Ce programme ne suppose aucun pré-requis mise à part une distribution récente d'un noyau unix. Les différents Makefile sont préparés pour des architectures spécifiques ainsi que pour le compilateur gcc-11 : il faut les modifier au besoin. Aussi, l'exécution des différents tests se fait via valgrind, il est donc nécessaire de l'installer avant d'exécuter les codes de test.
 
 Compiler avec
 
@@ -69,7 +69,7 @@ Se référer au fichier [changelog](changelog.md) pour la liste exhaustive des m
 *   ajout de commentaires générés par IA dans les fichiers de test pour faciliter la relecture
 *   la libération de la mémoire pour les tas de Fibonacci est plus rapide
 *   résolution des bugs sur Dijkstra et les tables de hachage : les pointeurs sur 0 et 1 n'étaient pas comparés (à la suite des nouvelles méthodes de hachage)
-*   gestion de signaux (sur quelques signaux qui stoppent le processus, affichage approximatif du processus arrêté)
+*   gestion de signaux (sur quelques signaux qui stoppent le processus, affichage approximatif du processus arrêté) (la fonction signal étant une extension GNU, -std=c18 lors de la compilation modifie son comportement, ce qui explique ses nombreux appels)
 
 </details>
 
@@ -82,3 +82,4 @@ Se référer au fichier [changelog](changelog.md) pour la liste exhaustive des m
 *   ~~bug sur l'algorithme de Dijkstra~~ (v0.0.4)
 *   ~~bug sur les tables de hachages~~ (v0.0.4)
 *   ~~gestion de signaux (profil de la progression du processus courant)~~ (v0.0.4)
+*   intégration des différents parcours à l'algorithme principal
