@@ -44,6 +44,7 @@ vec_t *connexe(hset_t *nodes) {
     }
 
     hset_itr_t *itr_all = hset_itr_new(all);
+    // this loop is used to detect the connected components
     while (hset_nitems(all) > 0) {
         compt++;
         hset_t *close = hset_new();
@@ -54,6 +55,7 @@ vec_t *connexe(hset_t *nodes) {
         node_t *current = (node_t *)hset_itr_value(itr_all);
         hset_push(open, current);
 
+        // this loop is used to go through the component
         while (hset_nitems(open) != 0) {
             node_t *node = (node_t *)hset_itr_value(itr_open);
             hset_discard(open, node);
@@ -62,6 +64,7 @@ vec_t *connexe(hset_t *nodes) {
             hset_push(component, node);
 
             hset_itr_t *itr_child = node->neighbors;
+            // this loop is used to detect the neighbors of the current node
             while (hset_itr_has_next(itr_child)) {
                 node_t *node_child = (node_t *)hset_itr_value(itr_child);
                 hset_push(open, node_child);
