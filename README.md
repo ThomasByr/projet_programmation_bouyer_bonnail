@@ -1,6 +1,7 @@
 # Projet Programmation 2021/2022 | Julie BONNAIL & Thomas BOUYER
 
 > version 0.0.4 fr
+> ([rapport](doc/Rapport.pdf) de projet)
 
 1. [Le sujet](#le-sujet)
 2. [Méthode de résolution](#méthode-de-résolution)
