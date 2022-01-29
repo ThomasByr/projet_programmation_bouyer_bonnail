@@ -31,7 +31,7 @@ Les différents parcours de graphes sont des parcours en largeur. Ils permettent
 
 ## Utilisation et pré-requis
 
-Ce programme ne suppose aucun pré-requis mise à part une distribution récente d'un noyau unix. Les différents Makefile sont préparés pour des architectures spécifiques ainsi que pour le compilateur gcc-11 : il faut les modifier au besoin. Aussi, l'exécution des différents tests se fait via valgrind, il est donc nécessaire de l'installer avant d'exécuter les codes de test.
+Ce programme ne suppose aucun pré-requis mise à part une distribution récente d'un noyau unix. Les différents Makefile sont préparés pour des architectures spécifiques ainsi que pour le compilateur gcc-11 : il faut les modifier au besoin. Aussi, l'exécution des différents tests se fait via valgrind, il est donc nécessaire de l'installer avant d'exécuter les codes de test. Le programme compile avec `-Ofast -pipe -std=c18 -pedantic -Wall -Wextra -Werror` et a besoin de la librairie mathématique `lm`. La gestion des signaux peut être simplifiée si elle est issue de la librairie GNU au lieu d'être du standard C.
 
 Compiler avec
 
