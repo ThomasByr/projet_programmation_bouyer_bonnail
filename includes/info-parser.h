@@ -20,6 +20,7 @@ struct parser_context_s {
 
     char *paper_type;  // paper type (external)
     char *paper_title; // last paper title
+    char *paper_year;  // last paper year of publication
     char *author;      // main author of the paper
     char *inner_tag;   // inner tag (look_for)
 
@@ -28,6 +29,7 @@ struct parser_context_s {
     dict_t *auth_co_auth; // author -> set of co-author names
     dict_t *auth_papers;  // author name -> paper titles
     dict_t *auth_node;    // author name -> node object
+    hset_t *auth_cur;     // set of authors of the current paper
     hset_t *auth_set;     // set of author names
     hset_t *nodes;        // set of node objects
 
