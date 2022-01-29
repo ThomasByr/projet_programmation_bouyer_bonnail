@@ -17,11 +17,10 @@ int diametre(hset_t *component) {
         while (hset_itr_has_next(itr_end)) {
             // distance between all nodes n1 and n2 possible with n1
             // corresponding to itr_beggin and n2 to itr_end
-            int a =
-                dijkstra(hset_itr_value(itr_beggin), hset_itr_value(itr_end));
-            if (a > max) {
-                max = a;
-            }
+            node_t *n1 = (node_t *)hset_itr_next(itr_beggin);
+            node_t *n2 = (node_t *)hset_itr_next(itr_end);
+            int a = dijkstra(n1, n2);
+            max = (a > max) ? a : max;
             hset_itr_next(itr_end);
         }
         hset_itr_next(itr_beggin);
