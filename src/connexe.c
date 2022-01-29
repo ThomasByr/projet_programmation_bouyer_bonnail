@@ -7,18 +7,21 @@
 #include "dijkstra.h"
 
 int diametre(hset_t *component) {
+    // detection of the biggest distance between two nodes of the same connected
+    // component
     int max = 0;
     hset_itr_t *itr_beggin = hset_itr_new(component);
 
     while (hset_itr_has_next(itr_beggin)) {
         hset_itr_t *itr_end = hset_itr_new(component);
-
         while (hset_itr_has_next(itr_end)) {
-            node_t *beggin = (node_t *)hset_itr_value(itr_beggin);
-            node_t *end = (node_t *)hset_itr_value(itr_end);
-
-            int a = dijkstra(beggin, end);
-            max = (a > max) ? a : max;
+            // distance between all nodes n1 and n2 possible with n1
+            // corresponding to itr_beggin and n2 to itr_end
+            int a =
+                dijkstra(hset_itr_value(itr_beggin), hset_itr_value(itr_end));
+            if (a > max) {
+                max = a;
+            }
             hset_itr_next(itr_end);
         }
         hset_itr_next(itr_beggin);
@@ -30,6 +33,7 @@ int diametre(hset_t *component) {
 }
 
 vec_t *connexe(hset_t *nodes) {
+    // width first search
     vec_t *list = vec_new();
     hset_itr_t *itr = hset_itr_new(nodes);
     hset_t *all = hset_new();
