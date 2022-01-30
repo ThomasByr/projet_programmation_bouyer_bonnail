@@ -9,16 +9,16 @@ Efficient storage of key-value pairs.
 #include "protocol.h"
 #include "types.h"
 
-struct dict_s
-{
-    size_t nbits;
-    size_t mask;
+struct dict_s {
+    int hash_content; // 0: hash pointer, otherwise hash content
+    size_t nbits;     // number of bits of the mask
+    size_t mask;      // mask for the number of buckets
 
-    size_t capacity;
-    size_t *keys;
-    size_t *values;
-    size_t nitems;
-    size_t n_deleted_items;
+    size_t capacity;        // number of buckets
+    size_t *keys;           // keys array
+    size_t *values;         // values array
+    size_t nitems;          // number of items
+    size_t n_deleted_items; // number of deleted items
 };
 /**
  * @brief dictionary data structure that maps uniques keys to some value
@@ -26,8 +26,7 @@ struct dict_s
  */
 typedef struct dict_s dict_t;
 
-struct dict_itr_s
-{
+struct dict_itr_s {
     dict_t *dict;
     size_t index;
 };
@@ -37,12 +36,21 @@ struct dict_itr_s
  */
 typedef struct dict_itr_s dict_itr_t;
 
+struct dict_args_s {
+    int hash_content;
+};
+typedef struct dict_args_s dict_args_t;
+
 /**
  * @brief new dictionary
  *
  * @return dict_t*
  */
-dict_t *dict_new(void);
+dict_t *_dict_new(int hash_content);
+
+dict_t *_dict_new_args(dict_args_t args);
+
+#define dict_new(...) _dict_new_args((dict_args_t){__VA_ARGS__})
 
 /**
  * @brief free dictionary underlying structure.

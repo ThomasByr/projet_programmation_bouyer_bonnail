@@ -7,18 +7,23 @@
 static const unsigned int prime_1 = 3079;
 static const unsigned int prime_2 = 1572869;
 
-dict_t *dict_new(void) {
+dict_t *_dict_new_args(dict_args_t args) {
+    int hash_content = args.hash_content ? args.hash_content : 0;
+    return _dict_new(hash_content);
+}
+
+dict_t *_dict_new(int hash_content) {
     dict_t *d = calloc(1, sizeof(struct dict_s));
 
     if (d == NULL) // out of memory
         return NULL;
 
+    d->hash_content = hash_content;
     d->nbits = 3;                                    // 2^3 = 8 buckets
     d->capacity = (size_t)(1 << d->nbits);           // is increased when needed
     d->mask = d->capacity - 1;                       // 2^3 - 1 = 7
     d->keys = calloc(d->capacity, sizeof(size_t));   // keys array
     d->values = calloc(d->capacity, sizeof(size_t)); // values array
-
     if (d->keys == NULL || d->values == NULL) {
         dict_free(d);
         return NULL;
@@ -37,9 +42,19 @@ void dict_free(dict_t *d) {
 }
 
 int _dict_push_item(dict_t *dict, void *key, void *value) {
-    size_t k = (size_t)key;   // cast key to size_t
+    size_t k;
     size_t v = (size_t)value; // cast value to size_t
     size_t ii;                // index of the bucket
+
+    switch (dict->hash_content) {
+    case 0:
+        k = (size_t)key;
+        break;
+    case 1:
+    default:
+        k = hash((char *)key);
+        break;
+    }
 
     if (k == 0 || k == 1) // if key casts to 0 or 1
         return -1;        // return error
@@ -49,9 +64,10 @@ int _dict_push_item(dict_t *dict, void *key, void *value) {
     while (dict->keys[ii] != 0 &&
            dict->keys[ii] != 1) // find empty or deleted bucket
     {
-        if (dict->keys[ii] == k) { // if key is already in set
-            dict->values[ii] = v;  // update value
-            return 0;              // return success 0
+        // if key is already in set
+        if (compare(dict->hash_content, dict->keys[ii], (size_t)key)) {
+            dict->values[ii] = v; // update value
+            return 0;             // return success 0
         } else {
             ii = dict->mask & (ii + prime_2); // get index of next bucket
         }
@@ -60,9 +76,9 @@ int _dict_push_item(dict_t *dict, void *key, void *value) {
     if (dict->keys[ii] == 1)     // if bucket is deleted
         dict->n_deleted_items--; // decrease number of deleted items
 
-    dict->keys[ii] = k;   // insert key
-    dict->values[ii] = v; // insert value
-    return 1;             // return success 1
+    dict->keys[ii] = (size_t)key; // insert key
+    dict->values[ii] = v;         // insert value
+    return 1;                     // return success 1
 }
 
 static int _maybe_rehash(dict_t *dict) {
@@ -115,18 +131,30 @@ int dict_push(dict_t *dict, void *key, void *value) {
 }
 
 size_t dict_get(dict_t *dict, void *key) {
-    size_t k = (size_t)key; // cast key to size_t
-    size_t ii;              // index of the bucket
+    if (dict == NULL || key == NULL)
+        return 0; // return error
 
-    if (dict == NULL || k == 0 ||
-        k == 1)    // if dict is NULL or key casts to 0 or 1
-        return -1; // return NULL
+    size_t k;
+    switch (dict->hash_content) {
+    case 0:
+        k = (size_t)key; // cast key to size_t
+        break;
+    case 1:
+    default:
+        k = hash((char *)key); // hash key before casting
+        break;
+    }
 
-    ii = dict->mask & (prime_1 * k); // hash value modulo capacity
+    // if dict is NULL or key casts to 0 or 1
+    if (dict == NULL || k == 0 || k == 1)
+        return 0; // return error
 
-    while (dict->keys[ii] != 0) // find empty bucket (step over deleled ones)
-    {
-        if (dict->keys[ii] == k) {   // if key is found
+    size_t ii = dict->mask & (prime_1 * k); // hash value modulo capacity
+
+    // continue searching for item until empty bucket is found
+    while (dict->keys[ii] != 0) {
+        // if key is found
+        if (compare(dict->hash_content, dict->keys[ii], (size_t)key)) {
             return dict->values[ii]; // return value
         } else {
             ii = dict->mask & (ii + prime_2); // get index of next bucket
@@ -136,18 +164,30 @@ size_t dict_get(dict_t *dict, void *key) {
 }
 
 int dict_discard(dict_t *dict, void *item) {
-    size_t key = (size_t)item; // cast key to size_t
-    size_t ii;                 // index of the bucket
+    if (dict == NULL || item == NULL)
+        return 0; // return error
+
+    size_t key;
+    switch (dict->hash_content) {
+    case 0:
+        key = (size_t)item;
+        break;
+    case 1:
+    default:
+        key = hash((char *)item);
+        break;
+    }
 
     // if dict is NULL or key casts to 0 or 1
     if (dict == NULL || key == 0 || key == 1)
         return -1; // return error
 
-    ii = dict->mask & (prime_1 * key); // hash value modulo capacity
+    size_t ii = dict->mask & (prime_1 * key); // hash value modulo capacity
 
-    while (dict->keys[ii] != 0) // find non empty bucket
-    {
-        if (dict->keys[ii] == key) { // if key is found
+    // continue searching for item until empty bucket is found
+    while (dict->keys[ii] != 0) {
+        // if key is found
+        if (compare(dict->hash_content, dict->keys[ii], (size_t)item)) {
             dict->keys[ii] = 1;      // mark bucket as deleted
             dict->nitems--;          // decrease number of items
             dict->n_deleted_items++; // increase number of deleted items
@@ -244,21 +284,22 @@ size_t dict_itr_next(dict_itr_t *itr) {
 
     itr->index++;
     while (itr->index < itr->dict->capacity &&
-           itr->dict->keys[(itr->index)] == 0)
+           (itr->dict->keys[(itr->index)] == 0 ||
+            itr->dict->keys[(itr->index)] == 1))
         itr->index++;
 
     return itr->index;
 }
 
 size_t dict_itr_key(dict_itr_t *itr) {
-    if (itr->dict->keys[itr->index] == 0)
+    if (itr->dict->keys[itr->index] == 0 || itr->dict->keys[itr->index] == 1)
         dict_itr_next(itr);
 
     return itr->dict->keys[itr->index];
 }
 
 size_t dict_itr_value(dict_itr_t *itr) {
-    if (itr->dict->keys[itr->index] == 0)
+    if (itr->dict->keys[itr->index] == 0 || itr->dict->keys[itr->index] == 1)
         dict_itr_next(itr);
 
     return itr->dict->values[itr->index];

@@ -9,12 +9,12 @@
 #include "vec.h"
 
 /**
- * @brief info lists articles of an autor
+ * @brief info lists articles of an author
  *
- * @param autor autor name
- * 
+ * @param author author name
+ *
  * @return print articles
  */
-void info(node_t *autor);
+void info(node_t *author);
 
 #endif

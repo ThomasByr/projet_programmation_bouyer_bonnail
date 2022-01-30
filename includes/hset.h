@@ -9,15 +9,15 @@ Collection of unique elements using a hash table.
 #include "protocol.h"
 #include "types.h"
 
-struct hset_s
-{
-    size_t nbits;
-    size_t mask;
+struct hset_s {
+    int hash_content; // 0: hash pointer, otherwise hash content
+    size_t nbits;     // number of bits of the mask
+    size_t mask;      // mask for the number of buckets
 
-    size_t capacity;
-    size_t *items;
-    size_t nitems;
-    size_t n_deleted_items;
+    size_t capacity;        // number of buckets
+    size_t *items;          // array of buckets
+    size_t nitems;          // number of items
+    size_t n_deleted_items; // number of deleted items
 };
 /**
  * @brief hash set data structure that holds a collection of unique items
@@ -25,8 +25,7 @@ struct hset_s
  */
 typedef struct hset_s hset_t;
 
-struct hset_itr_s
-{
+struct hset_itr_s {
     hset_t *set;
     size_t index;
 };
@@ -36,20 +35,21 @@ struct hset_itr_s
  */
 typedef struct hset_itr_s hset_itr_t;
 
-/**
- * @brief djb2 hash function by Dan Bernstein
- *
- * @param str string to hash
- * @return unsigned long
- */
-unsigned long hash(char *str);
+struct hset_args_s {
+    int hash_content;
+};
+typedef struct hset_args_s hset_args_t;
 
 /**
  * @brief create a new hash set
  *
  * @return hset_t*
  */
-hset_t *hset_new(void);
+hset_t *_hset_new(int hash_content);
+
+hset_t *_hset_new_args(hset_args_t args);
+
+#define hset_new(...) _hset_new_args((hset_args_t){__VA_ARGS__})
 
 /**
  * @brief return a new hash set.
@@ -67,6 +67,14 @@ hset_t *hset_copy(hset_t *hset);
  * @param hset
  */
 void hset_free(hset_t *hset);
+
+/**
+ * @brief reset a hash set to empty.
+ * Does not free the items, neither does it reset its capacity.
+ *
+ * @param hset hash set
+ */
+void hset_reset(hset_t *hset);
 
 /**
  * @brief add a new element to the hash set, does nothing if already present

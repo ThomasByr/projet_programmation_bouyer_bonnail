@@ -7,6 +7,9 @@ Functions to parse and check the validity of the command line arguments.
 #define ARGS_PARSER_H
 
 #include "args-options.h"
+#include "protocol.h"
+
+extern status_t _status;
 
 /**
  * @brief parse user input in command line

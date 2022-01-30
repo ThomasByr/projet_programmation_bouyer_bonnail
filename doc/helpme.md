@@ -818,7 +818,7 @@ void pqueue_merge(pqueue_t *pq1, pqueue_t *pq2);
 
 ```c
 /**
- * @brief free the priority queue and all its nodes (might be expensive)
+ * @brief free the priority queue and all its nodes in linear time
  *
  * @param pq priority queue
  */

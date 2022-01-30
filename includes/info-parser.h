@@ -10,20 +10,30 @@ XML parser context and info retrieval.
 #include "hset.h"
 #include "node.h"
 
+extern status_t _status;
+
 struct parser_context_s {
-    int text_count;
-    int open_count;
-    int close_count;
+    int text_count;  // number of fields
+    int open_count;  // number of open tags
+    int close_count; // number of close tags
+    int flag;        // flag for the client
 
-    char *paper_type;
-    char *inner_tag;
+    char *paper_type;  // paper type (external)
+    char *paper_title; // last paper title
+    char *paper_year;  // last paper year of publication
+    char *author;      // main author of the paper
+    char *inner_tag;   // inner tag (look_for)
 
-    node_t *current_node;
+    node_t *current_node; // current node
 
-    dict_t *auth_co_auth;
-    dict_t *auth_papers;
-    dict_t *auth_node;
-    hset_t *nodes;
+    dict_t *auth_co_auth; // author -> set of co-author names
+    dict_t *auth_papers;  // author name -> paper titles
+    dict_t *auth_node;    // author name -> node object
+    hset_t *auth_cur;     // set of authors of the current paper
+    hset_t *auth_set;     // set of author names
+    hset_t *nodes;        // set of node objects
+
+    FILE *out; // binary output file
 };
 typedef struct parser_context_s parser_context_t;
 
@@ -37,9 +47,9 @@ enum parser_error_type_e {
 typedef enum parser_error_type_e parser_error_type_t;
 
 struct parser_info_s {
-    void (*handleOpenTag)(char *, struct parser_context_s *);
-    void (*handleCloseTag)(char *, struct parser_context_s *);
-    void (*handleText)(char *, struct parser_context_s *);
+    int (*hndl_otg)(char *, struct parser_context_s *);
+    int (*hndl_ctg)(char *, struct parser_context_s *);
+    int (*hndl_txt)(char *, struct parser_context_s *);
     struct parser_context_s *context;
 };
 typedef struct parser_info_s parser_info_t;
@@ -49,31 +59,35 @@ typedef struct parser_info_s parser_info_t;
  *
  * @param txt some text
  * @param context the context to pass to the callback functions
+ * @return int - 0 if everything went well, -1 otherwise
  */
-void handleText(char *txt, struct parser_context_s *context);
+int hndl_txt(char *txt, struct parser_context_s *context);
 
 /**
  * @brief tell the parser to open a tag
  *
  * @param tag tag name (without the <> brackets and any attributes)
  * @param context the context to pass to the callback functions
+ * @return int - 0 if everything went well, -1 otherwise
  */
-void handleOpenTag(char *tag, struct parser_context_s *context);
+int hndl_otg(char *tag, struct parser_context_s *context);
 
 /**
  * @brief tell the parser to close a tag
  *
  * @param tag tag name (without the <> brackets and any attributes)
  * @param context the context to pass to the callback functions
+ * @return int - 0 if everything went well, -1 otherwise
  */
-void handleCloseTag(char *tag, struct parser_context_s *context);
+int hndl_ctg(char *tag, struct parser_context_s *context);
 
 /**
  * @brief new parser context structure
  *
+ * @param flag flag for the client
  * @return parser_context_t*
  */
-parser_context_t *parser_context_new(void);
+parser_context_t *parser_context_new(int flag);
 
 /**
  * @brief free a parser context underlaying structure
@@ -85,9 +99,10 @@ void parser_context_free(parser_context_t *context);
 /**
  * @brief new parser info structure
  *
+ * @param flag flag for the client
  * @return parser_info_t*
  */
-parser_info_t *parser_info_new(void);
+parser_info_t *parser_info_new(int flag);
 
 /**
  * @brief free a parser info underlaying structure

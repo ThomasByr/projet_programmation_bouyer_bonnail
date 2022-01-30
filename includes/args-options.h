@@ -8,7 +8,6 @@ Options for the command line arguments.
 
 struct options_s {
     int verbose;
-    int debug;
     int quiet;
 
     int find_connex_components; // find connex components in the graph
@@ -18,7 +17,8 @@ struct options_s {
     int find_authors_within; // find all authors that are within a distance of a
                              // given author
 
-    int n_closest; // max distance between two authors to find
+    int need_graph; // need to make the graph
+    int n_closest;  // max distance between two authors to find
 
     char *input_file;
     char *author;

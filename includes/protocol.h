@@ -38,11 +38,35 @@ It is the caller's responsability to cast the values to the same type.
 #define CAT_HELPER(a, b) a##b
 #define X(name) CAT(__##name, __LINE__)
 
-#define VERSION "0.0.3"
+#define VERSION "0.0.4"
 #define AUTHORS "Julie BONNAIL & Thomas BOUYER"
+
+#define BAR_WIDTH 20ul
+#define THRESHOLD 2
 
 #define lerp(x, x0, x1, y0, y1) \
     (((y0) * ((x1) - (x)) + (y1) * ((x) - (x0))) / ((x1) - (x0)))
+
+enum status_e {
+    LAUNCH,
+    THREADING,
+    ALLOCATING_MEMORY,
+    READING_FILE,
+    WRITING_FILE,
+    PARSING_XML,
+    PARSING_BIN,
+    PARSING_ARGS,
+    CHECKING_ARGS,
+    MAKING_GRAPH,
+    GRAPH_WALKTHROUGH,
+};
+/**
+ * @brief The status_t struct is used to store the status of the program
+ *
+ */
+typedef enum status_e status_t;
+
+extern status_t _status;
 
 /**
  * @brief duplicate a string.
@@ -54,12 +78,36 @@ It is the caller's responsability to cast the values to the same type.
 extern char *strdup(const char *);
 
 /**
+ * @brief send a error to the client.
+ * Does not exit the process.
+ *
+ * @param msg message to send
+ */
+void alert(const char *msg, ...);
+
+/**
+ * @brief send a warning to the client.
+ * Does not exit the process.
+ *
+ * @param msg message to send
+ */
+void warn(const char *msg, ...);
+
+/**
  * @brief send a message to the client.
  * Does not exit the process.
  *
  * @param msg message to send
  */
-void complain(const char *msg, ...);
+void award(const char *msg, ...);
+
+/**
+ * @brief ask the user to confirm an action.
+ *
+ * @param msg message to send
+ * @return int - 1 if the user confirms, 0 otherwise, -1 if error
+ */
+int ask(const char *msg, ...);
 
 /**
  * @brief display the main usage of the program.
@@ -72,6 +120,14 @@ void print_usage(void);
  *
  */
 void print_version(void);
+
+/**
+ * @brief diaplay the progress of some operation.
+ *
+ * @param current current tick
+ * @param total total number of ticks
+ */
+void disp_progress(size_t current, size_t total);
 
 /**
  * @brief compare two strings.
@@ -99,5 +155,38 @@ int compare_ints(const void *a, const void *b);
  * @return int - -1 if a < b, 0 if a == b, 1 if a > b
  */
 int compare_floats(const void *a, const void *b);
+
+/**
+ * @brief djb2 hash function by Dan Bernstein
+ *
+ * @param str string to hash
+ * @return unsigned long
+ */
+unsigned long hash(char *str);
+
+/**
+ * @brief compare two size_t, interpreted as either pointers or strings
+ *
+ * @param hash_content 0 for pointer, non-zero for string
+ * @param item first item
+ * @param value second item
+ * @return int - result of the comparison
+ */
+int compare(int hash_content, size_t item, size_t value);
+
+/**
+ * @brief handle signals
+ *
+ * @param sig signal to handle
+ */
+void handle_signal(int sig);
+
+/**
+ * @brief get string representation of a status_t
+ *
+ * @param status status to get the string representation of
+ * @return char* - string representation of the status
+ */
+char *status_to_string(status_t status);
 
 #endif

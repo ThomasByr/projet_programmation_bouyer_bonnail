@@ -18,6 +18,8 @@ where E is the number of edges and V is the number of vertices.
 #include "types.h"
 #include "vec.h"
 
+extern status_t _status;
+
 /**
  * @brief dijkstra algorithm using only one search head
  *

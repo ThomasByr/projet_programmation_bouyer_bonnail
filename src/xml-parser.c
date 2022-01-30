@@ -1,3 +1,4 @@
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,16 +18,8 @@ void get_tag_id(char *tag) {
     *p = '\0';
 }
 
-void *pthread_func(void *arg) {
-    pthread_arg_t *p = (pthread_arg_t *)arg;
-    char *buffer = p->buffer;
-    long size = p->size;
-    parser_info_t *info = p->info;
-    parser_error_type_t err = parse_buffer(buffer, size, info);
-    return (void *)err;
-}
-
-parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info) {
+parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info,
+                                 int flag) {
     char *p = buffer;  // current position in buffer
     char *pp = buffer; // previous position in buffer
 
@@ -34,13 +27,18 @@ parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info) {
     int index = 0;
     int is_opening_tag = 0;
     int is_ending_tag = 0;
+    _status = PARSING_XML;
 
     // read the buffer character by character
     while (p < buffer + size) {
+        _status = PARSING_XML;
+        if (flag == 1)
+            disp_progress(p - buffer, size);
+
         if (*p == open_tag) {
             if (index > 0) {
                 buff[index] = '\0';
-                info->handleText(buff, info->context);
+                info->hndl_txt(buff, info->context);
             }
             check(is_opening_tag, is_ending_tag);
             is_opening_tag = 1;
@@ -62,9 +60,9 @@ parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info) {
             get_tag_id(buff);
 
             if (is_opening_tag == 1)
-                info->handleOpenTag(buff, info->context);
+                info->hndl_otg(buff, info->context);
             if (is_ending_tag == 1)
-                info->handleCloseTag(buff, info->context);
+                info->hndl_ctg(buff, info->context);
 
             is_opening_tag = 0;
             is_ending_tag = 0;
@@ -74,6 +72,7 @@ parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info) {
             continue;
         }
 
+        _status = PARSING_XML;
         buff[index] = *p;
         index++;
         pp = p;
@@ -83,7 +82,7 @@ parser_error_type_t parse_buffer(char *buffer, long size, parser_info_t *info) {
     return PARSER_OK;
 }
 
-parser_error_type_t parse(const char *filename, parser_info_t *info) {
+parser_error_type_t parse(const char *filename, parser_info_t *info, int flag) {
     FILE *fp = fopen(filename, "r");
     if (fp == NULL) // error while opening file
         return ERROR_UNABLE_TO_OPEN_FILE;
@@ -94,12 +93,16 @@ parser_error_type_t parse(const char *filename, parser_info_t *info) {
     rewind(fp);
 
     // allocate memory to contain the whole file
+    if (flag == 1)
+        fprintf(stdout, "allocating %ld bytes of memory\n", size);
+    _status = ALLOCATING_MEMORY;
     char *buffer = (char *)malloc(sizeof(char) * (size + 1));
     if (buffer == NULL) // error while allocating memory
         return ERROR_UNABLE_TO_ALLOCATE_MEMORY;
     memset(buffer, 0, size);
 
     // copy the file into the buffer
+    _status = READING_FILE;
     size_t result = fread(buffer, 1, size, fp);
     buffer[size] = '\0';
     if (result != (size_t)size) // error while reading file
@@ -108,8 +111,22 @@ parser_error_type_t parse(const char *filename, parser_info_t *info) {
     // close file
     fclose(fp);
 
+    // open bin file for writing
+    char *ext = strrchr(filename, '.');
+    if (ext == NULL)
+        ext = ""; // no extension
+    char out[BUFSIZ] = "";
+    size_t n = strlen(filename) - strlen(ext);
+    memcpy(out, filename, n);
+    strcat(out, ".bin");
+    info->context->out = fopen(out, "wb");
+
     // parse the file
-    parser_error_type_t err = parse_buffer(buffer, size, info);
+    if (flag == 1)
+        fprintf(stdout, "parsing file %s\n", filename);
+    parser_error_type_t err = parse_buffer(buffer, size, info, flag);
+    if (flag == 1)
+        fprintf(stdout, "\n");
 
     free(buffer);
     return err;
